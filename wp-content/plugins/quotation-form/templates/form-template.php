@@ -35,20 +35,7 @@ if (!empty($product_types) && is_array($product_types)) {
     }
 }
 
-// Group materials by material_type
-$standard_materials = array();
-$doorco_materials = array();
-
-if (!empty($materials) && is_array($materials)) {
-    foreach ($materials as $material) {
-        $material_type = isset($material['material_type']) ? $material['material_type'] : 'standard';
-        if ($material_type === 'standard') {
-            $standard_materials[] = $material;
-        } elseif ($material_type === 'doorco') {
-            $doorco_materials[] = $material;
-        }
-    }
-}
+// Materials are now unified - no grouping needed
 
 // Fallback to hardcoded if ACF data empty
 $use_acf = !empty($categories);
@@ -83,13 +70,10 @@ if (!$use_acf) {
         array('name' => 'Aluminium Casement Bays', 'slug' => 'aluminium-casement-bays', 'requires_material' => false, 'image' => array('url' => $plugin_url . 'assets/images/aluminium-casement-bays.jpg')),
     );
 
-    $standard_materials = array(
+    $materials = array(
         array('name' => 'PVCu Chamfered', 'slug' => 'pvcu-chamfered', 'image' => array('url' => $plugin_url . 'assets/images/pvcu-chamfered.jpg')),
         array('name' => 'PVCu Decorative', 'slug' => 'pvcu-decorative', 'image' => array('url' => $plugin_url . 'assets/images/pvcu-decorative.jpg')),
         array('name' => 'Aluminium', 'slug' => 'aluminium', 'image' => array('url' => $plugin_url . 'assets/images/aluminium.jpg')),
-    );
-
-    $doorco_materials = array(
         array('name' => 'Traditional', 'slug' => 'traditional', 'image' => array('url' => $plugin_url . 'assets/images/doorco-traditional.jpg')),
         array('name' => 'Designer', 'slug' => 'designer', 'image' => array('url' => $plugin_url . 'assets/images/doorco-designer.jpg')),
         array('name' => 'Contemporary', 'slug' => 'contemporary', 'image' => array('url' => $plugin_url . 'assets/images/doorco-contemporary.jpg')),
@@ -214,37 +198,11 @@ if (!$use_acf) {
                 </div>
             </div>
 
-            <!-- Sub-Step 1C: Material Selection (Standard) -->
-            <div class="sub-step" data-substep="1c-material-standard">
+            <!-- Sub-Step 1C: Material Selection -->
+            <div class="sub-step" data-substep="1c-material">
                 <h2>Select Material</h2>
                 <div class="card-grid material-grid">
-                    <?php foreach ($standard_materials as $material):
-                        $image_url = isset($material['image']['url']) ? $material['image']['url'] : '';
-                        $name = isset($material['name']) ? $material['name'] : '';
-                        $slug = isset($material['slug']) ? $material['slug'] : '';
-
-                        // Get availability data (array of type slugs)
-                        $available_types = isset($material['available_types']) ? $material['available_types'] : array();
-                    ?>
-                    <div class="image-card"
-                         data-material="<?php echo esc_attr($slug); ?>"
-                         data-available-types="<?php echo esc_attr(json_encode($available_types)); ?>">
-                        <div class="card-image">
-                            <?php if ($image_url): ?>
-                                <img src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($name); ?>">
-                            <?php endif; ?>
-                        </div>
-                        <h3><?php echo esc_html($name); ?></h3>
-                    </div>
-                    <?php endforeach; ?>
-                </div>
-            </div>
-
-            <!-- Sub-Step 1C: Material Selection (DoorCo) -->
-            <div class="sub-step" data-substep="1c-material-doorco">
-                <h2>Select DoorCo Style</h2>
-                <div class="card-grid material-grid">
-                    <?php foreach ($doorco_materials as $material):
+                    <?php foreach ($materials as $material):
                         $image_url = isset($material['image']['url']) ? $material['image']['url'] : '';
                         $name = isset($material['name']) ? $material['name'] : '';
                         $slug = isset($material['slug']) ? $material['slug'] : '';

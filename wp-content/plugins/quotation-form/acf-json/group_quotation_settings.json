@@ -14,26 +14,23 @@
             "label": "Product Categories",
             "name": "product_categories",
             "type": "repeater",
-            "instructions": "Drag rows to reorder categories",
-            "layout": "block",
+            "instructions": "Drag rows to reorder",
+            "layout": "table",
             "button_label": "Add Category",
             "sub_fields": [
                 {
                     "key": "field_category_name",
-                    "label": "Category Name",
+                    "label": "Name",
                     "name": "name",
                     "type": "text",
-                    "required": 1,
-                    "placeholder": "e.g., Windows"
+                    "required": 1
                 },
                 {
                     "key": "field_category_slug",
                     "label": "Slug",
                     "name": "slug",
                     "type": "text",
-                    "required": 1,
-                    "instructions": "Must match: windows, doors, or bay-windows",
-                    "placeholder": "e.g., windows"
+                    "required": 1
                 },
                 {
                     "key": "field_category_image",
@@ -41,7 +38,7 @@
                     "name": "image",
                     "type": "image",
                     "return_format": "array",
-                    "preview_size": "medium"
+                    "preview_size": "thumbnail"
                 }
             ]
         },
@@ -57,26 +54,23 @@
             "label": "Product Types",
             "name": "product_types",
             "type": "repeater",
-            "instructions": "All product types (windows, doors, bay windows). Drag rows to reorder.",
-            "layout": "block",
+            "instructions": "All product types. Drag rows to reorder.",
+            "layout": "table",
             "button_label": "Add Product Type",
             "sub_fields": [
                 {
                     "key": "field_type_name",
-                    "label": "Type Name",
+                    "label": "Name",
                     "name": "name",
                     "type": "text",
-                    "required": 1,
-                    "placeholder": "e.g., Casement Windows"
+                    "required": 1
                 },
                 {
                     "key": "field_type_slug",
                     "label": "Slug",
                     "name": "slug",
                     "type": "text",
-                    "required": 1,
-                    "instructions": "Lowercase, no spaces. e.g., casement",
-                    "placeholder": "e.g., casement"
+                    "required": 1
                 },
                 {
                     "key": "field_type_category",
@@ -84,7 +78,7 @@
                     "name": "category",
                     "type": "select",
                     "required": 1,
-                    "instructions": "Which product category does this type belong to? (Populated from Product Categories tab)",
+                    "instructions": "",
                     "choices": {},
                     "default_value": "",
                     "allow_null": 0,
@@ -97,7 +91,7 @@
                     "name": "image",
                     "type": "image",
                     "return_format": "array",
-                    "preview_size": "medium"
+                    "preview_size": "thumbnail"
                 }
             ]
         },
@@ -113,41 +107,23 @@
             "label": "Materials",
             "name": "materials",
             "type": "repeater",
-            "instructions": "All materials (standard and DoorCo). Drag rows to reorder.",
-            "layout": "block",
+            "instructions": "All materials. Drag rows to reorder.",
+            "layout": "table",
             "button_label": "Add Material",
             "sub_fields": [
                 {
                     "key": "field_material_name",
-                    "label": "Material Name",
+                    "label": "Name",
                     "name": "name",
                     "type": "text",
-                    "required": 1,
-                    "placeholder": "e.g., PVCu Chamfered"
+                    "required": 1
                 },
                 {
                     "key": "field_material_slug",
                     "label": "Slug",
                     "name": "slug",
                     "type": "text",
-                    "required": 1,
-                    "placeholder": "e.g., pvcu-chamfered"
-                },
-                {
-                    "key": "field_material_type",
-                    "label": "Material Type",
-                    "name": "material_type",
-                    "type": "select",
-                    "required": 1,
-                    "instructions": "Is this a standard material or DoorCo material?",
-                    "choices": {
-                        "standard": "Standard",
-                        "doorco": "DoorCo"
-                    },
-                    "default_value": "standard",
-                    "allow_null": 0,
-                    "multiple": 0,
-                    "ui": 1
+                    "required": 1
                 },
                 {
                     "key": "field_material_image",
@@ -155,14 +131,14 @@
                     "name": "image",
                     "type": "image",
                     "return_format": "array",
-                    "preview_size": "medium"
+                    "preview_size": "thumbnail"
                 },
                 {
                     "key": "field_material_available_types",
                     "label": "Available for Product Types",
                     "name": "available_types",
                     "type": "select",
-                    "instructions": "Select which product types this material is available for. Leave empty for all types.",
+                    "instructions": "Leave empty for all types",
                     "choices": {},
                     "default_value": [],
                     "allow_null": 1,
@@ -182,49 +158,47 @@
         },
         {
             "key": "field_styles",
-            "label": "Configuration Styles",
+            "label": "Styles",
             "name": "styles",
             "type": "repeater",
-            "instructions": "Drag rows to reorder styles",
-            "layout": "block",
+            "instructions": "Drag rows to reorder",
+            "layout": "table",
             "button_label": "Add Style",
             "sub_fields": [
                 {
                     "key": "field_style_code",
-                    "label": "Style Code",
+                    "label": "Code",
                     "name": "code",
                     "type": "text",
-                    "required": 1,
-                    "placeholder": "e.g., W1"
+                    "required": 1
                 },
                 {
                     "key": "field_style_name",
-                    "label": "Style Name",
+                    "label": "Name",
                     "name": "name",
-                    "type": "text",
-                    "placeholder": "Optional display name"
+                    "type": "text"
                 },
                 {
                     "key": "field_style_image",
-                    "label": "Style Diagram",
+                    "label": "Image",
                     "name": "image",
                     "type": "image",
                     "return_format": "array",
-                    "preview_size": "medium"
+                    "preview_size": "thumbnail"
                 },
                 {
                     "key": "field_style_types",
                     "label": "Available for Product Types",
                     "name": "available_types",
                     "type": "select",
-                    "instructions": "Select which product types this style is available for. Leave empty for all types.",
+                    "instructions": "Leave empty for all types",
                     "choices": {},
                     "default_value": [],
                     "allow_null": 1,
                     "multiple": 1,
                     "ui": 1,
                     "ajax": 0,
-                    "placeholder": "Select product types..."
+                    "placeholder": "Select types..."
                 }
             ]
         },
@@ -422,5 +396,5 @@
     "style": "default",
     "label_placement": "top",
     "instruction_placement": "label",
-    "modified": 1732114600
+    "modified": 1732114800
 }

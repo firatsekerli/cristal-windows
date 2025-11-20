@@ -58,12 +58,9 @@ jQuery(document).ready(function($) {
                 // Dynamically determine if material selection is needed
                 const hasMaterialsAvailable = self.checkMaterialsAvailable(type);
 
-                if (hasMaterialsAvailable.hasStandard) {
-                    // Navigate to standard materials
-                    self.navigateToSubStep('1c-material-standard');
-                } else if (hasMaterialsAvailable.hasDoorco) {
-                    // Navigate to doorco materials
-                    self.navigateToSubStep('1c-material-doorco');
+                if (hasMaterialsAvailable) {
+                    // Navigate to material selection
+                    self.navigateToSubStep('1c-material');
                 } else {
                     // No materials available, skip to Step 2 (Style)
                     self.currentItem.material = 'N/A';
@@ -172,40 +169,20 @@ jQuery(document).ready(function($) {
          */
         checkMaterialsAvailable: function(productType) {
             const config = quotationFormAjax.config || {};
-            const standardMaterials = config.standardMaterials || [];
-            const doorcoMaterials = config.doorcoMaterials || [];
+            const materials = config.materials || [];
 
-            let hasStandard = false;
-            let hasDoorco = false;
-
-            // Check standard materials
-            for (let i = 0; i < standardMaterials.length; i++) {
-                const material = standardMaterials[i];
+            // Check if any materials are available for this product type
+            for (let i = 0; i < materials.length; i++) {
+                const material = materials[i];
                 const availableTypes = material.available_types || [];
 
                 // If no types specified, available for all
                 if (availableTypes.length === 0 || availableTypes.includes(productType)) {
-                    hasStandard = true;
-                    break;
+                    return true;
                 }
             }
 
-            // Check doorco materials
-            for (let i = 0; i < doorcoMaterials.length; i++) {
-                const material = doorcoMaterials[i];
-                const availableTypes = material.available_types || [];
-
-                // If no types specified, available for all
-                if (availableTypes.length === 0 || availableTypes.includes(productType)) {
-                    hasDoorco = true;
-                    break;
-                }
-            }
-
-            return {
-                hasStandard: hasStandard,
-                hasDoorco: hasDoorco
-            };
+            return false;
         },
 
         /**
