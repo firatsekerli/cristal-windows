@@ -10,6 +10,66 @@ if (!defined('ABSPATH')) {
 }
 
 $plugin_url = QUOTATION_FORM_PLUGIN_URL;
+
+// Get ACF data
+$categories = function_exists('get_field') ? get_field('product_categories', 'option') : array();
+$window_types = function_exists('get_field') ? get_field('window_types', 'option') : array();
+$door_types = function_exists('get_field') ? get_field('door_types', 'option') : array();
+$bay_types = function_exists('get_field') ? get_field('bay_types', 'option') : array();
+$standard_materials = function_exists('get_field') ? get_field('standard_materials', 'option') : array();
+$doorco_materials = function_exists('get_field') ? get_field('doorco_materials', 'option') : array();
+$styles = function_exists('get_field') ? get_field('styles', 'option') : array();
+
+// Fallback to hardcoded if ACF data empty
+$use_acf = !empty($categories);
+
+// Hardcoded fallbacks
+if (!$use_acf) {
+    $categories = array(
+        array('name' => 'Windows', 'slug' => 'windows', 'image' => array('url' => $plugin_url . 'assets/images/windows.jpg')),
+        array('name' => 'Doors', 'slug' => 'doors', 'image' => array('url' => $plugin_url . 'assets/images/doors.jpg')),
+        array('name' => 'Bay Windows', 'slug' => 'bay-windows', 'image' => array('url' => $plugin_url . 'assets/images/bay-windows.jpg')),
+    );
+
+    $window_types = array(
+        array('name' => 'Casement Windows', 'slug' => 'casement', 'requires_material' => true, 'material_type' => 'standard', 'image' => array('url' => $plugin_url . 'assets/images/casement-windows.jpg')),
+        array('name' => 'Flush Windows', 'slug' => 'flush', 'requires_material' => true, 'material_type' => 'standard', 'image' => array('url' => $plugin_url . 'assets/images/flush-windows.jpg')),
+        array('name' => 'Tilt & Turn', 'slug' => 'tilt-turn', 'requires_material' => true, 'material_type' => 'standard', 'image' => array('url' => $plugin_url . 'assets/images/tilt-turn.jpg')),
+        array('name' => 'Reversible Window', 'slug' => 'reversible', 'requires_material' => false, 'image' => array('url' => $plugin_url . 'assets/images/reversible.jpg')),
+        array('name' => 'Sash Windows', 'slug' => 'sash', 'requires_material' => false, 'image' => array('url' => $plugin_url . 'assets/images/sash-windows.jpg')),
+    );
+
+    $door_types = array(
+        array('name' => 'BiFold Doors', 'slug' => 'bifold', 'requires_material' => false, 'image' => array('url' => $plugin_url . 'assets/images/bifold-doors.jpg')),
+        array('name' => 'French Doors', 'slug' => 'french', 'requires_material' => true, 'material_type' => 'standard', 'image' => array('url' => $plugin_url . 'assets/images/french-doors.jpg')),
+        array('name' => 'Glazed Doors', 'slug' => 'glazed', 'requires_material' => true, 'material_type' => 'standard', 'image' => array('url' => $plugin_url . 'assets/images/glazed-doors.jpg')),
+        array('name' => 'Sliding Doors', 'slug' => 'sliding', 'requires_material' => true, 'material_type' => 'standard', 'image' => array('url' => $plugin_url . 'assets/images/sliding-doors.jpg')),
+        array('name' => 'DoorCo', 'slug' => 'doorco', 'requires_material' => true, 'material_type' => 'doorco', 'image' => array('url' => $plugin_url . 'assets/images/doorco.jpg')),
+    );
+
+    $bay_types = array(
+        array('name' => 'Casement Bays', 'slug' => 'casement-bays', 'requires_material' => true, 'material_type' => 'standard', 'image' => array('url' => $plugin_url . 'assets/images/casement-bays.jpg')),
+        array('name' => 'Flush Bays', 'slug' => 'flush-bays', 'requires_material' => false, 'image' => array('url' => $plugin_url . 'assets/images/flush-bays.jpg')),
+        array('name' => 'Aluminium Casement Bays', 'slug' => 'aluminium-casement-bays', 'requires_material' => false, 'image' => array('url' => $plugin_url . 'assets/images/aluminium-casement-bays.jpg')),
+    );
+
+    $standard_materials = array(
+        array('name' => 'PVCu Chamfered', 'slug' => 'pvcu-chamfered', 'image' => array('url' => $plugin_url . 'assets/images/pvcu-chamfered.jpg')),
+        array('name' => 'PVCu Decorative', 'slug' => 'pvcu-decorative', 'image' => array('url' => $plugin_url . 'assets/images/pvcu-decorative.jpg')),
+        array('name' => 'Aluminium', 'slug' => 'aluminium', 'image' => array('url' => $plugin_url . 'assets/images/aluminium.jpg')),
+    );
+
+    $doorco_materials = array(
+        array('name' => 'Traditional', 'slug' => 'traditional', 'image' => array('url' => $plugin_url . 'assets/images/doorco-traditional.jpg')),
+        array('name' => 'Designer', 'slug' => 'designer', 'image' => array('url' => $plugin_url . 'assets/images/doorco-designer.jpg')),
+        array('name' => 'Contemporary', 'slug' => 'contemporary', 'image' => array('url' => $plugin_url . 'assets/images/doorco-contemporary.jpg')),
+    );
+
+    $styles = array();
+    for ($i = 1; $i <= 12; $i++) {
+        $styles[] = array('code' => 'W' . $i, 'name' => 'Style ' . $i, 'image' => array('url' => $plugin_url . 'assets/images/styles/w' . $i . '.jpg'));
+    }
+}
 ?>
 
 <div class="quotation-form-container">
@@ -44,24 +104,20 @@ $plugin_url = QUOTATION_FORM_PLUGIN_URL;
             <div class="sub-step active" data-substep="1a">
                 <h2>Select Product Category</h2>
                 <div class="card-grid category-grid">
-                    <div class="image-card" data-category="windows">
+                    <?php foreach ($categories as $category):
+                        $image_url = isset($category['image']['url']) ? $category['image']['url'] : '';
+                        $name = isset($category['name']) ? $category['name'] : '';
+                        $slug = isset($category['slug']) ? $category['slug'] : '';
+                    ?>
+                    <div class="image-card" data-category="<?php echo esc_attr($slug); ?>">
                         <div class="card-image">
-                            <img src="<?php echo $plugin_url; ?>assets/images/windows.jpg" alt="Windows">
+                            <?php if ($image_url): ?>
+                                <img src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($name); ?>">
+                            <?php endif; ?>
                         </div>
-                        <h3>Windows</h3>
+                        <h3><?php echo esc_html($name); ?></h3>
                     </div>
-                    <div class="image-card" data-category="doors">
-                        <div class="card-image">
-                            <img src="<?php echo $plugin_url; ?>assets/images/doors.jpg" alt="Doors">
-                        </div>
-                        <h3>Doors</h3>
-                    </div>
-                    <div class="image-card" data-category="bay-windows">
-                        <div class="card-image">
-                            <img src="<?php echo $plugin_url; ?>assets/images/bay-windows.jpg" alt="Bay Windows">
-                        </div>
-                        <h3>Bay Windows</h3>
-                    </div>
+                    <?php endforeach; ?>
                 </div>
             </div>
 
@@ -69,36 +125,22 @@ $plugin_url = QUOTATION_FORM_PLUGIN_URL;
             <div class="sub-step" data-substep="1b-windows" data-parent-category="windows">
                 <h2>Select Window Type</h2>
                 <div class="card-grid type-grid">
-                    <div class="image-card" data-type="casement" data-requires-material="true">
+                    <?php foreach ($window_types as $type):
+                        $image_url = isset($type['image']['url']) ? $type['image']['url'] : '';
+                        $name = isset($type['name']) ? $type['name'] : '';
+                        $slug = isset($type['slug']) ? $type['slug'] : '';
+                        $requires_material = isset($type['requires_material']) ? $type['requires_material'] : false;
+                        $material_type = isset($type['material_type']) ? $type['material_type'] : 'none';
+                    ?>
+                    <div class="image-card" data-type="<?php echo esc_attr($slug); ?>" data-requires-material="<?php echo $requires_material ? 'true' : 'false'; ?>" data-material-type="<?php echo esc_attr($material_type); ?>">
                         <div class="card-image">
-                            <img src="<?php echo $plugin_url; ?>assets/images/casement-windows.jpg" alt="Casement Windows">
+                            <?php if ($image_url): ?>
+                                <img src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($name); ?>">
+                            <?php endif; ?>
                         </div>
-                        <h3>Casement Windows</h3>
+                        <h3><?php echo esc_html($name); ?></h3>
                     </div>
-                    <div class="image-card" data-type="flush" data-requires-material="true">
-                        <div class="card-image">
-                            <img src="<?php echo $plugin_url; ?>assets/images/flush-windows.jpg" alt="Flush Windows">
-                        </div>
-                        <h3>Flush Windows</h3>
-                    </div>
-                    <div class="image-card" data-type="tilt-turn" data-requires-material="true">
-                        <div class="card-image">
-                            <img src="<?php echo $plugin_url; ?>assets/images/tilt-turn.jpg" alt="Tilt & Turn">
-                        </div>
-                        <h3>Tilt & Turn</h3>
-                    </div>
-                    <div class="image-card" data-type="reversible" data-requires-material="false">
-                        <div class="card-image">
-                            <img src="<?php echo $plugin_url; ?>assets/images/reversible.jpg" alt="Reversible Window">
-                        </div>
-                        <h3>Reversible Window</h3>
-                    </div>
-                    <div class="image-card" data-type="sash" data-requires-material="false">
-                        <div class="card-image">
-                            <img src="<?php echo $plugin_url; ?>assets/images/sash-windows.jpg" alt="Sash Windows">
-                        </div>
-                        <h3>Sash Windows</h3>
-                    </div>
+                    <?php endforeach; ?>
                 </div>
             </div>
 
@@ -106,36 +148,22 @@ $plugin_url = QUOTATION_FORM_PLUGIN_URL;
             <div class="sub-step" data-substep="1b-doors" data-parent-category="doors">
                 <h2>Select Door Type</h2>
                 <div class="card-grid type-grid">
-                    <div class="image-card" data-type="bifold" data-requires-material="false">
+                    <?php foreach ($door_types as $type):
+                        $image_url = isset($type['image']['url']) ? $type['image']['url'] : '';
+                        $name = isset($type['name']) ? $type['name'] : '';
+                        $slug = isset($type['slug']) ? $type['slug'] : '';
+                        $requires_material = isset($type['requires_material']) ? $type['requires_material'] : false;
+                        $material_type = isset($type['material_type']) ? $type['material_type'] : 'none';
+                    ?>
+                    <div class="image-card" data-type="<?php echo esc_attr($slug); ?>" data-requires-material="<?php echo $requires_material ? 'true' : 'false'; ?>" data-material-type="<?php echo esc_attr($material_type); ?>">
                         <div class="card-image">
-                            <img src="<?php echo $plugin_url; ?>assets/images/bifold-doors.jpg" alt="BiFold Doors">
+                            <?php if ($image_url): ?>
+                                <img src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($name); ?>">
+                            <?php endif; ?>
                         </div>
-                        <h3>BiFold Doors</h3>
+                        <h3><?php echo esc_html($name); ?></h3>
                     </div>
-                    <div class="image-card" data-type="french" data-requires-material="true" data-material-type="standard">
-                        <div class="card-image">
-                            <img src="<?php echo $plugin_url; ?>assets/images/french-doors.jpg" alt="French Doors">
-                        </div>
-                        <h3>French Doors</h3>
-                    </div>
-                    <div class="image-card" data-type="glazed" data-requires-material="true" data-material-type="standard">
-                        <div class="card-image">
-                            <img src="<?php echo $plugin_url; ?>assets/images/glazed-doors.jpg" alt="Glazed Doors">
-                        </div>
-                        <h3>Glazed Doors</h3>
-                    </div>
-                    <div class="image-card" data-type="sliding" data-requires-material="true" data-material-type="standard">
-                        <div class="card-image">
-                            <img src="<?php echo $plugin_url; ?>assets/images/sliding-doors.jpg" alt="Sliding Doors">
-                        </div>
-                        <h3>Sliding Doors</h3>
-                    </div>
-                    <div class="image-card" data-type="doorco" data-requires-material="true" data-material-type="doorco">
-                        <div class="card-image">
-                            <img src="<?php echo $plugin_url; ?>assets/images/doorco.jpg" alt="DoorCo">
-                        </div>
-                        <h3>DoorCo</h3>
-                    </div>
+                    <?php endforeach; ?>
                 </div>
             </div>
 
@@ -143,24 +171,22 @@ $plugin_url = QUOTATION_FORM_PLUGIN_URL;
             <div class="sub-step" data-substep="1b-bay-windows" data-parent-category="bay-windows">
                 <h2>Select Bay Window Type</h2>
                 <div class="card-grid type-grid">
-                    <div class="image-card" data-type="casement-bays" data-requires-material="true" data-material-type="standard">
+                    <?php foreach ($bay_types as $type):
+                        $image_url = isset($type['image']['url']) ? $type['image']['url'] : '';
+                        $name = isset($type['name']) ? $type['name'] : '';
+                        $slug = isset($type['slug']) ? $type['slug'] : '';
+                        $requires_material = isset($type['requires_material']) ? $type['requires_material'] : false;
+                        $material_type = isset($type['material_type']) ? $type['material_type'] : 'none';
+                    ?>
+                    <div class="image-card" data-type="<?php echo esc_attr($slug); ?>" data-requires-material="<?php echo $requires_material ? 'true' : 'false'; ?>" data-material-type="<?php echo esc_attr($material_type); ?>">
                         <div class="card-image">
-                            <img src="<?php echo $plugin_url; ?>assets/images/casement-bays.jpg" alt="Casement Bays">
+                            <?php if ($image_url): ?>
+                                <img src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($name); ?>">
+                            <?php endif; ?>
                         </div>
-                        <h3>Casement Bays</h3>
+                        <h3><?php echo esc_html($name); ?></h3>
                     </div>
-                    <div class="image-card" data-type="flush-bays" data-requires-material="false">
-                        <div class="card-image">
-                            <img src="<?php echo $plugin_url; ?>assets/images/flush-bays.jpg" alt="Flush Bays">
-                        </div>
-                        <h3>Flush Bays</h3>
-                    </div>
-                    <div class="image-card" data-type="aluminium-casement-bays" data-requires-material="false">
-                        <div class="card-image">
-                            <img src="<?php echo $plugin_url; ?>assets/images/aluminium-casement-bays.jpg" alt="Aluminium Casement Bays">
-                        </div>
-                        <h3>Aluminium Casement Bays</h3>
-                    </div>
+                    <?php endforeach; ?>
                 </div>
             </div>
 
@@ -168,24 +194,20 @@ $plugin_url = QUOTATION_FORM_PLUGIN_URL;
             <div class="sub-step" data-substep="1c-material-standard">
                 <h2>Select Material</h2>
                 <div class="card-grid material-grid">
-                    <div class="image-card" data-material="pvcu-chamfered">
+                    <?php foreach ($standard_materials as $material):
+                        $image_url = isset($material['image']['url']) ? $material['image']['url'] : '';
+                        $name = isset($material['name']) ? $material['name'] : '';
+                        $slug = isset($material['slug']) ? $material['slug'] : '';
+                    ?>
+                    <div class="image-card" data-material="<?php echo esc_attr($slug); ?>">
                         <div class="card-image">
-                            <img src="<?php echo $plugin_url; ?>assets/images/pvcu-chamfered.jpg" alt="PVCu Chamfered">
+                            <?php if ($image_url): ?>
+                                <img src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($name); ?>">
+                            <?php endif; ?>
                         </div>
-                        <h3>PVCu Chamfered</h3>
+                        <h3><?php echo esc_html($name); ?></h3>
                     </div>
-                    <div class="image-card" data-material="pvcu-decorative">
-                        <div class="card-image">
-                            <img src="<?php echo $plugin_url; ?>assets/images/pvcu-decorative.jpg" alt="PVCu Decorative">
-                        </div>
-                        <h3>PVCu Decorative</h3>
-                    </div>
-                    <div class="image-card" data-material="aluminium">
-                        <div class="card-image">
-                            <img src="<?php echo $plugin_url; ?>assets/images/aluminium.jpg" alt="Aluminium">
-                        </div>
-                        <h3>Aluminium</h3>
-                    </div>
+                    <?php endforeach; ?>
                 </div>
             </div>
 
@@ -193,24 +215,20 @@ $plugin_url = QUOTATION_FORM_PLUGIN_URL;
             <div class="sub-step" data-substep="1c-material-doorco">
                 <h2>Select DoorCo Style</h2>
                 <div class="card-grid material-grid">
-                    <div class="image-card" data-material="traditional">
+                    <?php foreach ($doorco_materials as $material):
+                        $image_url = isset($material['image']['url']) ? $material['image']['url'] : '';
+                        $name = isset($material['name']) ? $material['name'] : '';
+                        $slug = isset($material['slug']) ? $material['slug'] : '';
+                    ?>
+                    <div class="image-card" data-material="<?php echo esc_attr($slug); ?>">
                         <div class="card-image">
-                            <img src="<?php echo $plugin_url; ?>assets/images/doorco-traditional.jpg" alt="Traditional">
+                            <?php if ($image_url): ?>
+                                <img src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($name); ?>">
+                            <?php endif; ?>
                         </div>
-                        <h3>Traditional</h3>
+                        <h3><?php echo esc_html($name); ?></h3>
                     </div>
-                    <div class="image-card" data-material="designer">
-                        <div class="card-image">
-                            <img src="<?php echo $plugin_url; ?>assets/images/doorco-designer.jpg" alt="Designer">
-                        </div>
-                        <h3>Designer</h3>
-                    </div>
-                    <div class="image-card" data-material="contemporary">
-                        <div class="card-image">
-                            <img src="<?php echo $plugin_url; ?>assets/images/doorco-contemporary.jpg" alt="Contemporary">
-                        </div>
-                        <h3>Contemporary</h3>
-                    </div>
+                    <?php endforeach; ?>
                 </div>
             </div>
 
@@ -220,14 +238,35 @@ $plugin_url = QUOTATION_FORM_PLUGIN_URL;
         <div class="form-step" data-step="2">
             <h2>Select Configuration Style</h2>
             <div class="card-grid style-grid">
-                <?php for ($i = 1; $i <= 12; $i++): ?>
-                <div class="image-card style-card" data-style="W<?php echo $i; ?>">
-                    <div class="card-image">
-                        <img src="<?php echo $plugin_url; ?>assets/images/styles/w<?php echo $i; ?>.jpg" alt="Style W<?php echo $i; ?>">
+                <?php
+                if (!empty($styles)) {
+                    foreach ($styles as $style):
+                        $image_url = isset($style['image']['url']) ? $style['image']['url'] : '';
+                        $code = isset($style['code']) ? $style['code'] : '';
+                        $name = isset($style['name']) ? $style['name'] : $code;
+                    ?>
+                    <div class="image-card style-card" data-style="<?php echo esc_attr($code); ?>">
+                        <div class="card-image">
+                            <?php if ($image_url): ?>
+                                <img src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($name); ?>">
+                            <?php endif; ?>
+                        </div>
+                        <h3><?php echo esc_html($name); ?></h3>
                     </div>
-                    <h3>W<?php echo $i; ?></h3>
-                </div>
-                <?php endfor; ?>
+                    <?php
+                    endforeach;
+                } else {
+                    // Fallback to W1-W12 if no styles defined
+                    for ($i = 1; $i <= 12; $i++): ?>
+                    <div class="image-card style-card" data-style="W<?php echo $i; ?>">
+                        <div class="card-image">
+                            <img src="<?php echo $plugin_url; ?>assets/images/styles/w<?php echo $i; ?>.jpg" alt="Style W<?php echo $i; ?>">
+                        </div>
+                        <h3>W<?php echo $i; ?></h3>
+                    </div>
+                    <?php endfor;
+                }
+                ?>
             </div>
         </div>
 
