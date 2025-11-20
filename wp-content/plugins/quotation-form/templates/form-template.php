@@ -145,10 +145,8 @@ if (!$use_acf) {
                         $image_url = isset($type['image']['url']) ? $type['image']['url'] : '';
                         $name = isset($type['name']) ? $type['name'] : '';
                         $slug = isset($type['slug']) ? $type['slug'] : '';
-                        $requires_material = isset($type['requires_material']) ? $type['requires_material'] : false;
-                        $material_type = isset($type['material_type']) ? $type['material_type'] : 'none';
                     ?>
-                    <div class="image-card" data-type="<?php echo esc_attr($slug); ?>" data-requires-material="<?php echo $requires_material ? 'true' : 'false'; ?>" data-material-type="<?php echo esc_attr($material_type); ?>">
+                    <div class="image-card" data-type="<?php echo esc_attr($slug); ?>">
                         <div class="card-image">
                             <?php if ($image_url): ?>
                                 <img src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($name); ?>">
@@ -168,10 +166,8 @@ if (!$use_acf) {
                         $image_url = isset($type['image']['url']) ? $type['image']['url'] : '';
                         $name = isset($type['name']) ? $type['name'] : '';
                         $slug = isset($type['slug']) ? $type['slug'] : '';
-                        $requires_material = isset($type['requires_material']) ? $type['requires_material'] : false;
-                        $material_type = isset($type['material_type']) ? $type['material_type'] : 'none';
                     ?>
-                    <div class="image-card" data-type="<?php echo esc_attr($slug); ?>" data-requires-material="<?php echo $requires_material ? 'true' : 'false'; ?>" data-material-type="<?php echo esc_attr($material_type); ?>">
+                    <div class="image-card" data-type="<?php echo esc_attr($slug); ?>">
                         <div class="card-image">
                             <?php if ($image_url): ?>
                                 <img src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($name); ?>">
@@ -191,10 +187,8 @@ if (!$use_acf) {
                         $image_url = isset($type['image']['url']) ? $type['image']['url'] : '';
                         $name = isset($type['name']) ? $type['name'] : '';
                         $slug = isset($type['slug']) ? $type['slug'] : '';
-                        $requires_material = isset($type['requires_material']) ? $type['requires_material'] : false;
-                        $material_type = isset($type['material_type']) ? $type['material_type'] : 'none';
                     ?>
-                    <div class="image-card" data-type="<?php echo esc_attr($slug); ?>" data-requires-material="<?php echo $requires_material ? 'true' : 'false'; ?>" data-material-type="<?php echo esc_attr($material_type); ?>">
+                    <div class="image-card" data-type="<?php echo esc_attr($slug); ?>">
                         <div class="card-image">
                             <?php if ($image_url): ?>
                                 <img src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($name); ?>">

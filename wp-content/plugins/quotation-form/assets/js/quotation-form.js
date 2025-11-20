@@ -50,22 +50,22 @@ jQuery(document).ready(function($) {
             // Type selection (Step 1B)
             $('.card-grid.type-grid .image-card').on('click', function() {
                 const type = $(this).data('type');
-                const requiresMaterial = $(this).data('requires-material');
-                const materialType = $(this).data('material-type') || 'standard';
 
                 self.currentItem.type = type;
                 self.currentItem.typeName = $(this).find('h3').text();
                 self.selectCard($(this));
 
-                if (requiresMaterial) {
-                    // Navigate to material selection
-                    if (materialType === 'doorco') {
-                        self.navigateToSubStep('1c-material-doorco');
-                    } else {
-                        self.navigateToSubStep('1c-material-standard');
-                    }
+                // Dynamically determine if material selection is needed
+                const hasMaterialsAvailable = self.checkMaterialsAvailable(type);
+
+                if (hasMaterialsAvailable.hasStandard) {
+                    // Navigate to standard materials
+                    self.navigateToSubStep('1c-material-standard');
+                } else if (hasMaterialsAvailable.hasDoorco) {
+                    // Navigate to doorco materials
+                    self.navigateToSubStep('1c-material-doorco');
                 } else {
-                    // Skip material, go to Step 2 (Style)
+                    // No materials available, skip to Step 2 (Style)
                     self.currentItem.material = 'N/A';
                     self.navigateToStep(2);
                 }
@@ -165,6 +165,47 @@ jQuery(document).ready(function($) {
 
         selectCard: function($card) {
             $card.addClass('selected').siblings().removeClass('selected');
+        },
+
+        /**
+         * Check if materials are available for a given product type
+         */
+        checkMaterialsAvailable: function(productType) {
+            const config = quotationFormAjax.config || {};
+            const standardMaterials = config.standardMaterials || [];
+            const doorcoMaterials = config.doorcoMaterials || [];
+
+            let hasStandard = false;
+            let hasDoorco = false;
+
+            // Check standard materials
+            for (let i = 0; i < standardMaterials.length; i++) {
+                const material = standardMaterials[i];
+                const availableTypes = material.available_types || [];
+
+                // If no types specified, available for all
+                if (availableTypes.length === 0 || availableTypes.includes(productType)) {
+                    hasStandard = true;
+                    break;
+                }
+            }
+
+            // Check doorco materials
+            for (let i = 0; i < doorcoMaterials.length; i++) {
+                const material = doorcoMaterials[i];
+                const availableTypes = material.available_types || [];
+
+                // If no types specified, available for all
+                if (availableTypes.length === 0 || availableTypes.includes(productType)) {
+                    hasDoorco = true;
+                    break;
+                }
+            }
+
+            return {
+                hasStandard: hasStandard,
+                hasDoorco: hasDoorco
+            };
         },
 
         /**

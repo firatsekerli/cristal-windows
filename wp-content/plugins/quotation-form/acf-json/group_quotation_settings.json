@@ -98,37 +98,6 @@
                     "type": "image",
                     "return_format": "array",
                     "preview_size": "medium"
-                },
-                {
-                    "key": "field_type_requires_material",
-                    "label": "Requires Material Selection",
-                    "name": "requires_material",
-                    "type": "true_false",
-                    "default_value": 1,
-                    "ui": 1,
-                    "ui_on_text": "Yes",
-                    "ui_off_text": "No"
-                },
-                {
-                    "key": "field_type_material_type",
-                    "label": "Material Type",
-                    "name": "material_type",
-                    "type": "select",
-                    "choices": {
-                        "standard": "Standard Materials",
-                        "doorco": "DoorCo Materials",
-                        "none": "None"
-                    },
-                    "default_value": "standard",
-                    "conditional_logic": [
-                        [
-                            {
-                                "field": "field_type_requires_material",
-                                "operator": "==",
-                                "value": "1"
-                            }
-                        ]
-                    ]
                 }
             ]
         },
@@ -484,5 +453,5 @@
     "style": "default",
     "label_placement": "top",
     "instruction_placement": "label",
-    "modified": 1732114200
+    "modified": 1732114400
 }
