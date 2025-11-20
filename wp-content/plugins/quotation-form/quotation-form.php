@@ -1,0 +1,259 @@
+<?php
+/**
+ * Plugin Name: Multi-Step Quotation Form
+ * Plugin URI: https://cristalwindows.com
+ * Description: A comprehensive multi-step quotation form for Windows, Doors, and Bay Windows with basket functionality
+ * Version: 1.0.0
+ * Author: Cristal Windows
+ * Author URI: https://cristalwindows.com
+ * Text Domain: quotation-form
+ * Domain Path: /languages
+ * Requires at least: 5.0
+ * Requires PHP: 7.2
+ */
+
+// Exit if accessed directly
+if (!defined('ABSPATH')) {
+    exit;
+}
+
+// Define plugin constants
+define('QUOTATION_FORM_VERSION', '1.0.0');
+define('QUOTATION_FORM_PLUGIN_DIR', plugin_dir_path(__FILE__));
+define('QUOTATION_FORM_PLUGIN_URL', plugin_dir_url(__FILE__));
+define('QUOTATION_FORM_PLUGIN_BASENAME', plugin_basename(__FILE__));
+
+/**
+ * Main Plugin Class
+ */
+class Quotation_Form_Plugin {
+
+    /**
+     * Instance of this class
+     */
+    private static $instance = null;
+
+    /**
+     * Get instance
+     */
+    public static function get_instance() {
+        if (null === self::$instance) {
+            self::$instance = new self();
+        }
+        return self::$instance;
+    }
+
+    /**
+     * Constructor
+     */
+    private function __construct() {
+        $this->init_hooks();
+        $this->load_dependencies();
+    }
+
+    /**
+     * Initialize hooks
+     */
+    private function init_hooks() {
+        add_action('wp_enqueue_scripts', array($this, 'enqueue_scripts'));
+        add_action('wp_ajax_submit_quotation_form', array($this, 'handle_form_submission'));
+        add_action('wp_ajax_nopriv_submit_quotation_form', array($this, 'handle_form_submission'));
+        add_shortcode('quotation_form', array($this, 'render_form_shortcode'));
+    }
+
+    /**
+     * Load plugin dependencies
+     */
+    private function load_dependencies() {
+        // Load additional files if needed
+    }
+
+    /**
+     * Enqueue scripts and styles
+     */
+    public function enqueue_scripts() {
+        // Only enqueue on pages that have the shortcode
+        global $post;
+        if (is_a($post, 'WP_Post') && has_shortcode($post->post_content, 'quotation_form')) {
+
+            // Enqueue CSS
+            wp_enqueue_style(
+                'quotation-form-css',
+                QUOTATION_FORM_PLUGIN_URL . 'assets/css/quotation-form.css',
+                array(),
+                QUOTATION_FORM_VERSION
+            );
+
+            // Enqueue JavaScript
+            wp_enqueue_script(
+                'quotation-form-js',
+                QUOTATION_FORM_PLUGIN_URL . 'assets/js/quotation-form.js',
+                array('jquery'),
+                QUOTATION_FORM_VERSION,
+                true
+            );
+
+            // Localize script for AJAX
+            wp_localize_script('quotation-form-js', 'quotationFormAjax', array(
+                'ajaxurl' => admin_url('admin-ajax.php'),
+                'nonce' => wp_create_nonce('quotation_form_nonce'),
+                'pluginUrl' => QUOTATION_FORM_PLUGIN_URL
+            ));
+        }
+    }
+
+    /**
+     * Render form via shortcode
+     * Usage: [quotation_form]
+     */
+    public function render_form_shortcode($atts) {
+        $atts = shortcode_atts(array(
+            'title' => '',
+        ), $atts);
+
+        ob_start();
+        include QUOTATION_FORM_PLUGIN_DIR . 'templates/form-template.php';
+        return ob_get_clean();
+    }
+
+    /**
+     * Handle AJAX form submission
+     */
+    public function handle_form_submission() {
+        check_ajax_referer('quotation_form_nonce', 'nonce');
+
+        $basket_items = isset($_POST['basket_items']) ? json_decode(stripslashes($_POST['basket_items']), true) : array();
+        $customer_data = isset($_POST['customer_data']) ? $_POST['customer_data'] : array();
+
+        // Sanitize customer data
+        $customer_data = array_map('sanitize_text_field', $customer_data);
+
+        // Process the submission
+        $this->send_email_notification($basket_items, $customer_data);
+
+        // Optional: Save to database
+        // $this->save_to_database($basket_items, $customer_data);
+
+        wp_send_json_success(array(
+            'message' => 'Quotation request submitted successfully!'
+        ));
+    }
+
+    /**
+     * Send email notification
+     */
+    private function send_email_notification($basket_items, $customer_data) {
+        $admin_email = get_option('admin_email');
+        $subject = 'New Quotation Request from ' . $customer_data['customer_name'];
+
+        $message = "New quotation request received:\n\n";
+        $message .= "=== CUSTOMER DETAILS ===\n\n";
+
+        foreach ($customer_data as $key => $value) {
+            $label = ucfirst(str_replace('_', ' ', str_replace('customer_', '', $key)));
+            $message .= $label . ": " . $value . "\n";
+        }
+
+        $message .= "\n\n=== ITEMS (" . count($basket_items) . ") ===\n\n";
+
+        foreach ($basket_items as $index => $item) {
+            $message .= "--- Item " . ($index + 1) . " ---\n";
+            $message .= "Category: " . ucfirst($item['category']) . "\n";
+            $message .= "Type: " . $item['typeName'] . "\n";
+
+            if (isset($item['materialName']) && $item['materialName'] !== 'N/A') {
+                $message .= "Material: " . $item['materialName'] . "\n";
+            }
+
+            $message .= "Style: " . $item['styleName'] . "\n";
+            $message .= "Dimensions: " . $item['width'] . "mm (W) x " . $item['height'] . "mm (H)\n";
+            $message .= "Cill: " . $item['cill'] . "\n";
+            $message .= "Inside Colour: " . $item['insideColour'] . "\n";
+            $message .= "Outside Colour: " . $item['outsideColour'] . "\n";
+            $message .= "Glazing Type: " . ucfirst($item['glazingType']) . "\n";
+            $message .= "Glazing Features: " . ucfirst($item['glazingFeatures']) . "\n";
+            $message .= "Hardware Colour: " . ucfirst($item['hardwareColour']) . "\n";
+
+            if (!empty($item['location'])) {
+                $message .= "Location: " . $item['location'] . "\n";
+            }
+
+            $message .= "\n";
+        }
+
+        $message .= "\n---\nThis email was sent from the quotation form on " . get_bloginfo('name') . "\n";
+        $message .= "Submitted: " . current_time('mysql') . "\n";
+
+        // Send email
+        wp_mail($admin_email, $subject, $message);
+
+        // Optional: Send confirmation email to customer
+        if (!empty($customer_data['customer_email'])) {
+            $customer_subject = 'Thank you for your quotation request';
+            $customer_message = "Dear " . $customer_data['customer_name'] . ",\n\n";
+            $customer_message .= "Thank you for requesting a quotation. We have received your request and will get back to you shortly.\n\n";
+            $customer_message .= "Items requested: " . count($basket_items) . "\n\n";
+            $customer_message .= "Best regards,\n";
+            $customer_message .= get_bloginfo('name');
+
+            wp_mail($customer_data['customer_email'], $customer_subject, $customer_message);
+        }
+    }
+
+    /**
+     * Save to database (optional)
+     * Uncomment and customize if you want to save submissions to database
+     */
+    private function save_to_database($basket_items, $customer_data) {
+        // Example: Save as custom post type
+        /*
+        $post_id = wp_insert_post(array(
+            'post_title' => 'Quote: ' . $customer_data['customer_name'] . ' - ' . date('Y-m-d H:i'),
+            'post_type' => 'quotation_submission',
+            'post_status' => 'publish'
+        ));
+
+        if ($post_id) {
+            update_post_meta($post_id, 'customer_data', $customer_data);
+            update_post_meta($post_id, 'basket_items', $basket_items);
+            update_post_meta($post_id, 'submission_date', current_time('mysql'));
+        }
+        */
+    }
+}
+
+/**
+ * Initialize the plugin
+ */
+function quotation_form_init() {
+    return Quotation_Form_Plugin::get_instance();
+}
+
+// Start the plugin
+add_action('plugins_loaded', 'quotation_form_init');
+
+/**
+ * Activation hook
+ */
+register_activation_hook(__FILE__, 'quotation_form_activate');
+function quotation_form_activate() {
+    // Create upload directory for form images if needed
+    $upload_dir = wp_upload_dir();
+    $quotation_form_dir = $upload_dir['basedir'] . '/quotation-form';
+
+    if (!file_exists($quotation_form_dir)) {
+        wp_mkdir_p($quotation_form_dir);
+    }
+
+    // Flush rewrite rules
+    flush_rewrite_rules();
+}
+
+/**
+ * Deactivation hook
+ */
+register_deactivation_hook(__FILE__, 'quotation_form_deactivate');
+function quotation_form_deactivate() {
+    // Flush rewrite rules
+    flush_rewrite_rules();
+}
