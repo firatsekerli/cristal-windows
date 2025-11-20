@@ -137,7 +137,7 @@ if (!$use_acf) {
 
             <!-- Sub-Step 1B: Windows Type Selection -->
             <div class="sub-step" data-substep="1b-windows" data-parent-category="windows">
-                <h2>Select Window Type</h2>
+                <h2>Select Type</h2>
                 <div class="card-grid type-grid">
                     <?php foreach ($window_types as $type):
                         $image_url = isset($type['image']['url']) ? $type['image']['url'] : '';
@@ -158,7 +158,7 @@ if (!$use_acf) {
 
             <!-- Sub-Step 1B: Doors Type Selection -->
             <div class="sub-step" data-substep="1b-doors" data-parent-category="doors">
-                <h2>Select Door Type</h2>
+                <h2>Select Type</h2>
                 <div class="card-grid type-grid">
                     <?php foreach ($door_types as $type):
                         $image_url = isset($type['image']['url']) ? $type['image']['url'] : '';
@@ -179,7 +179,7 @@ if (!$use_acf) {
 
             <!-- Sub-Step 1B: Bay Windows Type Selection -->
             <div class="sub-step" data-substep="1b-bay-windows" data-parent-category="bay-windows">
-                <h2>Select Bay Window Type</h2>
+                <h2>Select Type</h2>
                 <div class="card-grid type-grid">
                     <?php foreach ($bay_types as $type):
                         $image_url = isset($type['image']['url']) ? $type['image']['url'] : '';

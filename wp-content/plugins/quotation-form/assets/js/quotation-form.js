@@ -55,8 +55,14 @@ jQuery(document).ready(function($) {
                 self.currentItem.typeName = $(this).find('h3').text();
                 self.selectCard($(this));
 
+                // Debug logging
+                console.log('Selected type:', type);
+                console.log('Config:', quotationFormAjax.config);
+                console.log('Materials:', quotationFormAjax.config.materials);
+
                 // Dynamically determine if material selection is needed
                 const hasMaterialsAvailable = self.checkMaterialsAvailable(type);
+                console.log('Has materials available:', hasMaterialsAvailable);
 
                 if (hasMaterialsAvailable) {
                     // Navigate to material selection
@@ -171,17 +177,24 @@ jQuery(document).ready(function($) {
             const config = quotationFormAjax.config || {};
             const materials = config.materials || [];
 
+            console.log('Checking materials for type:', productType);
+            console.log('Total materials:', materials.length);
+
             // Check if any materials are available for this product type
             for (let i = 0; i < materials.length; i++) {
                 const material = materials[i];
                 const availableTypes = material.available_types || [];
 
+                console.log('Material:', material.name, 'Available types:', availableTypes);
+
                 // If no types specified, available for all
                 if (availableTypes.length === 0 || availableTypes.includes(productType)) {
+                    console.log('Found available material:', material.name);
                     return true;
                 }
             }
 
+            console.log('No materials available for this type');
             return false;
         },
 
