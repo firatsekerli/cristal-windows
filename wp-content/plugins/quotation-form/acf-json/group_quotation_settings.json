@@ -84,13 +84,9 @@
                     "name": "category",
                     "type": "select",
                     "required": 1,
-                    "instructions": "Which product category does this type belong to?",
-                    "choices": {
-                        "windows": "Windows",
-                        "doors": "Doors",
-                        "bay-windows": "Bay Windows"
-                    },
-                    "default_value": "windows",
+                    "instructions": "Which product category does this type belong to? (Populated from Product Categories tab)",
+                    "choices": {},
+                    "default_value": "",
                     "allow_null": 0,
                     "multiple": 0,
                     "ui": 1
@@ -488,5 +484,5 @@
     "style": "default",
     "label_placement": "top",
     "instruction_placement": "label",
-    "modified": 1732114000
+    "modified": 1732114200
 }

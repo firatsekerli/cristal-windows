@@ -63,9 +63,13 @@ class Quotation_Form_Plugin {
         add_shortcode('quotation_form', array($this, 'render_form_shortcode'));
 
         // Populate select field choices dynamically
+        add_filter('acf/load_field/key=field_type_category', array($this, 'populate_category_choices'));
         add_filter('acf/load_field/key=field_std_material_types', array($this, 'populate_type_choices'));
         add_filter('acf/load_field/key=field_doorco_material_types', array($this, 'populate_type_choices'));
         add_filter('acf/load_field/key=field_style_types', array($this, 'populate_type_choices'));
+
+        // Add admin scripts for auto-slug generation
+        add_action('acf/input/admin_enqueue_scripts', array($this, 'enqueue_admin_scripts'));
     }
 
     /**
@@ -90,6 +94,39 @@ class Quotation_Form_Plugin {
                 'redirect'    => false
             ));
         }
+    }
+
+    /**
+     * Populate category choices from product categories
+     */
+    public function populate_category_choices($field) {
+        $field['choices'] = array();
+
+        // Get product categories
+        if (function_exists('get_field')) {
+            $categories = get_field('product_categories', 'option');
+            if (!empty($categories) && is_array($categories)) {
+                foreach ($categories as $category) {
+                    $slug = isset($category['slug']) ? $category['slug'] : '';
+                    $name = isset($category['name']) ? $category['name'] : '';
+
+                    if ($slug && $name) {
+                        $field['choices'][$slug] = $name;
+                    }
+                }
+            }
+        }
+
+        // Fallback to defaults if no categories exist
+        if (empty($field['choices'])) {
+            $field['choices'] = array(
+                'windows' => 'Windows',
+                'doors' => 'Doors',
+                'bay-windows' => 'Bay Windows'
+            );
+        }
+
+        return $field;
     }
 
     /**
@@ -121,6 +158,41 @@ class Quotation_Form_Plugin {
         }
 
         return $field;
+    }
+
+    /**
+     * Enqueue admin scripts for ACF fields
+     */
+    public function enqueue_admin_scripts() {
+        ?>
+        <script type="text/javascript">
+        (function($) {
+            if (typeof acf === 'undefined') return;
+
+            // Auto-generate slug from name for Product Categories
+            acf.addAction('ready_field/name=name', function($field) {
+                var $nameInput = $field.find('input[type="text"]');
+                var $row = $nameInput.closest('.acf-row');
+                var $slugInput = $row.find('input[data-name="slug"]');
+
+                if ($slugInput.length && $nameInput.length) {
+                    $nameInput.on('blur', function() {
+                        // Only auto-generate if slug is empty
+                        if ($slugInput.val() === '') {
+                            var name = $(this).val();
+                            var slug = name
+                                .toLowerCase()
+                                .replace(/[^a-z0-9]+/g, '-')
+                                .replace(/^-+|-+$/g, '');
+                            $slugInput.val(slug);
+                        }
+                    });
+                }
+            });
+
+        })(jQuery);
+        </script>
+        <?php
     }
 
     /**
