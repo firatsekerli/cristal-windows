@@ -81,7 +81,7 @@ if (!$use_acf) {
 
     $styles = array();
     for ($i = 1; $i <= 12; $i++) {
-        $styles[] = array('code' => 'W' . $i, 'name' => 'Style ' . $i, 'image' => array('url' => $plugin_url . 'assets/images/styles/w' . $i . '.jpg'));
+        $styles[] = array('name' => 'Style W' . $i, 'slug' => 'w' . $i, 'image' => array('url' => $plugin_url . 'assets/images/styles/w' . $i . '.jpg'));
     }
 }
 ?>
@@ -234,14 +234,14 @@ if (!$use_acf) {
                 if (!empty($styles)) {
                     foreach ($styles as $style):
                         $image_url = isset($style['image']['url']) ? $style['image']['url'] : '';
-                        $code = isset($style['code']) ? $style['code'] : '';
-                        $name = isset($style['name']) ? $style['name'] : $code;
+                        $slug = isset($style['slug']) ? $style['slug'] : '';
+                        $name = isset($style['name']) ? $style['name'] : '';
 
                         // Get availability data (array of type slugs)
                         $available_types = isset($style['available_types']) ? $style['available_types'] : array();
                     ?>
                     <div class="image-card style-card"
-                         data-style="<?php echo esc_attr($code); ?>"
+                         data-style="<?php echo esc_attr($slug); ?>"
                          data-available-types="<?php echo esc_attr(json_encode($available_types)); ?>">
                         <div class="card-image">
                             <?php if ($image_url): ?>
@@ -255,11 +255,11 @@ if (!$use_acf) {
                 } else {
                     // Fallback to W1-W12 if no styles defined
                     for ($i = 1; $i <= 12; $i++): ?>
-                    <div class="image-card style-card" data-style="W<?php echo $i; ?>">
+                    <div class="image-card style-card" data-style="w<?php echo $i; ?>">
                         <div class="card-image">
                             <img src="<?php echo $plugin_url; ?>assets/images/styles/w<?php echo $i; ?>.jpg" alt="Style W<?php echo $i; ?>">
                         </div>
-                        <h3>W<?php echo $i; ?></h3>
+                        <h3>Style W<?php echo $i; ?></h3>
                     </div>
                     <?php endfor;
                 }

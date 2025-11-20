@@ -166,17 +166,18 @@
             "button_label": "Add Style",
             "sub_fields": [
                 {
-                    "key": "field_style_code",
-                    "label": "Code",
-                    "name": "code",
+                    "key": "field_style_name",
+                    "label": "Name",
+                    "name": "name",
                     "type": "text",
                     "required": 1
                 },
                 {
-                    "key": "field_style_name",
-                    "label": "Name",
-                    "name": "name",
-                    "type": "text"
+                    "key": "field_style_slug",
+                    "label": "Slug",
+                    "name": "slug",
+                    "type": "text",
+                    "required": 1
                 },
                 {
                     "key": "field_style_image",
@@ -396,5 +397,5 @@
     "style": "default",
     "label_placement": "top",
     "instruction_placement": "label",
-    "modified": 1732114800
+    "modified": 1732115000
 }
