@@ -1,0 +1,609 @@
+{
+    "key": "group_quotation_settings",
+    "title": "Quotation Form Settings",
+    "fields": [
+        {
+            "key": "field_tab_categories",
+            "label": "Product Categories",
+            "name": "",
+            "type": "tab",
+            "placement": "left"
+        },
+        {
+            "key": "field_product_categories",
+            "label": "Product Categories",
+            "name": "product_categories",
+            "type": "repeater",
+            "layout": "block",
+            "button_label": "Add Category",
+            "sub_fields": [
+                {
+                    "key": "field_category_name",
+                    "label": "Category Name",
+                    "name": "name",
+                    "type": "text",
+                    "required": 1,
+                    "placeholder": "e.g., Windows"
+                },
+                {
+                    "key": "field_category_slug",
+                    "label": "Slug",
+                    "name": "slug",
+                    "type": "text",
+                    "required": 1,
+                    "placeholder": "e.g., windows"
+                },
+                {
+                    "key": "field_category_image",
+                    "label": "Image",
+                    "name": "image",
+                    "type": "image",
+                    "return_format": "array",
+                    "preview_size": "medium"
+                },
+                {
+                    "key": "field_category_order",
+                    "label": "Order",
+                    "name": "order",
+                    "type": "number",
+                    "default_value": 1
+                }
+            ]
+        },
+        {
+            "key": "field_tab_window_types",
+            "label": "Window Types",
+            "name": "",
+            "type": "tab",
+            "placement": "left"
+        },
+        {
+            "key": "field_window_types",
+            "label": "Window Types",
+            "name": "window_types",
+            "type": "repeater",
+            "layout": "block",
+            "button_label": "Add Window Type",
+            "sub_fields": [
+                {
+                    "key": "field_window_type_name",
+                    "label": "Type Name",
+                    "name": "name",
+                    "type": "text",
+                    "required": 1,
+                    "placeholder": "e.g., Casement Windows"
+                },
+                {
+                    "key": "field_window_type_slug",
+                    "label": "Slug",
+                    "name": "slug",
+                    "type": "text",
+                    "required": 1,
+                    "placeholder": "e.g., casement"
+                },
+                {
+                    "key": "field_window_type_image",
+                    "label": "Image",
+                    "name": "image",
+                    "type": "image",
+                    "return_format": "array",
+                    "preview_size": "medium"
+                },
+                {
+                    "key": "field_window_requires_material",
+                    "label": "Requires Material Selection",
+                    "name": "requires_material",
+                    "type": "true_false",
+                    "default_value": 1,
+                    "ui": 1
+                },
+                {
+                    "key": "field_window_material_type",
+                    "label": "Material Type",
+                    "name": "material_type",
+                    "type": "select",
+                    "choices": {
+                        "standard": "Standard",
+                        "none": "None"
+                    },
+                    "default_value": "standard",
+                    "conditional_logic": [
+                        [
+                            {
+                                "field": "field_window_requires_material",
+                                "operator": "==",
+                                "value": "1"
+                            }
+                        ]
+                    ]
+                },
+                {
+                    "key": "field_window_type_order",
+                    "label": "Order",
+                    "name": "order",
+                    "type": "number",
+                    "default_value": 1
+                }
+            ]
+        },
+        {
+            "key": "field_tab_door_types",
+            "label": "Door Types",
+            "name": "",
+            "type": "tab",
+            "placement": "left"
+        },
+        {
+            "key": "field_door_types",
+            "label": "Door Types",
+            "name": "door_types",
+            "type": "repeater",
+            "layout": "block",
+            "button_label": "Add Door Type",
+            "sub_fields": [
+                {
+                    "key": "field_door_type_name",
+                    "label": "Type Name",
+                    "name": "name",
+                    "type": "text",
+                    "required": 1,
+                    "placeholder": "e.g., French Doors"
+                },
+                {
+                    "key": "field_door_type_slug",
+                    "label": "Slug",
+                    "name": "slug",
+                    "type": "text",
+                    "required": 1,
+                    "placeholder": "e.g., french"
+                },
+                {
+                    "key": "field_door_type_image",
+                    "label": "Image",
+                    "name": "image",
+                    "type": "image",
+                    "return_format": "array",
+                    "preview_size": "medium"
+                },
+                {
+                    "key": "field_door_requires_material",
+                    "label": "Requires Material Selection",
+                    "name": "requires_material",
+                    "type": "true_false",
+                    "default_value": 1,
+                    "ui": 1
+                },
+                {
+                    "key": "field_door_material_type",
+                    "label": "Material Type",
+                    "name": "material_type",
+                    "type": "select",
+                    "choices": {
+                        "standard": "Standard",
+                        "doorco": "DoorCo",
+                        "none": "None"
+                    },
+                    "default_value": "standard",
+                    "conditional_logic": [
+                        [
+                            {
+                                "field": "field_door_requires_material",
+                                "operator": "==",
+                                "value": "1"
+                            }
+                        ]
+                    ]
+                },
+                {
+                    "key": "field_door_type_order",
+                    "label": "Order",
+                    "name": "order",
+                    "type": "number",
+                    "default_value": 1
+                }
+            ]
+        },
+        {
+            "key": "field_tab_bay_types",
+            "label": "Bay Window Types",
+            "name": "",
+            "type": "tab",
+            "placement": "left"
+        },
+        {
+            "key": "field_bay_types",
+            "label": "Bay Window Types",
+            "name": "bay_types",
+            "type": "repeater",
+            "layout": "block",
+            "button_label": "Add Bay Type",
+            "sub_fields": [
+                {
+                    "key": "field_bay_type_name",
+                    "label": "Type Name",
+                    "name": "name",
+                    "type": "text",
+                    "required": 1,
+                    "placeholder": "e.g., Casement Bays"
+                },
+                {
+                    "key": "field_bay_type_slug",
+                    "label": "Slug",
+                    "name": "slug",
+                    "type": "text",
+                    "required": 1,
+                    "placeholder": "e.g., casement-bays"
+                },
+                {
+                    "key": "field_bay_type_image",
+                    "label": "Image",
+                    "name": "image",
+                    "type": "image",
+                    "return_format": "array",
+                    "preview_size": "medium"
+                },
+                {
+                    "key": "field_bay_requires_material",
+                    "label": "Requires Material Selection",
+                    "name": "requires_material",
+                    "type": "true_false",
+                    "default_value": 1,
+                    "ui": 1
+                },
+                {
+                    "key": "field_bay_material_type",
+                    "label": "Material Type",
+                    "name": "material_type",
+                    "type": "select",
+                    "choices": {
+                        "standard": "Standard",
+                        "none": "None"
+                    },
+                    "default_value": "standard",
+                    "conditional_logic": [
+                        [
+                            {
+                                "field": "field_bay_requires_material",
+                                "operator": "==",
+                                "value": "1"
+                            }
+                        ]
+                    ]
+                },
+                {
+                    "key": "field_bay_type_order",
+                    "label": "Order",
+                    "name": "order",
+                    "type": "number",
+                    "default_value": 1
+                }
+            ]
+        },
+        {
+            "key": "field_tab_materials",
+            "label": "Materials",
+            "name": "",
+            "type": "tab",
+            "placement": "left"
+        },
+        {
+            "key": "field_standard_materials",
+            "label": "Standard Materials",
+            "name": "standard_materials",
+            "type": "repeater",
+            "layout": "block",
+            "button_label": "Add Material",
+            "sub_fields": [
+                {
+                    "key": "field_std_material_name",
+                    "label": "Material Name",
+                    "name": "name",
+                    "type": "text",
+                    "required": 1,
+                    "placeholder": "e.g., PVCu Chamfered"
+                },
+                {
+                    "key": "field_std_material_slug",
+                    "label": "Slug",
+                    "name": "slug",
+                    "type": "text",
+                    "required": 1,
+                    "placeholder": "e.g., pvcu-chamfered"
+                },
+                {
+                    "key": "field_std_material_image",
+                    "label": "Image",
+                    "name": "image",
+                    "type": "image",
+                    "return_format": "array",
+                    "preview_size": "medium"
+                },
+                {
+                    "key": "field_std_material_order",
+                    "label": "Order",
+                    "name": "order",
+                    "type": "number",
+                    "default_value": 1
+                }
+            ]
+        },
+        {
+            "key": "field_doorco_materials",
+            "label": "DoorCo Materials",
+            "name": "doorco_materials",
+            "type": "repeater",
+            "layout": "block",
+            "button_label": "Add DoorCo Material",
+            "sub_fields": [
+                {
+                    "key": "field_doorco_material_name",
+                    "label": "Material Name",
+                    "name": "name",
+                    "type": "text",
+                    "required": 1,
+                    "placeholder": "e.g., Traditional"
+                },
+                {
+                    "key": "field_doorco_material_slug",
+                    "label": "Slug",
+                    "name": "slug",
+                    "type": "text",
+                    "required": 1,
+                    "placeholder": "e.g., traditional"
+                },
+                {
+                    "key": "field_doorco_material_image",
+                    "label": "Image",
+                    "name": "image",
+                    "type": "image",
+                    "return_format": "array",
+                    "preview_size": "medium"
+                },
+                {
+                    "key": "field_doorco_material_order",
+                    "label": "Order",
+                    "name": "order",
+                    "type": "number",
+                    "default_value": 1
+                }
+            ]
+        },
+        {
+            "key": "field_tab_styles",
+            "label": "Styles",
+            "name": "",
+            "type": "tab",
+            "placement": "left"
+        },
+        {
+            "key": "field_styles",
+            "label": "Configuration Styles",
+            "name": "styles",
+            "type": "repeater",
+            "layout": "block",
+            "button_label": "Add Style",
+            "sub_fields": [
+                {
+                    "key": "field_style_code",
+                    "label": "Style Code",
+                    "name": "code",
+                    "type": "text",
+                    "required": 1,
+                    "placeholder": "e.g., W1"
+                },
+                {
+                    "key": "field_style_name",
+                    "label": "Style Name",
+                    "name": "name",
+                    "type": "text",
+                    "placeholder": "e.g., Single Panel"
+                },
+                {
+                    "key": "field_style_image",
+                    "label": "Style Diagram",
+                    "name": "image",
+                    "type": "image",
+                    "return_format": "array",
+                    "preview_size": "medium"
+                },
+                {
+                    "key": "field_style_order",
+                    "label": "Order",
+                    "name": "order",
+                    "type": "number",
+                    "default_value": 1
+                }
+            ]
+        },
+        {
+            "key": "field_tab_colours",
+            "label": "Colours",
+            "name": "",
+            "type": "tab",
+            "placement": "left"
+        },
+        {
+            "key": "field_colours",
+            "label": "Available Colours",
+            "name": "colours",
+            "type": "repeater",
+            "layout": "table",
+            "button_label": "Add Colour",
+            "sub_fields": [
+                {
+                    "key": "field_colour_name",
+                    "label": "Colour Name",
+                    "name": "name",
+                    "type": "text",
+                    "required": 1,
+                    "placeholder": "e.g., White"
+                },
+                {
+                    "key": "field_colour_category",
+                    "label": "Category",
+                    "name": "category",
+                    "type": "select",
+                    "choices": {
+                        "Base": "Base",
+                        "Colour": "Colour"
+                    },
+                    "default_value": "Colour"
+                },
+                {
+                    "key": "field_colour_hex",
+                    "label": "Hex Code",
+                    "name": "hex",
+                    "type": "color_picker",
+                    "default_value": "#FFFFFF"
+                }
+            ]
+        },
+        {
+            "key": "field_tab_options",
+            "label": "Form Options",
+            "name": "",
+            "type": "tab",
+            "placement": "left"
+        },
+        {
+            "key": "field_cill_options",
+            "label": "Cill Options",
+            "name": "cill_options",
+            "type": "repeater",
+            "layout": "table",
+            "button_label": "Add Option",
+            "sub_fields": [
+                {
+                    "key": "field_cill_label",
+                    "label": "Label",
+                    "name": "label",
+                    "type": "text",
+                    "required": 1
+                },
+                {
+                    "key": "field_cill_value",
+                    "label": "Value",
+                    "name": "value",
+                    "type": "text",
+                    "required": 1
+                }
+            ]
+        },
+        {
+            "key": "field_glazing_types",
+            "label": "Glazing Types",
+            "name": "glazing_types",
+            "type": "repeater",
+            "layout": "table",
+            "button_label": "Add Type",
+            "sub_fields": [
+                {
+                    "key": "field_glazing_label",
+                    "label": "Label",
+                    "name": "label",
+                    "type": "text",
+                    "required": 1
+                },
+                {
+                    "key": "field_glazing_value",
+                    "label": "Value",
+                    "name": "value",
+                    "type": "text",
+                    "required": 1
+                }
+            ]
+        },
+        {
+            "key": "field_glazing_features",
+            "label": "Glazing Features",
+            "name": "glazing_features",
+            "type": "repeater",
+            "layout": "table",
+            "button_label": "Add Feature",
+            "sub_fields": [
+                {
+                    "key": "field_feature_label",
+                    "label": "Label",
+                    "name": "label",
+                    "type": "text",
+                    "required": 1
+                },
+                {
+                    "key": "field_feature_value",
+                    "label": "Value",
+                    "name": "value",
+                    "type": "text",
+                    "required": 1
+                }
+            ]
+        },
+        {
+            "key": "field_hardware_colours",
+            "label": "Hardware Colours",
+            "name": "hardware_colours",
+            "type": "repeater",
+            "layout": "table",
+            "button_label": "Add Colour",
+            "sub_fields": [
+                {
+                    "key": "field_hardware_label",
+                    "label": "Label",
+                    "name": "label",
+                    "type": "text",
+                    "required": 1
+                },
+                {
+                    "key": "field_hardware_value",
+                    "label": "Value",
+                    "name": "value",
+                    "type": "text",
+                    "required": 1
+                }
+            ]
+        },
+        {
+            "key": "field_tab_email",
+            "label": "Email Settings",
+            "name": "",
+            "type": "tab",
+            "placement": "left"
+        },
+        {
+            "key": "field_email_recipients",
+            "label": "Email Recipients",
+            "name": "email_recipients",
+            "type": "textarea",
+            "rows": 3,
+            "instructions": "Enter email addresses (one per line) to receive quotation notifications"
+        },
+        {
+            "key": "field_email_subject",
+            "label": "Email Subject",
+            "name": "email_subject",
+            "type": "text",
+            "default_value": "New Quotation Request"
+        },
+        {
+            "key": "field_send_customer_confirmation",
+            "label": "Send Customer Confirmation",
+            "name": "send_customer_confirmation",
+            "type": "true_false",
+            "default_value": 1,
+            "ui": 1
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "options_page",
+                "operator": "==",
+                "value": "quotation-form-settings"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label"
+}

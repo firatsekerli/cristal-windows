@@ -1,0 +1,246 @@
+{
+    "key": "group_quotation_submission",
+    "title": "Quotation Submission Details",
+    "fields": [
+        {
+            "key": "field_tab_customer",
+            "label": "Customer Information",
+            "name": "",
+            "type": "tab",
+            "placement": "top"
+        },
+        {
+            "key": "field_customer_name",
+            "label": "Customer Name",
+            "name": "customer_name",
+            "type": "text",
+            "required": 1
+        },
+        {
+            "key": "field_customer_email",
+            "label": "Customer Email",
+            "name": "customer_email",
+            "type": "email",
+            "required": 1
+        },
+        {
+            "key": "field_customer_phone",
+            "label": "Customer Phone",
+            "name": "customer_phone",
+            "type": "text",
+            "required": 1
+        },
+        {
+            "key": "field_customer_address",
+            "label": "Customer Address",
+            "name": "customer_address",
+            "type": "textarea",
+            "rows": 3
+        },
+        {
+            "key": "field_customer_postcode",
+            "label": "Postcode",
+            "name": "customer_postcode",
+            "type": "text"
+        },
+        {
+            "key": "field_preferred_contact",
+            "label": "Preferred Contact Method",
+            "name": "preferred_contact",
+            "type": "select",
+            "choices": {
+                "email": "Email",
+                "phone": "Phone",
+                "either": "Either"
+            },
+            "default_value": "email"
+        },
+        {
+            "key": "field_additional_notes",
+            "label": "Additional Notes",
+            "name": "additional_notes",
+            "type": "textarea",
+            "rows": 4
+        },
+        {
+            "key": "field_submission_date",
+            "label": "Submission Date",
+            "name": "submission_date",
+            "type": "date_time_picker",
+            "display_format": "d/m/Y g:i a",
+            "return_format": "Y-m-d H:i:s",
+            "required": 1
+        },
+        {
+            "key": "field_tab_items",
+            "label": "Basket Items",
+            "name": "",
+            "type": "tab",
+            "placement": "top"
+        },
+        {
+            "key": "field_basket_items",
+            "label": "Items",
+            "name": "basket_items",
+            "type": "repeater",
+            "layout": "block",
+            "button_label": "Add Item",
+            "sub_fields": [
+                {
+                    "key": "field_item_category",
+                    "label": "Category",
+                    "name": "category",
+                    "type": "text"
+                },
+                {
+                    "key": "field_item_type",
+                    "label": "Product Type",
+                    "name": "type_name",
+                    "type": "text"
+                },
+                {
+                    "key": "field_item_material",
+                    "label": "Material",
+                    "name": "material_name",
+                    "type": "text"
+                },
+                {
+                    "key": "field_item_style",
+                    "label": "Style",
+                    "name": "style_name",
+                    "type": "text"
+                },
+                {
+                    "key": "field_item_width",
+                    "label": "Width (mm)",
+                    "name": "width",
+                    "type": "number"
+                },
+                {
+                    "key": "field_item_height",
+                    "label": "Height (mm)",
+                    "name": "height",
+                    "type": "number"
+                },
+                {
+                    "key": "field_item_cill",
+                    "label": "Cill",
+                    "name": "cill",
+                    "type": "text"
+                },
+                {
+                    "key": "field_item_inside_colour",
+                    "label": "Inside Colour",
+                    "name": "inside_colour",
+                    "type": "text"
+                },
+                {
+                    "key": "field_item_outside_colour",
+                    "label": "Outside Colour",
+                    "name": "outside_colour",
+                    "type": "text"
+                },
+                {
+                    "key": "field_item_glazing_type",
+                    "label": "Glazing Type",
+                    "name": "glazing_type",
+                    "type": "text"
+                },
+                {
+                    "key": "field_item_glazing_features",
+                    "label": "Glazing Features",
+                    "name": "glazing_features",
+                    "type": "text"
+                },
+                {
+                    "key": "field_item_hardware_colour",
+                    "label": "Hardware Colour",
+                    "name": "hardware_colour",
+                    "type": "text"
+                },
+                {
+                    "key": "field_item_location",
+                    "label": "Location",
+                    "name": "location",
+                    "type": "text"
+                }
+            ]
+        },
+        {
+            "key": "field_tab_quote",
+            "label": "Quote Management",
+            "name": "",
+            "type": "tab",
+            "placement": "top"
+        },
+        {
+            "key": "field_quote_status",
+            "label": "Quote Status",
+            "name": "quote_status",
+            "type": "select",
+            "choices": {
+                "pending": "Pending Review",
+                "in_progress": "In Progress",
+                "quoted": "Quote Sent",
+                "accepted": "Accepted",
+                "rejected": "Rejected",
+                "completed": "Completed"
+            },
+            "default_value": "pending"
+        },
+        {
+            "key": "field_quote_price",
+            "label": "Quote Price (£)",
+            "name": "quote_price",
+            "type": "number",
+            "prepend": "£"
+        },
+        {
+            "key": "field_quote_sent_date",
+            "label": "Quote Sent Date",
+            "name": "quote_sent_date",
+            "type": "date_picker",
+            "display_format": "d/m/Y",
+            "return_format": "Y-m-d"
+        },
+        {
+            "key": "field_follow_up_date",
+            "label": "Follow-up Date",
+            "name": "follow_up_date",
+            "type": "date_picker",
+            "display_format": "d/m/Y",
+            "return_format": "Y-m-d"
+        },
+        {
+            "key": "field_admin_notes",
+            "label": "Admin Notes",
+            "name": "admin_notes",
+            "type": "wysiwyg",
+            "tabs": "all",
+            "toolbar": "basic",
+            "media_upload": 0
+        },
+        {
+            "key": "field_quote_pdf",
+            "label": "Quote PDF",
+            "name": "quote_pdf",
+            "type": "file",
+            "return_format": "array",
+            "mime_types": "pdf"
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "quotation"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label"
+}

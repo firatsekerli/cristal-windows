@@ -55,6 +55,9 @@ class Quotation_Form_Plugin {
      * Initialize hooks
      */
     private function init_hooks() {
+        add_action('acf/init', array($this, 'register_acf_options_page'));
+        add_filter('acf/settings/save_json', array($this, 'acf_json_save_point'));
+        add_filter('acf/settings/load_json', array($this, 'acf_json_load_point'));
         add_action('wp_ajax_submit_quotation_form', array($this, 'handle_form_submission'));
         add_action('wp_ajax_nopriv_submit_quotation_form', array($this, 'handle_form_submission'));
         add_shortcode('quotation_form', array($this, 'render_form_shortcode'));
@@ -65,6 +68,39 @@ class Quotation_Form_Plugin {
      */
     private function load_dependencies() {
         // Load additional files if needed
+    }
+
+    /**
+     * Register ACF options page
+     */
+    public function register_acf_options_page() {
+        if (function_exists('acf_add_options_page')) {
+            acf_add_options_page(array(
+                'page_title'  => 'Quotation Form Settings',
+                'menu_title'  => 'Quote Settings',
+                'menu_slug'   => 'quotation-form-settings',
+                'capability'  => 'manage_options',
+                'icon_url'    => 'dashicons-feedback',
+                'position'    => 58,
+                'redirect'    => false
+            ));
+        }
+    }
+
+    /**
+     * Set ACF JSON save point
+     */
+    public function acf_json_save_point($path) {
+        return QUOTATION_FORM_PLUGIN_DIR . 'acf-json';
+    }
+
+    /**
+     * Set ACF JSON load point
+     */
+    public function acf_json_load_point($paths) {
+        unset($paths[0]);
+        $paths[] = QUOTATION_FORM_PLUGIN_DIR . 'acf-json';
+        return $paths;
     }
 
     /**
@@ -88,12 +124,37 @@ class Quotation_Form_Plugin {
             true
         );
 
+        // Get ACF config data (with fallbacks to hardcoded defaults)
+        $config = array(
+            'categories' => $this->get_acf_field_or_default('product_categories', 'option'),
+            'windowTypes' => $this->get_acf_field_or_default('window_types', 'option'),
+            'doorTypes' => $this->get_acf_field_or_default('door_types', 'option'),
+            'bayTypes' => $this->get_acf_field_or_default('bay_types', 'option'),
+            'standardMaterials' => $this->get_acf_field_or_default('standard_materials', 'option'),
+            'doorcoMaterials' => $this->get_acf_field_or_default('doorco_materials', 'option'),
+            'styles' => $this->get_acf_field_or_default('styles', 'option'),
+            'colours' => $this->get_acf_field_or_default('colours', 'option'),
+            'useAcfData' => function_exists('get_field') && get_field('product_categories', 'option') ? true : false
+        );
+
         // Localize script for AJAX
         wp_localize_script('quotation-form-js', 'quotationFormAjax', array(
             'ajaxurl' => admin_url('admin-ajax.php'),
             'nonce' => wp_create_nonce('quotation_form_nonce'),
-            'pluginUrl' => QUOTATION_FORM_PLUGIN_URL
+            'pluginUrl' => QUOTATION_FORM_PLUGIN_URL,
+            'config' => $config
         ));
+    }
+
+    /**
+     * Get ACF field or return empty array
+     */
+    private function get_acf_field_or_default($field_name, $post_id) {
+        if (function_exists('get_field')) {
+            $value = get_field($field_name, $post_id);
+            return $value ? $value : array();
+        }
+        return array();
     }
 
     /**
@@ -125,23 +186,77 @@ class Quotation_Form_Plugin {
         // Sanitize customer data
         $customer_data = array_map('sanitize_text_field', $customer_data);
 
-        // Process the submission
-        $this->send_email_notification($basket_items, $customer_data);
+        // Save to quotation CPT
+        $post_id = $this->save_to_quotation_cpt($basket_items, $customer_data);
 
-        // Optional: Save to database
-        // $this->save_to_database($basket_items, $customer_data);
+        // Send email notification
+        $this->send_email_notification($basket_items, $customer_data, $post_id);
 
         wp_send_json_success(array(
-            'message' => 'Quotation request submitted successfully!'
+            'message' => 'Quotation request submitted successfully!',
+            'quotation_id' => $post_id
         ));
+    }
+
+    /**
+     * Save submission to quotation custom post type
+     */
+    private function save_to_quotation_cpt($basket_items, $customer_data) {
+        // Create post in quotation CPT
+        $post_id = wp_insert_post(array(
+            'post_title'  => $customer_data['customer_name'] . ' - ' . date('d M Y'),
+            'post_type'   => 'quotation',
+            'post_status' => 'publish',
+        ));
+
+        if (!$post_id || is_wp_error($post_id)) {
+            return false;
+        }
+
+        // Save customer data to ACF fields (if ACF is available)
+        if (function_exists('update_field')) {
+            update_field('customer_name', $customer_data['customer_name'], $post_id);
+            update_field('customer_email', $customer_data['customer_email'], $post_id);
+            update_field('customer_phone', $customer_data['customer_phone'], $post_id);
+            update_field('customer_address', isset($customer_data['customer_address']) ? $customer_data['customer_address'] : '', $post_id);
+            update_field('customer_postcode', isset($customer_data['customer_postcode']) ? $customer_data['customer_postcode'] : '', $post_id);
+            update_field('preferred_contact', isset($customer_data['preferred_contact']) ? $customer_data['preferred_contact'] : 'email', $post_id);
+            update_field('additional_notes', isset($customer_data['additional_notes']) ? $customer_data['additional_notes'] : '', $post_id);
+            update_field('submission_date', current_time('Y-m-d H:i:s'), $post_id);
+
+            // Save basket items
+            update_field('basket_items', $basket_items, $post_id);
+
+            // Set default quote status
+            update_field('quote_status', 'pending', $post_id);
+        } else {
+            // Fallback: Save as post meta if ACF not available
+            update_post_meta($post_id, 'customer_data', $customer_data);
+            update_post_meta($post_id, 'basket_items', $basket_items);
+            update_post_meta($post_id, 'submission_date', current_time('mysql'));
+        }
+
+        return $post_id;
     }
 
     /**
      * Send email notification
      */
-    private function send_email_notification($basket_items, $customer_data) {
-        $admin_email = get_option('admin_email');
-        $subject = 'New Quotation Request from ' . $customer_data['customer_name'];
+    private function send_email_notification($basket_items, $customer_data, $post_id = null) {
+        // Get email settings from ACF or use defaults
+        $email_recipients = function_exists('get_field') ? get_field('email_recipients', 'option') : '';
+        $email_subject = function_exists('get_field') ? get_field('email_subject', 'option') : '';
+        $send_customer_confirmation = function_exists('get_field') ? get_field('send_customer_confirmation', 'option') : true;
+
+        // Parse recipients (one per line)
+        if (!empty($email_recipients)) {
+            $recipients = array_filter(array_map('trim', explode("\n", $email_recipients)));
+            $admin_email = $recipients;
+        } else {
+            $admin_email = get_option('admin_email');
+        }
+
+        $subject = !empty($email_subject) ? $email_subject : 'New Quotation Request from ' . $customer_data['customer_name'];
 
         $message = "New quotation request received:\n\n";
         $message .= "=== CUSTOMER DETAILS ===\n\n";
@@ -181,11 +296,17 @@ class Quotation_Form_Plugin {
         $message .= "\n---\nThis email was sent from the quotation form on " . get_bloginfo('name') . "\n";
         $message .= "Submitted: " . current_time('mysql') . "\n";
 
+        // Add link to view quotation in admin (if post_id provided)
+        if ($post_id) {
+            $edit_link = admin_url('post.php?post=' . $post_id . '&action=edit');
+            $message .= "\nView quotation in admin: " . $edit_link . "\n";
+        }
+
         // Send email
         wp_mail($admin_email, $subject, $message);
 
-        // Optional: Send confirmation email to customer
-        if (!empty($customer_data['customer_email'])) {
+        // Send confirmation email to customer (if enabled)
+        if ($send_customer_confirmation && !empty($customer_data['customer_email'])) {
             $customer_subject = 'Thank you for your quotation request';
             $customer_message = "Dear " . $customer_data['customer_name'] . ",\n\n";
             $customer_message .= "Thank you for requesting a quotation. We have received your request and will get back to you shortly.\n\n";
@@ -197,26 +318,6 @@ class Quotation_Form_Plugin {
         }
     }
 
-    /**
-     * Save to database (optional)
-     * Uncomment and customize if you want to save submissions to database
-     */
-    private function save_to_database($basket_items, $customer_data) {
-        // Example: Save as custom post type
-        /*
-        $post_id = wp_insert_post(array(
-            'post_title' => 'Quote: ' . $customer_data['customer_name'] . ' - ' . date('Y-m-d H:i'),
-            'post_type' => 'quotation_submission',
-            'post_status' => 'publish'
-        ));
-
-        if ($post_id) {
-            update_post_meta($post_id, 'customer_data', $customer_data);
-            update_post_meta($post_id, 'basket_items', $basket_items);
-            update_post_meta($post_id, 'submission_date', current_time('mysql'));
-        }
-        */
-    }
 }
 
 /**
