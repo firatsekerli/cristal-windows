@@ -61,6 +61,11 @@ class Quotation_Form_Plugin {
         add_action('wp_ajax_submit_quotation_form', array($this, 'handle_form_submission'));
         add_action('wp_ajax_nopriv_submit_quotation_form', array($this, 'handle_form_submission'));
         add_shortcode('quotation_form', array($this, 'render_form_shortcode'));
+
+        // Populate select field choices dynamically
+        add_filter('acf/load_field/key=field_std_material_types', array($this, 'populate_type_choices'));
+        add_filter('acf/load_field/key=field_doorco_material_types', array($this, 'populate_type_choices'));
+        add_filter('acf/load_field/key=field_style_types', array($this, 'populate_type_choices'));
     }
 
     /**
@@ -85,6 +90,37 @@ class Quotation_Form_Plugin {
                 'redirect'    => false
             ));
         }
+    }
+
+    /**
+     * Populate product type choices for materials and styles
+     */
+    public function populate_type_choices($field) {
+        $field['choices'] = array();
+
+        // Get all product types
+        if (function_exists('get_field')) {
+            $product_types = get_field('product_types', 'option');
+            if (!empty($product_types) && is_array($product_types)) {
+                foreach ($product_types as $type) {
+                    $slug = isset($type['slug']) ? $type['slug'] : '';
+                    $name = isset($type['name']) ? $type['name'] : '';
+                    $category = isset($type['category']) ? $type['category'] : '';
+
+                    if ($slug && $name) {
+                        // Format: "Casement Windows (Windows)"
+                        $display_name = $name;
+                        if ($category) {
+                            $category_label = ucfirst(str_replace('-', ' ', $category));
+                            $display_name .= ' (' . $category_label . ')';
+                        }
+                        $field['choices'][$slug] = $display_name;
+                    }
+                }
+            }
+        }
+
+        return $field;
     }
 
     /**
@@ -125,18 +161,23 @@ class Quotation_Form_Plugin {
         );
 
         // Get ACF config data (with fallbacks to hardcoded defaults)
+        $product_types = $this->get_acf_field_or_default('product_types', 'option');
         $standard_materials = $this->get_acf_field_or_default('standard_materials', 'option');
         $doorco_materials = $this->get_acf_field_or_default('doorco_materials', 'option');
         $styles = $this->get_acf_field_or_default('styles', 'option');
 
+        // Group types by category for backwards compatibility
+        $types_by_category = $this->group_types_by_category($product_types);
+
         $config = array(
             'categories' => $this->get_acf_field_or_default('product_categories', 'option'),
-            'windowTypes' => $this->get_acf_field_or_default('window_types', 'option'),
-            'doorTypes' => $this->get_acf_field_or_default('door_types', 'option'),
-            'bayTypes' => $this->get_acf_field_or_default('bay_types', 'option'),
-            'standardMaterials' => $this->process_items_with_availability($standard_materials),
-            'doorcoMaterials' => $this->process_items_with_availability($doorco_materials),
-            'styles' => $this->process_items_with_availability($styles),
+            'productTypes' => $product_types,
+            'windowTypes' => $types_by_category['windows'],
+            'doorTypes' => $types_by_category['doors'],
+            'bayTypes' => $types_by_category['bay-windows'],
+            'standardMaterials' => $standard_materials,
+            'doorcoMaterials' => $doorco_materials,
+            'styles' => $styles,
             'colours' => $this->get_acf_field_or_default('colours', 'option'),
             'useAcfData' => function_exists('get_field') && get_field('product_categories', 'option') ? true : false
         );
@@ -162,35 +203,27 @@ class Quotation_Form_Plugin {
     }
 
     /**
-     * Process materials/styles to include availability data
+     * Group product types by category
      */
-    private function process_items_with_availability($items) {
-        if (empty($items)) {
-            return array();
+    private function group_types_by_category($product_types) {
+        $grouped = array(
+            'windows' => array(),
+            'doors' => array(),
+            'bay-windows' => array()
+        );
+
+        if (empty($product_types) || !is_array($product_types)) {
+            return $grouped;
         }
 
-        $processed = array();
-        foreach ($items as $item) {
-            // Get availability data
-            $available_categories = isset($item['available_categories']) ? $item['available_categories'] : array('windows', 'doors', 'bay-windows');
-            $specific_types = isset($item['specific_types']) ? $item['specific_types'] : '';
-
-            // Parse specific types (one per line)
-            $specific_types_array = array();
-            if (!empty($specific_types)) {
-                $specific_types_array = array_filter(array_map('trim', explode("\n", $specific_types)));
+        foreach ($product_types as $type) {
+            $category = isset($type['category']) ? $type['category'] : 'windows';
+            if (isset($grouped[$category])) {
+                $grouped[$category][] = $type;
             }
-
-            // Add availability metadata to the item
-            $item['availability'] = array(
-                'categories' => $available_categories,
-                'specificTypes' => $specific_types_array
-            );
-
-            $processed[] = $item;
         }
 
-        return $processed;
+        return $grouped;
     }
 
     /**

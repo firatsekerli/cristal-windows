@@ -14,6 +14,7 @@
             "label": "Product Categories",
             "name": "product_categories",
             "type": "repeater",
+            "instructions": "Drag rows to reorder categories",
             "layout": "block",
             "button_label": "Add Category",
             "sub_fields": [
@@ -31,6 +32,7 @@
                     "name": "slug",
                     "type": "text",
                     "required": 1,
+                    "instructions": "Must match: windows, doors, or bay-windows",
                     "placeholder": "e.g., windows"
                 },
                 {
@@ -40,33 +42,27 @@
                     "type": "image",
                     "return_format": "array",
                     "preview_size": "medium"
-                },
-                {
-                    "key": "field_category_order",
-                    "label": "Order",
-                    "name": "order",
-                    "type": "number",
-                    "default_value": 1
                 }
             ]
         },
         {
-            "key": "field_tab_window_types",
-            "label": "Window Types",
+            "key": "field_tab_types",
+            "label": "Types",
             "name": "",
             "type": "tab",
             "placement": "left"
         },
         {
-            "key": "field_window_types",
-            "label": "Window Types",
-            "name": "window_types",
+            "key": "field_product_types",
+            "label": "Product Types",
+            "name": "product_types",
             "type": "repeater",
+            "instructions": "All product types (windows, doors, bay windows). Drag rows to reorder.",
             "layout": "block",
-            "button_label": "Add Window Type",
+            "button_label": "Add Product Type",
             "sub_fields": [
                 {
-                    "key": "field_window_type_name",
+                    "key": "field_type_name",
                     "label": "Type Name",
                     "name": "name",
                     "type": "text",
@@ -74,15 +70,33 @@
                     "placeholder": "e.g., Casement Windows"
                 },
                 {
-                    "key": "field_window_type_slug",
+                    "key": "field_type_slug",
                     "label": "Slug",
                     "name": "slug",
                     "type": "text",
                     "required": 1,
+                    "instructions": "Lowercase, no spaces. e.g., casement",
                     "placeholder": "e.g., casement"
                 },
                 {
-                    "key": "field_window_type_image",
+                    "key": "field_type_category",
+                    "label": "Category",
+                    "name": "category",
+                    "type": "select",
+                    "required": 1,
+                    "instructions": "Which product category does this type belong to?",
+                    "choices": {
+                        "windows": "Windows",
+                        "doors": "Doors",
+                        "bay-windows": "Bay Windows"
+                    },
+                    "default_value": "windows",
+                    "allow_null": 0,
+                    "multiple": 0,
+                    "ui": 1
+                },
+                {
+                    "key": "field_type_image",
                     "label": "Image",
                     "name": "image",
                     "type": "image",
@@ -90,192 +104,35 @@
                     "preview_size": "medium"
                 },
                 {
-                    "key": "field_window_requires_material",
+                    "key": "field_type_requires_material",
                     "label": "Requires Material Selection",
                     "name": "requires_material",
                     "type": "true_false",
                     "default_value": 1,
-                    "ui": 1
+                    "ui": 1,
+                    "ui_on_text": "Yes",
+                    "ui_off_text": "No"
                 },
                 {
-                    "key": "field_window_material_type",
+                    "key": "field_type_material_type",
                     "label": "Material Type",
                     "name": "material_type",
                     "type": "select",
                     "choices": {
-                        "standard": "Standard",
+                        "standard": "Standard Materials",
+                        "doorco": "DoorCo Materials",
                         "none": "None"
                     },
                     "default_value": "standard",
                     "conditional_logic": [
                         [
                             {
-                                "field": "field_window_requires_material",
+                                "field": "field_type_requires_material",
                                 "operator": "==",
                                 "value": "1"
                             }
                         ]
                     ]
-                },
-                {
-                    "key": "field_window_type_order",
-                    "label": "Order",
-                    "name": "order",
-                    "type": "number",
-                    "default_value": 1
-                }
-            ]
-        },
-        {
-            "key": "field_tab_door_types",
-            "label": "Door Types",
-            "name": "",
-            "type": "tab",
-            "placement": "left"
-        },
-        {
-            "key": "field_door_types",
-            "label": "Door Types",
-            "name": "door_types",
-            "type": "repeater",
-            "layout": "block",
-            "button_label": "Add Door Type",
-            "sub_fields": [
-                {
-                    "key": "field_door_type_name",
-                    "label": "Type Name",
-                    "name": "name",
-                    "type": "text",
-                    "required": 1,
-                    "placeholder": "e.g., French Doors"
-                },
-                {
-                    "key": "field_door_type_slug",
-                    "label": "Slug",
-                    "name": "slug",
-                    "type": "text",
-                    "required": 1,
-                    "placeholder": "e.g., french"
-                },
-                {
-                    "key": "field_door_type_image",
-                    "label": "Image",
-                    "name": "image",
-                    "type": "image",
-                    "return_format": "array",
-                    "preview_size": "medium"
-                },
-                {
-                    "key": "field_door_requires_material",
-                    "label": "Requires Material Selection",
-                    "name": "requires_material",
-                    "type": "true_false",
-                    "default_value": 1,
-                    "ui": 1
-                },
-                {
-                    "key": "field_door_material_type",
-                    "label": "Material Type",
-                    "name": "material_type",
-                    "type": "select",
-                    "choices": {
-                        "standard": "Standard",
-                        "doorco": "DoorCo",
-                        "none": "None"
-                    },
-                    "default_value": "standard",
-                    "conditional_logic": [
-                        [
-                            {
-                                "field": "field_door_requires_material",
-                                "operator": "==",
-                                "value": "1"
-                            }
-                        ]
-                    ]
-                },
-                {
-                    "key": "field_door_type_order",
-                    "label": "Order",
-                    "name": "order",
-                    "type": "number",
-                    "default_value": 1
-                }
-            ]
-        },
-        {
-            "key": "field_tab_bay_types",
-            "label": "Bay Window Types",
-            "name": "",
-            "type": "tab",
-            "placement": "left"
-        },
-        {
-            "key": "field_bay_types",
-            "label": "Bay Window Types",
-            "name": "bay_types",
-            "type": "repeater",
-            "layout": "block",
-            "button_label": "Add Bay Type",
-            "sub_fields": [
-                {
-                    "key": "field_bay_type_name",
-                    "label": "Type Name",
-                    "name": "name",
-                    "type": "text",
-                    "required": 1,
-                    "placeholder": "e.g., Casement Bays"
-                },
-                {
-                    "key": "field_bay_type_slug",
-                    "label": "Slug",
-                    "name": "slug",
-                    "type": "text",
-                    "required": 1,
-                    "placeholder": "e.g., casement-bays"
-                },
-                {
-                    "key": "field_bay_type_image",
-                    "label": "Image",
-                    "name": "image",
-                    "type": "image",
-                    "return_format": "array",
-                    "preview_size": "medium"
-                },
-                {
-                    "key": "field_bay_requires_material",
-                    "label": "Requires Material Selection",
-                    "name": "requires_material",
-                    "type": "true_false",
-                    "default_value": 1,
-                    "ui": 1
-                },
-                {
-                    "key": "field_bay_material_type",
-                    "label": "Material Type",
-                    "name": "material_type",
-                    "type": "select",
-                    "choices": {
-                        "standard": "Standard",
-                        "none": "None"
-                    },
-                    "default_value": "standard",
-                    "conditional_logic": [
-                        [
-                            {
-                                "field": "field_bay_requires_material",
-                                "operator": "==",
-                                "value": "1"
-                            }
-                        ]
-                    ]
-                },
-                {
-                    "key": "field_bay_type_order",
-                    "label": "Order",
-                    "name": "order",
-                    "type": "number",
-                    "default_value": 1
                 }
             ]
         },
@@ -291,6 +148,7 @@
             "label": "Standard Materials",
             "name": "standard_materials",
             "type": "repeater",
+            "instructions": "Drag rows to reorder materials",
             "layout": "block",
             "button_label": "Add Material",
             "sub_fields": [
@@ -319,34 +177,18 @@
                     "preview_size": "medium"
                 },
                 {
-                    "key": "field_std_material_order",
-                    "label": "Order",
-                    "name": "order",
-                    "type": "number",
-                    "default_value": 1
-                },
-                {
-                    "key": "field_std_material_categories",
-                    "label": "Available for Categories",
-                    "name": "available_categories",
-                    "type": "checkbox",
-                    "instructions": "Select which product categories this material is available for",
-                    "choices": {
-                        "windows": "Windows",
-                        "doors": "Doors",
-                        "bay-windows": "Bay Windows"
-                    },
-                    "default_value": ["windows", "doors", "bay-windows"],
-                    "layout": "vertical"
-                },
-                {
-                    "key": "field_std_material_specific_types",
-                    "label": "Specific Product Types (Optional)",
-                    "name": "specific_types",
-                    "type": "textarea",
-                    "instructions": "Enter specific product type slugs (one per line) to limit availability. Leave empty to make available for all products in selected categories above. Example: casement\\nfrench",
-                    "rows": 3,
-                    "placeholder": "casement\nsliding-patio"
+                    "key": "field_std_material_types",
+                    "label": "Available for Product Types",
+                    "name": "available_types",
+                    "type": "select",
+                    "instructions": "Select which product types this material is available for. Leave empty for all types.",
+                    "choices": {},
+                    "default_value": [],
+                    "allow_null": 1,
+                    "multiple": 1,
+                    "ui": 1,
+                    "ajax": 0,
+                    "placeholder": "Select product types..."
                 }
             ]
         },
@@ -355,6 +197,7 @@
             "label": "DoorCo Materials",
             "name": "doorco_materials",
             "type": "repeater",
+            "instructions": "Drag rows to reorder materials",
             "layout": "block",
             "button_label": "Add DoorCo Material",
             "sub_fields": [
@@ -363,16 +206,14 @@
                     "label": "Material Name",
                     "name": "name",
                     "type": "text",
-                    "required": 1,
-                    "placeholder": "e.g., Traditional"
+                    "required": 1
                 },
                 {
                     "key": "field_doorco_material_slug",
                     "label": "Slug",
                     "name": "slug",
                     "type": "text",
-                    "required": 1,
-                    "placeholder": "e.g., traditional"
+                    "required": 1
                 },
                 {
                     "key": "field_doorco_material_image",
@@ -383,34 +224,18 @@
                     "preview_size": "medium"
                 },
                 {
-                    "key": "field_doorco_material_order",
-                    "label": "Order",
-                    "name": "order",
-                    "type": "number",
-                    "default_value": 1
-                },
-                {
-                    "key": "field_doorco_material_categories",
-                    "label": "Available for Categories",
-                    "name": "available_categories",
-                    "type": "checkbox",
-                    "instructions": "Select which product categories this material is available for",
-                    "choices": {
-                        "windows": "Windows",
-                        "doors": "Doors",
-                        "bay-windows": "Bay Windows"
-                    },
-                    "default_value": ["doors"],
-                    "layout": "vertical"
-                },
-                {
-                    "key": "field_doorco_material_specific_types",
-                    "label": "Specific Product Types (Optional)",
-                    "name": "specific_types",
-                    "type": "textarea",
-                    "instructions": "Enter specific product type slugs (one per line) to limit availability. Leave empty to make available for all products in selected categories above. Example: composite\\nfrench",
-                    "rows": 3,
-                    "placeholder": "composite\nfrench"
+                    "key": "field_doorco_material_types",
+                    "label": "Available for Product Types",
+                    "name": "available_types",
+                    "type": "select",
+                    "instructions": "Select which product types this material is available for. Leave empty for all types.",
+                    "choices": {},
+                    "default_value": [],
+                    "allow_null": 1,
+                    "multiple": 1,
+                    "ui": 1,
+                    "ajax": 0,
+                    "placeholder": "Select product types..."
                 }
             ]
         },
@@ -426,6 +251,7 @@
             "label": "Configuration Styles",
             "name": "styles",
             "type": "repeater",
+            "instructions": "Drag rows to reorder styles",
             "layout": "block",
             "button_label": "Add Style",
             "sub_fields": [
@@ -442,7 +268,7 @@
                     "label": "Style Name",
                     "name": "name",
                     "type": "text",
-                    "placeholder": "e.g., Single Panel"
+                    "placeholder": "Optional display name"
                 },
                 {
                     "key": "field_style_image",
@@ -453,34 +279,18 @@
                     "preview_size": "medium"
                 },
                 {
-                    "key": "field_style_order",
-                    "label": "Order",
-                    "name": "order",
-                    "type": "number",
-                    "default_value": 1
-                },
-                {
-                    "key": "field_style_categories",
-                    "label": "Available for Categories",
-                    "name": "available_categories",
-                    "type": "checkbox",
-                    "instructions": "Select which product categories this style is available for",
-                    "choices": {
-                        "windows": "Windows",
-                        "doors": "Doors",
-                        "bay-windows": "Bay Windows"
-                    },
-                    "default_value": ["windows", "doors", "bay-windows"],
-                    "layout": "vertical"
-                },
-                {
-                    "key": "field_style_specific_types",
-                    "label": "Specific Product Types (Optional)",
-                    "name": "specific_types",
-                    "type": "textarea",
-                    "instructions": "Enter specific product type slugs (one per line) to limit availability. Leave empty to make available for all products in selected categories above. Example: casement\\nfrench",
-                    "rows": 3,
-                    "placeholder": "casement\nfrench"
+                    "key": "field_style_types",
+                    "label": "Available for Product Types",
+                    "name": "available_types",
+                    "type": "select",
+                    "instructions": "Select which product types this style is available for. Leave empty for all types.",
+                    "choices": {},
+                    "default_value": [],
+                    "allow_null": 1,
+                    "multiple": 1,
+                    "ui": 1,
+                    "ajax": 0,
+                    "placeholder": "Select product types..."
                 }
             ]
         },
@@ -493,9 +303,10 @@
         },
         {
             "key": "field_colours",
-            "label": "Available Colours",
+            "label": "Colour Options",
             "name": "colours",
             "type": "repeater",
+            "instructions": "Drag rows to reorder colours",
             "layout": "table",
             "button_label": "Add Colour",
             "sub_fields": [
@@ -504,8 +315,7 @@
                     "label": "Colour Name",
                     "name": "name",
                     "type": "text",
-                    "required": 1,
-                    "placeholder": "e.g., White"
+                    "required": 1
                 },
                 {
                     "key": "field_colour_category",
@@ -514,7 +324,8 @@
                     "type": "select",
                     "choices": {
                         "Base": "Base",
-                        "Colour": "Colour"
+                        "Colour": "Colour",
+                        "Woodgrain": "Woodgrain"
                     },
                     "default_value": "Colour"
                 },
@@ -522,13 +333,13 @@
                     "key": "field_colour_hex",
                     "label": "Hex Code",
                     "name": "hex",
-                    "type": "color_picker",
-                    "default_value": "#FFFFFF"
+                    "type": "text",
+                    "placeholder": "#FFFFFF"
                 }
             ]
         },
         {
-            "key": "field_tab_options",
+            "key": "field_tab_form_options",
             "label": "Form Options",
             "name": "",
             "type": "tab",
@@ -540,7 +351,7 @@
             "name": "cill_options",
             "type": "repeater",
             "layout": "table",
-            "button_label": "Add Option",
+            "button_label": "Add Cill Option",
             "sub_fields": [
                 {
                     "key": "field_cill_label",
@@ -564,17 +375,17 @@
             "name": "glazing_types",
             "type": "repeater",
             "layout": "table",
-            "button_label": "Add Type",
+            "button_label": "Add Glazing Type",
             "sub_fields": [
                 {
-                    "key": "field_glazing_label",
+                    "key": "field_glazing_type_label",
                     "label": "Label",
                     "name": "label",
                     "type": "text",
                     "required": 1
                 },
                 {
-                    "key": "field_glazing_value",
+                    "key": "field_glazing_type_value",
                     "label": "Value",
                     "name": "value",
                     "type": "text",
@@ -612,17 +423,17 @@
             "name": "hardware_colours",
             "type": "repeater",
             "layout": "table",
-            "button_label": "Add Colour",
+            "button_label": "Add Hardware Colour",
             "sub_fields": [
                 {
-                    "key": "field_hardware_label",
+                    "key": "field_hardware_colour_label",
                     "label": "Label",
                     "name": "label",
                     "type": "text",
                     "required": 1
                 },
                 {
-                    "key": "field_hardware_value",
+                    "key": "field_hardware_colour_value",
                     "label": "Value",
                     "name": "value",
                     "type": "text",
@@ -642,19 +453,21 @@
             "label": "Email Recipients",
             "name": "email_recipients",
             "type": "textarea",
+            "instructions": "Enter email addresses (one per line) to receive quote submissions",
             "rows": 3,
-            "instructions": "Enter email addresses (one per line) to receive quotation notifications"
+            "placeholder": "admin@example.com"
         },
         {
             "key": "field_email_subject",
             "label": "Email Subject",
             "name": "email_subject",
             "type": "text",
-            "default_value": "New Quotation Request"
+            "default_value": "New Quotation Request",
+            "placeholder": "New Quotation Request"
         },
         {
             "key": "field_send_customer_confirmation",
-            "label": "Send Customer Confirmation",
+            "label": "Send Customer Confirmation Email",
             "name": "send_customer_confirmation",
             "type": "true_false",
             "default_value": 1,
@@ -675,5 +488,5 @@
     "style": "default",
     "label_placement": "top",
     "instruction_placement": "label",
-    "modified": 1732113600
+    "modified": 1732114000
 }

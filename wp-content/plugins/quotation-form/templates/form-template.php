@@ -13,12 +13,28 @@ $plugin_url = QUOTATION_FORM_PLUGIN_URL;
 
 // Get ACF data
 $categories = function_exists('get_field') ? get_field('product_categories', 'option') : array();
-$window_types = function_exists('get_field') ? get_field('window_types', 'option') : array();
-$door_types = function_exists('get_field') ? get_field('door_types', 'option') : array();
-$bay_types = function_exists('get_field') ? get_field('bay_types', 'option') : array();
+$product_types = function_exists('get_field') ? get_field('product_types', 'option') : array();
 $standard_materials = function_exists('get_field') ? get_field('standard_materials', 'option') : array();
 $doorco_materials = function_exists('get_field') ? get_field('doorco_materials', 'option') : array();
 $styles = function_exists('get_field') ? get_field('styles', 'option') : array();
+
+// Group product types by category
+$window_types = array();
+$door_types = array();
+$bay_types = array();
+
+if (!empty($product_types) && is_array($product_types)) {
+    foreach ($product_types as $type) {
+        $category = isset($type['category']) ? $type['category'] : 'windows';
+        if ($category === 'windows') {
+            $window_types[] = $type;
+        } elseif ($category === 'doors') {
+            $door_types[] = $type;
+        } elseif ($category === 'bay-windows') {
+            $bay_types[] = $type;
+        }
+    }
+}
 
 // Fallback to hardcoded if ACF data empty
 $use_acf = !empty($categories);
@@ -199,15 +215,12 @@ if (!$use_acf) {
                         $name = isset($material['name']) ? $material['name'] : '';
                         $slug = isset($material['slug']) ? $material['slug'] : '';
 
-                        // Get availability data
-                        $available_categories = isset($material['available_categories']) ? $material['available_categories'] : array('windows', 'doors', 'bay-windows');
-                        $specific_types = isset($material['specific_types']) ? $material['specific_types'] : '';
-                        $specific_types_array = !empty($specific_types) ? array_filter(array_map('trim', explode("\n", $specific_types))) : array();
+                        // Get availability data (array of type slugs)
+                        $available_types = isset($material['available_types']) ? $material['available_types'] : array();
                     ?>
                     <div class="image-card"
                          data-material="<?php echo esc_attr($slug); ?>"
-                         data-available-categories="<?php echo esc_attr(json_encode($available_categories)); ?>"
-                         data-specific-types="<?php echo esc_attr(json_encode($specific_types_array)); ?>">
+                         data-available-types="<?php echo esc_attr(json_encode($available_types)); ?>">
                         <div class="card-image">
                             <?php if ($image_url): ?>
                                 <img src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($name); ?>">
@@ -228,15 +241,12 @@ if (!$use_acf) {
                         $name = isset($material['name']) ? $material['name'] : '';
                         $slug = isset($material['slug']) ? $material['slug'] : '';
 
-                        // Get availability data
-                        $available_categories = isset($material['available_categories']) ? $material['available_categories'] : array('doors');
-                        $specific_types = isset($material['specific_types']) ? $material['specific_types'] : '';
-                        $specific_types_array = !empty($specific_types) ? array_filter(array_map('trim', explode("\n", $specific_types))) : array();
+                        // Get availability data (array of type slugs)
+                        $available_types = isset($material['available_types']) ? $material['available_types'] : array();
                     ?>
                     <div class="image-card"
                          data-material="<?php echo esc_attr($slug); ?>"
-                         data-available-categories="<?php echo esc_attr(json_encode($available_categories)); ?>"
-                         data-specific-types="<?php echo esc_attr(json_encode($specific_types_array)); ?>">
+                         data-available-types="<?php echo esc_attr(json_encode($available_types)); ?>">
                         <div class="card-image">
                             <?php if ($image_url): ?>
                                 <img src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($name); ?>">
@@ -261,15 +271,12 @@ if (!$use_acf) {
                         $code = isset($style['code']) ? $style['code'] : '';
                         $name = isset($style['name']) ? $style['name'] : $code;
 
-                        // Get availability data
-                        $available_categories = isset($style['available_categories']) ? $style['available_categories'] : array('windows', 'doors', 'bay-windows');
-                        $specific_types = isset($style['specific_types']) ? $style['specific_types'] : '';
-                        $specific_types_array = !empty($specific_types) ? array_filter(array_map('trim', explode("\n", $specific_types))) : array();
+                        // Get availability data (array of type slugs)
+                        $available_types = isset($style['available_types']) ? $style['available_types'] : array();
                     ?>
                     <div class="image-card style-card"
                          data-style="<?php echo esc_attr($code); ?>"
-                         data-available-categories="<?php echo esc_attr(json_encode($available_categories)); ?>"
-                         data-specific-types="<?php echo esc_attr(json_encode($specific_types_array)); ?>">
+                         data-available-types="<?php echo esc_attr(json_encode($available_types)); ?>">
                         <div class="card-image">
                             <?php if ($image_url): ?>
                                 <img src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($name); ?>">

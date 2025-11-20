@@ -168,45 +168,27 @@ jQuery(document).ready(function($) {
         },
 
         /**
-         * Check if a material/style is available for current product selection
+         * Check if a material/style is available for current product type
          */
-        isItemAvailableForProduct: function(availableCategories, specificTypes) {
-            const currentCategory = this.currentItem.category;
+        isItemAvailableForProduct: function(availableTypes) {
             const currentType = this.currentItem.type;
 
             // Parse JSON if needed
-            if (typeof availableCategories === 'string') {
+            if (typeof availableTypes === 'string') {
                 try {
-                    availableCategories = JSON.parse(availableCategories);
+                    availableTypes = JSON.parse(availableTypes);
                 } catch (e) {
-                    availableCategories = [];
+                    availableTypes = [];
                 }
             }
 
-            if (typeof specificTypes === 'string') {
-                try {
-                    specificTypes = JSON.parse(specificTypes);
-                } catch (e) {
-                    specificTypes = [];
-                }
+            // If no restrictions, show for all
+            if (!availableTypes || !Array.isArray(availableTypes) || availableTypes.length === 0) {
+                return true;
             }
 
-            // Check if current category is in available categories
-            if (!availableCategories || !Array.isArray(availableCategories) || availableCategories.length === 0) {
-                return true; // If no restrictions, show for all
-            }
-
-            if (!availableCategories.includes(currentCategory)) {
-                return false; // Category not allowed
-            }
-
-            // If specific types are defined, check if current type matches
-            if (specificTypes && Array.isArray(specificTypes) && specificTypes.length > 0) {
-                return specificTypes.includes(currentType);
-            }
-
-            // Category matches and no specific type restrictions
-            return true;
+            // Check if current type is in the available types list
+            return availableTypes.includes(currentType);
         },
 
         /**
@@ -217,10 +199,9 @@ jQuery(document).ready(function($) {
 
             $container.find('.image-card').each(function() {
                 const $card = $(this);
-                const availableCategories = $card.data('available-categories');
-                const specificTypes = $card.data('specific-types');
+                const availableTypes = $card.data('available-types');
 
-                if (self.isItemAvailableForProduct(availableCategories, specificTypes)) {
+                if (self.isItemAvailableForProduct(availableTypes)) {
                     $card.show();
                 } else {
                     $card.hide();

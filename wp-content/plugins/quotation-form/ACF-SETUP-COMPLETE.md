@@ -107,107 +107,94 @@ You have **2 options**:
 **Tabs:**
 
 1. **Product Categories**
-   - Repeater: Name, Slug, Image, Order
+   - Repeater: Name, Slug, Image
+   - **Drag rows to reorder** (order managed automatically)
 
-2. **Window Types**
-   - Repeater: Name, Slug, Image, Requires Material, Material Type, Order
+2. **Types** (Unified - All Product Types)
+   - Repeater: Name, Slug, **Category** (dropdown), Image, Requires Material, Material Type
+   - Category dropdown lets you select: Windows, Doors, or Bay Windows
+   - **Drag rows to reorder** (order managed automatically)
 
-3. **Door Types**
-   - Repeater: Name, Slug, Image, Requires Material, Material Type, Order
-
-4. **Bay Window Types**
-   - Repeater: Name, Slug, Image, Requires Material, Material Type, Order
-
-5. **Materials**
+3. **Materials**
    - Standard Materials (repeater)
-     - Name, Slug, Image, Order
-     - **Available for Categories** (checkboxes: Windows, Doors, Bay Windows)
-     - **Specific Product Types** (optional textarea - one slug per line)
+     - Name, Slug, Image
+     - **Available for Product Types** (multi-select from your Types)
    - DoorCo Materials (repeater)
-     - Name, Slug, Image, Order
-     - **Available for Categories** (checkboxes: Windows, Doors, Bay Windows)
-     - **Specific Product Types** (optional textarea - one slug per line)
+     - Name, Slug, Image
+     - **Available for Product Types** (multi-select from your Types)
 
-6. **Styles**
-   - Repeater: Style Code, Name, Image, Order
-   - **Available for Categories** (checkboxes: Windows, Doors, Bay Windows)
-   - **Specific Product Types** (optional textarea - one slug per line)
+4. **Styles**
+   - Repeater: Style Code, Name, Image
+   - **Available for Product Types** (multi-select from your Types)
 
-7. **Colours**
+5. **Colours**
    - Repeater: Colour Name, Category, Hex Code
 
-8. **Form Options**
+6. **Form Options**
    - Cill Options (repeater)
    - Glazing Types (repeater)
    - Glazing Features (repeater)
    - Hardware Colours (repeater)
 
-9. **Email Settings**
+7. **Email Settings**
    - Email Recipients (textarea - one per line)
    - Email Subject
    - Send Customer Confirmation (yes/no)
 
 ---
 
-## 🎨 Product-Specific Availability (NEW!)
+## 🎨 Product-Specific Availability
 
 ### How It Works
 
-Materials and styles can now be restricted to specific product categories and types. This allows you to:
+Materials and styles can be restricted to specific product types using a simple visual selector. This allows you to:
 - Show aluminium only for certain window types
-- Display specific styles for doors but not windows
-- Customize which materials are available for each product type
+- Display specific styles for specific products
+- Easily manage which materials are available for each product type
 
 ### Configuring Availability
 
-When adding/editing a **Material** or **Style**:
+When adding/editing a **Material** or **Style**, you'll see:
 
-1. **Available for Categories** (Checkboxes):
-   - Check "Windows" to show for all window types
-   - Check "Doors" to show for all door types
-   - Check "Bay Windows" to show for all bay window types
-   - Default: All categories checked (shows for everything)
-
-2. **Specific Product Types** (Optional):
-   - Leave empty to show for ALL products in selected categories
-   - OR enter specific product type slugs (one per line) to restrict further
-   - Example:
-     ```
-     casement
-     sliding-patio
-     ```
-   - This material/style will ONLY show for casement and sliding patio types
+**"Available for Product Types"** (Multi-select dropdown)
+- Select which product types this material/style is available for
+- Dropdown shows all your product types with their categories (e.g., "Casement Windows (Windows)")
+- Leave empty to show for ALL product types
+- Select specific types to restrict availability
 
 ### Examples
 
 **Example 1: Aluminium for specific windows only**
-- Name: Aluminium
-- Available for Categories: ✓ Windows
-- Specific Product Types:
-  ```
-  casement
-  tilt-turn
-  ```
-- Result: Shows only when user selects casement or tilt-turn windows
+1. Edit Material: Aluminium
+2. In "Available for Product Types", select:
+   - Casement Windows (Windows)
+   - Tilt & Turn Windows (Windows)
+3. Save
+- Result: Aluminium only shows when customer selects casement or tilt & turn windows
 
-**Example 2: Style available for all doors**
-- Style Code: D1
-- Available for Categories: ✓ Doors
-- Specific Product Types: (leave empty)
-- Result: Shows for all door types
+**Example 2: Style for all doors**
+1. Edit Style: D1
+2. In "Available for Product Types", select all door types:
+   - French Doors (Doors)
+   - Sliding Doors (Doors)
+   - Composite Doors (Doors)
+3. Save
+- Result: Style D1 shows for all door types, but not for windows
 
-**Example 3: Material for windows and bay windows**
-- Name: PVCu Chamfered
-- Available for Categories: ✓ Windows, ✓ Bay Windows
-- Specific Product Types: (leave empty)
-- Result: Shows for all window and bay window types
+**Example 3: Universal material**
+1. Edit Material: PVCu White
+2. Leave "Available for Product Types" empty
+3. Save
+- Result: Shows for ALL product types (default behavior)
 
 ### Important Notes
 
-- The frontend automatically filters materials/styles based on the customer's product selection
-- If a product type has NO available materials/styles, all will be shown (failsafe)
-- Product type slugs are case-sensitive and must match exactly (e.g., "casement" not "Casement")
+- **No manual slug typing** - just select from the dropdown
+- The dropdown is populated from your "Types" tab
+- Add a new product type? It automatically appears in all material/style dropdowns
+- The frontend automatically filters materials/styles based on customer's selection
 - Changes take effect immediately on the frontend
+- If no types are selected, the material/style shows for everything (universal)
 
 ---
 
@@ -226,28 +213,34 @@ Go to **Quote Settings** in WordPress admin sidebar:
 1. **Add Product Categories:**
    - Click "Add Category"
    - Name: Windows
-   - Slug: windows
+   - Slug: windows (must be exact: windows, doors, or bay-windows)
    - Upload image
-   - Order: 1
-   - Repeat for Doors and Bay Windows
+   - Drag to reorder
+   - Repeat for Doors (and Bay Windows if needed)
 
-2. **Add Window Types:**
-   - Add your window types with images
+2. **Add Product Types** (in the Types tab):
+   - Click "Add Product Type"
+   - Name: Casement Windows
+   - Slug: casement (lowercase, no spaces)
+   - Category: Select "Windows" from dropdown
+   - Upload image
    - Set "Requires Material" to Yes/No
-   - Choose Material Type (Standard/None)
+   - If yes, choose Material Type (Standard/DoorCo)
+   - Drag rows to reorder
+   - Repeat for all your door types, window types, etc.
 
 3. **Add Materials:**
    - Add standard materials (PVCu Chamfered, Aluminium, etc.)
    - For each material:
-     - Select which categories it's available for (Windows, Doors, Bay Windows)
-     - Optionally specify specific product type slugs to restrict further
-   - Add DoorCo materials if needed (same availability options)
+     - Select which product types it's available for from the dropdown
+     - Leave empty to show for all types
+   - Add DoorCo materials if needed (same process)
 
 4. **Add Styles:**
    - Style Code: W1, W2, etc.
    - Upload style diagrams
-   - Select which categories the style is available for
-   - Optionally specify specific product type slugs
+   - Select which product types from the dropdown
+   - Leave empty to show for all types
 
 5. **Add Colours:**
    - Add all your colour options with hex codes
