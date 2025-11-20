@@ -14,8 +14,7 @@ $plugin_url = QUOTATION_FORM_PLUGIN_URL;
 // Get ACF data
 $categories = function_exists('get_field') ? get_field('product_categories', 'option') : array();
 $product_types = function_exists('get_field') ? get_field('product_types', 'option') : array();
-$standard_materials = function_exists('get_field') ? get_field('standard_materials', 'option') : array();
-$doorco_materials = function_exists('get_field') ? get_field('doorco_materials', 'option') : array();
+$materials = function_exists('get_field') ? get_field('materials', 'option') : array();
 $styles = function_exists('get_field') ? get_field('styles', 'option') : array();
 
 // Group product types by category
@@ -32,6 +31,21 @@ if (!empty($product_types) && is_array($product_types)) {
             $door_types[] = $type;
         } elseif ($category === 'bay-windows') {
             $bay_types[] = $type;
+        }
+    }
+}
+
+// Group materials by material_type
+$standard_materials = array();
+$doorco_materials = array();
+
+if (!empty($materials) && is_array($materials)) {
+    foreach ($materials as $material) {
+        $material_type = isset($material['material_type']) ? $material['material_type'] : 'standard';
+        if ($material_type === 'standard') {
+            $standard_materials[] = $material;
+        } elseif ($material_type === 'doorco') {
+            $doorco_materials[] = $material;
         }
     }
 }

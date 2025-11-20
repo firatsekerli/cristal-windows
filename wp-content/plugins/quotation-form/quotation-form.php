@@ -64,8 +64,7 @@ class Quotation_Form_Plugin {
 
         // Populate select field choices dynamically
         add_filter('acf/load_field/key=field_type_category', array($this, 'populate_category_choices'));
-        add_filter('acf/load_field/key=field_std_material_types', array($this, 'populate_type_choices'));
-        add_filter('acf/load_field/key=field_doorco_material_types', array($this, 'populate_type_choices'));
+        add_filter('acf/load_field/key=field_material_available_types', array($this, 'populate_type_choices'));
         add_filter('acf/load_field/key=field_style_types', array($this, 'populate_type_choices'));
 
         // Add admin scripts for auto-slug generation
@@ -234,12 +233,14 @@ class Quotation_Form_Plugin {
 
         // Get ACF config data (with fallbacks to hardcoded defaults)
         $product_types = $this->get_acf_field_or_default('product_types', 'option');
-        $standard_materials = $this->get_acf_field_or_default('standard_materials', 'option');
-        $doorco_materials = $this->get_acf_field_or_default('doorco_materials', 'option');
+        $materials = $this->get_acf_field_or_default('materials', 'option');
         $styles = $this->get_acf_field_or_default('styles', 'option');
 
         // Group types by category for backwards compatibility
         $types_by_category = $this->group_types_by_category($product_types);
+
+        // Group materials by material_type for backwards compatibility
+        $materials_by_type = $this->group_materials_by_type($materials);
 
         $config = array(
             'categories' => $this->get_acf_field_or_default('product_categories', 'option'),
@@ -247,8 +248,9 @@ class Quotation_Form_Plugin {
             'windowTypes' => $types_by_category['windows'],
             'doorTypes' => $types_by_category['doors'],
             'bayTypes' => $types_by_category['bay-windows'],
-            'standardMaterials' => $standard_materials,
-            'doorcoMaterials' => $doorco_materials,
+            'materials' => $materials,
+            'standardMaterials' => $materials_by_type['standard'],
+            'doorcoMaterials' => $materials_by_type['doorco'],
             'styles' => $styles,
             'colours' => $this->get_acf_field_or_default('colours', 'option'),
             'useAcfData' => function_exists('get_field') && get_field('product_categories', 'option') ? true : false
@@ -292,6 +294,29 @@ class Quotation_Form_Plugin {
             $category = isset($type['category']) ? $type['category'] : 'windows';
             if (isset($grouped[$category])) {
                 $grouped[$category][] = $type;
+            }
+        }
+
+        return $grouped;
+    }
+
+    /**
+     * Group materials by material_type
+     */
+    private function group_materials_by_type($materials) {
+        $grouped = array(
+            'standard' => array(),
+            'doorco' => array()
+        );
+
+        if (empty($materials) || !is_array($materials)) {
+            return $grouped;
+        }
+
+        foreach ($materials as $material) {
+            $material_type = isset($material['material_type']) ? $material['material_type'] : 'standard';
+            if (isset($grouped[$material_type])) {
+                $grouped[$material_type][] = $material;
             }
         }
 

@@ -109,16 +109,16 @@
             "placement": "left"
         },
         {
-            "key": "field_standard_materials",
-            "label": "Standard Materials",
-            "name": "standard_materials",
+            "key": "field_materials",
+            "label": "Materials",
+            "name": "materials",
             "type": "repeater",
-            "instructions": "Drag rows to reorder materials",
+            "instructions": "All materials (standard and DoorCo). Drag rows to reorder.",
             "layout": "block",
             "button_label": "Add Material",
             "sub_fields": [
                 {
-                    "key": "field_std_material_name",
+                    "key": "field_material_name",
                     "label": "Material Name",
                     "name": "name",
                     "type": "text",
@@ -126,7 +126,7 @@
                     "placeholder": "e.g., PVCu Chamfered"
                 },
                 {
-                    "key": "field_std_material_slug",
+                    "key": "field_material_slug",
                     "label": "Slug",
                     "name": "slug",
                     "type": "text",
@@ -134,54 +134,23 @@
                     "placeholder": "e.g., pvcu-chamfered"
                 },
                 {
-                    "key": "field_std_material_image",
-                    "label": "Image",
-                    "name": "image",
-                    "type": "image",
-                    "return_format": "array",
-                    "preview_size": "medium"
-                },
-                {
-                    "key": "field_std_material_types",
-                    "label": "Available for Product Types",
-                    "name": "available_types",
+                    "key": "field_material_type",
+                    "label": "Material Type",
+                    "name": "material_type",
                     "type": "select",
-                    "instructions": "Select which product types this material is available for. Leave empty for all types.",
-                    "choices": {},
-                    "default_value": [],
-                    "allow_null": 1,
-                    "multiple": 1,
-                    "ui": 1,
-                    "ajax": 0,
-                    "placeholder": "Select product types..."
-                }
-            ]
-        },
-        {
-            "key": "field_doorco_materials",
-            "label": "DoorCo Materials",
-            "name": "doorco_materials",
-            "type": "repeater",
-            "instructions": "Drag rows to reorder materials",
-            "layout": "block",
-            "button_label": "Add DoorCo Material",
-            "sub_fields": [
-                {
-                    "key": "field_doorco_material_name",
-                    "label": "Material Name",
-                    "name": "name",
-                    "type": "text",
-                    "required": 1
+                    "required": 1,
+                    "instructions": "Is this a standard material or DoorCo material?",
+                    "choices": {
+                        "standard": "Standard",
+                        "doorco": "DoorCo"
+                    },
+                    "default_value": "standard",
+                    "allow_null": 0,
+                    "multiple": 0,
+                    "ui": 1
                 },
                 {
-                    "key": "field_doorco_material_slug",
-                    "label": "Slug",
-                    "name": "slug",
-                    "type": "text",
-                    "required": 1
-                },
-                {
-                    "key": "field_doorco_material_image",
+                    "key": "field_material_image",
                     "label": "Image",
                     "name": "image",
                     "type": "image",
@@ -189,7 +158,7 @@
                     "preview_size": "medium"
                 },
                 {
-                    "key": "field_doorco_material_types",
+                    "key": "field_material_available_types",
                     "label": "Available for Product Types",
                     "name": "available_types",
                     "type": "select",
@@ -453,5 +422,5 @@
     "style": "default",
     "label_placement": "top",
     "instruction_placement": "label",
-    "modified": 1732114400
+    "modified": 1732114600
 }
