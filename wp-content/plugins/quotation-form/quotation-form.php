@@ -125,14 +125,18 @@ class Quotation_Form_Plugin {
         );
 
         // Get ACF config data (with fallbacks to hardcoded defaults)
+        $standard_materials = $this->get_acf_field_or_default('standard_materials', 'option');
+        $doorco_materials = $this->get_acf_field_or_default('doorco_materials', 'option');
+        $styles = $this->get_acf_field_or_default('styles', 'option');
+
         $config = array(
             'categories' => $this->get_acf_field_or_default('product_categories', 'option'),
             'windowTypes' => $this->get_acf_field_or_default('window_types', 'option'),
             'doorTypes' => $this->get_acf_field_or_default('door_types', 'option'),
             'bayTypes' => $this->get_acf_field_or_default('bay_types', 'option'),
-            'standardMaterials' => $this->get_acf_field_or_default('standard_materials', 'option'),
-            'doorcoMaterials' => $this->get_acf_field_or_default('doorco_materials', 'option'),
-            'styles' => $this->get_acf_field_or_default('styles', 'option'),
+            'standardMaterials' => $this->process_items_with_availability($standard_materials),
+            'doorcoMaterials' => $this->process_items_with_availability($doorco_materials),
+            'styles' => $this->process_items_with_availability($styles),
             'colours' => $this->get_acf_field_or_default('colours', 'option'),
             'useAcfData' => function_exists('get_field') && get_field('product_categories', 'option') ? true : false
         );
@@ -155,6 +159,38 @@ class Quotation_Form_Plugin {
             return $value ? $value : array();
         }
         return array();
+    }
+
+    /**
+     * Process materials/styles to include availability data
+     */
+    private function process_items_with_availability($items) {
+        if (empty($items)) {
+            return array();
+        }
+
+        $processed = array();
+        foreach ($items as $item) {
+            // Get availability data
+            $available_categories = isset($item['available_categories']) ? $item['available_categories'] : array('windows', 'doors', 'bay-windows');
+            $specific_types = isset($item['specific_types']) ? $item['specific_types'] : '';
+
+            // Parse specific types (one per line)
+            $specific_types_array = array();
+            if (!empty($specific_types)) {
+                $specific_types_array = array_filter(array_map('trim', explode("\n", $specific_types)));
+            }
+
+            // Add availability metadata to the item
+            $item['availability'] = array(
+                'categories' => $available_categories,
+                'specificTypes' => $specific_types_array
+            );
+
+            $processed[] = $item;
+        }
+
+        return $processed;
     }
 
     /**

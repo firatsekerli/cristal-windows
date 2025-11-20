@@ -198,8 +198,16 @@ if (!$use_acf) {
                         $image_url = isset($material['image']['url']) ? $material['image']['url'] : '';
                         $name = isset($material['name']) ? $material['name'] : '';
                         $slug = isset($material['slug']) ? $material['slug'] : '';
+
+                        // Get availability data
+                        $available_categories = isset($material['available_categories']) ? $material['available_categories'] : array('windows', 'doors', 'bay-windows');
+                        $specific_types = isset($material['specific_types']) ? $material['specific_types'] : '';
+                        $specific_types_array = !empty($specific_types) ? array_filter(array_map('trim', explode("\n", $specific_types))) : array();
                     ?>
-                    <div class="image-card" data-material="<?php echo esc_attr($slug); ?>">
+                    <div class="image-card"
+                         data-material="<?php echo esc_attr($slug); ?>"
+                         data-available-categories="<?php echo esc_attr(json_encode($available_categories)); ?>"
+                         data-specific-types="<?php echo esc_attr(json_encode($specific_types_array)); ?>">
                         <div class="card-image">
                             <?php if ($image_url): ?>
                                 <img src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($name); ?>">
@@ -219,8 +227,16 @@ if (!$use_acf) {
                         $image_url = isset($material['image']['url']) ? $material['image']['url'] : '';
                         $name = isset($material['name']) ? $material['name'] : '';
                         $slug = isset($material['slug']) ? $material['slug'] : '';
+
+                        // Get availability data
+                        $available_categories = isset($material['available_categories']) ? $material['available_categories'] : array('doors');
+                        $specific_types = isset($material['specific_types']) ? $material['specific_types'] : '';
+                        $specific_types_array = !empty($specific_types) ? array_filter(array_map('trim', explode("\n", $specific_types))) : array();
                     ?>
-                    <div class="image-card" data-material="<?php echo esc_attr($slug); ?>">
+                    <div class="image-card"
+                         data-material="<?php echo esc_attr($slug); ?>"
+                         data-available-categories="<?php echo esc_attr(json_encode($available_categories)); ?>"
+                         data-specific-types="<?php echo esc_attr(json_encode($specific_types_array)); ?>">
                         <div class="card-image">
                             <?php if ($image_url): ?>
                                 <img src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($name); ?>">
@@ -244,8 +260,16 @@ if (!$use_acf) {
                         $image_url = isset($style['image']['url']) ? $style['image']['url'] : '';
                         $code = isset($style['code']) ? $style['code'] : '';
                         $name = isset($style['name']) ? $style['name'] : $code;
+
+                        // Get availability data
+                        $available_categories = isset($style['available_categories']) ? $style['available_categories'] : array('windows', 'doors', 'bay-windows');
+                        $specific_types = isset($style['specific_types']) ? $style['specific_types'] : '';
+                        $specific_types_array = !empty($specific_types) ? array_filter(array_map('trim', explode("\n", $specific_types))) : array();
                     ?>
-                    <div class="image-card style-card" data-style="<?php echo esc_attr($code); ?>">
+                    <div class="image-card style-card"
+                         data-style="<?php echo esc_attr($code); ?>"
+                         data-available-categories="<?php echo esc_attr(json_encode($available_categories)); ?>"
+                         data-specific-types="<?php echo esc_attr(json_encode($specific_types_array)); ?>">
                         <div class="card-image">
                             <?php if ($image_url): ?>
                                 <img src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($name); ?>">

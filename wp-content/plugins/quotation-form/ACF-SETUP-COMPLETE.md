@@ -120,10 +120,18 @@ You have **2 options**:
 
 5. **Materials**
    - Standard Materials (repeater)
+     - Name, Slug, Image, Order
+     - **Available for Categories** (checkboxes: Windows, Doors, Bay Windows)
+     - **Specific Product Types** (optional textarea - one slug per line)
    - DoorCo Materials (repeater)
+     - Name, Slug, Image, Order
+     - **Available for Categories** (checkboxes: Windows, Doors, Bay Windows)
+     - **Specific Product Types** (optional textarea - one slug per line)
 
 6. **Styles**
    - Repeater: Style Code, Name, Image, Order
+   - **Available for Categories** (checkboxes: Windows, Doors, Bay Windows)
+   - **Specific Product Types** (optional textarea - one slug per line)
 
 7. **Colours**
    - Repeater: Colour Name, Category, Hex Code
@@ -138,6 +146,68 @@ You have **2 options**:
    - Email Recipients (textarea - one per line)
    - Email Subject
    - Send Customer Confirmation (yes/no)
+
+---
+
+## 🎨 Product-Specific Availability (NEW!)
+
+### How It Works
+
+Materials and styles can now be restricted to specific product categories and types. This allows you to:
+- Show aluminium only for certain window types
+- Display specific styles for doors but not windows
+- Customize which materials are available for each product type
+
+### Configuring Availability
+
+When adding/editing a **Material** or **Style**:
+
+1. **Available for Categories** (Checkboxes):
+   - Check "Windows" to show for all window types
+   - Check "Doors" to show for all door types
+   - Check "Bay Windows" to show for all bay window types
+   - Default: All categories checked (shows for everything)
+
+2. **Specific Product Types** (Optional):
+   - Leave empty to show for ALL products in selected categories
+   - OR enter specific product type slugs (one per line) to restrict further
+   - Example:
+     ```
+     casement
+     sliding-patio
+     ```
+   - This material/style will ONLY show for casement and sliding patio types
+
+### Examples
+
+**Example 1: Aluminium for specific windows only**
+- Name: Aluminium
+- Available for Categories: ✓ Windows
+- Specific Product Types:
+  ```
+  casement
+  tilt-turn
+  ```
+- Result: Shows only when user selects casement or tilt-turn windows
+
+**Example 2: Style available for all doors**
+- Style Code: D1
+- Available for Categories: ✓ Doors
+- Specific Product Types: (leave empty)
+- Result: Shows for all door types
+
+**Example 3: Material for windows and bay windows**
+- Name: PVCu Chamfered
+- Available for Categories: ✓ Windows, ✓ Bay Windows
+- Specific Product Types: (leave empty)
+- Result: Shows for all window and bay window types
+
+### Important Notes
+
+- The frontend automatically filters materials/styles based on the customer's product selection
+- If a product type has NO available materials/styles, all will be shown (failsafe)
+- Product type slugs are case-sensitive and must match exactly (e.g., "casement" not "Casement")
+- Changes take effect immediately on the frontend
 
 ---
 
@@ -168,11 +238,16 @@ Go to **Quote Settings** in WordPress admin sidebar:
 
 3. **Add Materials:**
    - Add standard materials (PVCu Chamfered, Aluminium, etc.)
-   - Add DoorCo materials if needed
+   - For each material:
+     - Select which categories it's available for (Windows, Doors, Bay Windows)
+     - Optionally specify specific product type slugs to restrict further
+   - Add DoorCo materials if needed (same availability options)
 
 4. **Add Styles:**
    - Style Code: W1, W2, etc.
    - Upload style diagrams
+   - Select which categories the style is available for
+   - Optionally specify specific product type slugs
 
 5. **Add Colours:**
    - Add all your colour options with hex codes

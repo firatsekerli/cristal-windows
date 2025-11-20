@@ -167,6 +167,67 @@ jQuery(document).ready(function($) {
             $card.addClass('selected').siblings().removeClass('selected');
         },
 
+        /**
+         * Check if a material/style is available for current product selection
+         */
+        isItemAvailableForProduct: function(availableCategories, specificTypes) {
+            const currentCategory = this.currentItem.category;
+            const currentType = this.currentItem.type;
+
+            // Parse JSON if needed
+            if (typeof availableCategories === 'string') {
+                try {
+                    availableCategories = JSON.parse(availableCategories);
+                } catch (e) {
+                    availableCategories = [];
+                }
+            }
+
+            if (typeof specificTypes === 'string') {
+                try {
+                    specificTypes = JSON.parse(specificTypes);
+                } catch (e) {
+                    specificTypes = [];
+                }
+            }
+
+            // Check if current category is in available categories
+            if (!availableCategories || !Array.isArray(availableCategories) || availableCategories.length === 0) {
+                return true; // If no restrictions, show for all
+            }
+
+            if (!availableCategories.includes(currentCategory)) {
+                return false; // Category not allowed
+            }
+
+            // If specific types are defined, check if current type matches
+            if (specificTypes && Array.isArray(specificTypes) && specificTypes.length > 0) {
+                return specificTypes.includes(currentType);
+            }
+
+            // Category matches and no specific type restrictions
+            return true;
+        },
+
+        /**
+         * Filter materials/styles based on current product selection
+         */
+        filterItemsForProduct: function($container) {
+            const self = this;
+
+            $container.find('.image-card').each(function() {
+                const $card = $(this);
+                const availableCategories = $card.data('available-categories');
+                const specificTypes = $card.data('specific-types');
+
+                if (self.isItemAvailableForProduct(availableCategories, specificTypes)) {
+                    $card.show();
+                } else {
+                    $card.hide();
+                }
+            });
+        },
+
         navigateToSubStep: function(substep) {
             this.currentSubStep = substep;
 
@@ -174,7 +235,13 @@ jQuery(document).ready(function($) {
             $('.form-step[data-step="1"] .sub-step').removeClass('active');
 
             // Show the target sub-step
-            $('.sub-step[data-substep="' + substep + '"]').addClass('active');
+            const $targetSubstep = $('.sub-step[data-substep="' + substep + '"]');
+            $targetSubstep.addClass('active');
+
+            // Filter materials if navigating to material selection
+            if (substep.startsWith('1c-material')) {
+                this.filterItemsForProduct($targetSubstep.find('.material-grid'));
+            }
 
             this.updateNavigationButtons();
         },
@@ -188,7 +255,13 @@ jQuery(document).ready(function($) {
                 $('.form-step.basket-review').addClass('active');
             } else {
                 $('.form-step').removeClass('active');
-                $('.form-step[data-step="' + step + '"]').addClass('active');
+                const $targetStep = $('.form-step[data-step="' + step + '"]');
+                $targetStep.addClass('active');
+
+                // Filter styles if navigating to step 2
+                if (step === 2) {
+                    this.filterItemsForProduct($targetStep.find('.style-grid'));
+                }
             }
 
             this.updateProgressIndicator();
