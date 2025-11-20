@@ -55,7 +55,6 @@ class Quotation_Form_Plugin {
      * Initialize hooks
      */
     private function init_hooks() {
-        add_action('wp_enqueue_scripts', array($this, 'enqueue_scripts'));
         add_action('wp_ajax_submit_quotation_form', array($this, 'handle_form_submission'));
         add_action('wp_ajax_nopriv_submit_quotation_form', array($this, 'handle_form_submission'));
         add_shortcode('quotation_form', array($this, 'render_form_shortcode'));
@@ -69,37 +68,32 @@ class Quotation_Form_Plugin {
     }
 
     /**
-     * Enqueue scripts and styles
+     * Enqueue scripts and styles for the form
      */
-    public function enqueue_scripts() {
-        // Only enqueue on pages that have the shortcode
-        global $post;
-        if (is_a($post, 'WP_Post') && has_shortcode($post->post_content, 'quotation_form')) {
+    private function enqueue_form_assets() {
+        // Enqueue CSS
+        wp_enqueue_style(
+            'quotation-form-css',
+            QUOTATION_FORM_PLUGIN_URL . 'assets/css/quotation-form.css',
+            array(),
+            QUOTATION_FORM_VERSION
+        );
 
-            // Enqueue CSS
-            wp_enqueue_style(
-                'quotation-form-css',
-                QUOTATION_FORM_PLUGIN_URL . 'assets/css/quotation-form.css',
-                array(),
-                QUOTATION_FORM_VERSION
-            );
+        // Enqueue JavaScript
+        wp_enqueue_script(
+            'quotation-form-js',
+            QUOTATION_FORM_PLUGIN_URL . 'assets/js/quotation-form.js',
+            array('jquery'),
+            QUOTATION_FORM_VERSION,
+            true
+        );
 
-            // Enqueue JavaScript
-            wp_enqueue_script(
-                'quotation-form-js',
-                QUOTATION_FORM_PLUGIN_URL . 'assets/js/quotation-form.js',
-                array('jquery'),
-                QUOTATION_FORM_VERSION,
-                true
-            );
-
-            // Localize script for AJAX
-            wp_localize_script('quotation-form-js', 'quotationFormAjax', array(
-                'ajaxurl' => admin_url('admin-ajax.php'),
-                'nonce' => wp_create_nonce('quotation_form_nonce'),
-                'pluginUrl' => QUOTATION_FORM_PLUGIN_URL
-            ));
-        }
+        // Localize script for AJAX
+        wp_localize_script('quotation-form-js', 'quotationFormAjax', array(
+            'ajaxurl' => admin_url('admin-ajax.php'),
+            'nonce' => wp_create_nonce('quotation_form_nonce'),
+            'pluginUrl' => QUOTATION_FORM_PLUGIN_URL
+        ));
     }
 
     /**
@@ -110,6 +104,9 @@ class Quotation_Form_Plugin {
         $atts = shortcode_atts(array(
             'title' => '',
         ), $atts);
+
+        // Enqueue assets when shortcode is called
+        $this->enqueue_form_assets();
 
         ob_start();
         include QUOTATION_FORM_PLUGIN_DIR . 'templates/form-template.php';
