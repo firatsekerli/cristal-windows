@@ -9,25 +9,27 @@ jQuery(document).ready(function($) {
         currentItem: {},
         editingItemId: null,
 
-        // Available colours
-        colours: [
-            { name: 'White', category: 'Base', hex: '#FFFFFF' },
-            { name: 'Cream', category: 'Colour', hex: '#FFFDD0' },
-            { name: 'Agate Grey', category: 'Colour', hex: '#B5B5B5' },
-            { name: 'Anthracite Grey', category: 'Colour', hex: '#3E3E3E' },
-            { name: 'Anthracite Grey Smooth', category: 'Colour', hex: '#383838' },
-            { name: 'Balmoral', category: 'Colour', hex: '#8B4513' },
-            { name: 'Basalt Grey', category: 'Colour', hex: '#4A4A4A' },
-            { name: 'Black', category: 'Colour', hex: '#000000' },
-            { name: 'Blue', category: 'Colour', hex: '#0066CC' },
-            { name: 'Chartwell Green', category: 'Colour', hex: '#3C4F3B' },
-            { name: 'Dark Green', category: 'Colour', hex: '#013220' },
-            { name: 'Golden Oak', category: 'Colour', hex: '#B8860B' },
-            { name: 'Grey', category: 'Colour', hex: '#808080' },
-            { name: 'Irish Oak', category: 'Colour', hex: '#C19A6B' },
-            { name: 'Light Oak', category: 'Colour', hex: '#D4A76A' },
-            { name: 'Rosewood', category: 'Colour', hex: '#65000B' },
-        ],
+        // Available colours - Use dynamic colours from config if available, otherwise fallback to hardcoded
+        colours: (typeof quotationFormAjax !== 'undefined' && quotationFormAjax.config && quotationFormAjax.config.colours)
+            ? quotationFormAjax.config.colours
+            : [
+                { name: 'White', category: 'Base', hex: '#FFFFFF' },
+                { name: 'Cream', category: 'Colour', hex: '#FFFDD0' },
+                { name: 'Agate Grey', category: 'Colour', hex: '#B5B5B5' },
+                { name: 'Anthracite Grey', category: 'Colour', hex: '#3E3E3E' },
+                { name: 'Anthracite Grey Smooth', category: 'Colour', hex: '#383838' },
+                { name: 'Balmoral', category: 'Colour', hex: '#8B4513' },
+                { name: 'Basalt Grey', category: 'Colour', hex: '#4A4A4A' },
+                { name: 'Black', category: 'Colour', hex: '#000000' },
+                { name: 'Blue', category: 'Colour', hex: '#0066CC' },
+                { name: 'Chartwell Green', category: 'Colour', hex: '#3C4F3B' },
+                { name: 'Dark Green', category: 'Colour', hex: '#013220' },
+                { name: 'Golden Oak', category: 'Colour', hex: '#B8860B' },
+                { name: 'Grey', category: 'Colour', hex: '#808080' },
+                { name: 'Irish Oak', category: 'Colour', hex: '#C19A6B' },
+                { name: 'Light Oak', category: 'Colour', hex: '#D4A76A' },
+                { name: 'Rosewood', category: 'Colour', hex: '#65000B' },
+            ],
 
         init: function() {
             this.bindEvents();
