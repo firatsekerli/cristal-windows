@@ -168,22 +168,53 @@ class Quotation_Form_Plugin {
         (function($) {
             if (typeof acf === 'undefined') return;
 
-            // Auto-generate slug from name for Product Categories
+            // Helper function to generate slug
+            function generateSlug(text) {
+                return text
+                    .toLowerCase()
+                    .trim()
+                    .replace(/[^a-z0-9\s-]/g, '')  // Remove special characters
+                    .replace(/\s+/g, '-')            // Replace spaces with hyphens
+                    .replace(/-+/g, '-')             // Replace multiple hyphens with single
+                    .replace(/^-+|-+$/g, '');        // Remove leading/trailing hyphens
+            }
+
+            // Auto-generate slug from name - works for all repeaters
             acf.addAction('ready_field/name=name', function($field) {
                 var $nameInput = $field.find('input[type="text"]');
                 var $row = $nameInput.closest('.acf-row');
+
+                // Try multiple selectors to find the slug field
                 var $slugInput = $row.find('input[data-name="slug"]');
+                if (!$slugInput.length) {
+                    $slugInput = $row.find('td[data-name="slug"] input');
+                }
+                if (!$slugInput.length) {
+                    $slugInput = $row.find('[data-key*="slug"] input');
+                }
 
                 if ($slugInput.length && $nameInput.length) {
-                    $nameInput.on('blur', function() {
+                    // Trigger on input (while typing) for better UX
+                    $nameInput.on('input keyup', function() {
+                        var currentSlug = $slugInput.val().trim();
                         // Only auto-generate if slug is empty
-                        if ($slugInput.val() === '') {
+                        if (currentSlug === '') {
                             var name = $(this).val();
-                            var slug = name
-                                .toLowerCase()
-                                .replace(/[^a-z0-9]+/g, '-')
-                                .replace(/^-+|-+$/g, '');
+                            var slug = generateSlug(name);
                             $slugInput.val(slug);
+                            // Trigger change event so ACF knows the field changed
+                            $slugInput.trigger('change');
+                        }
+                    });
+
+                    // Also trigger on blur as a fallback
+                    $nameInput.on('blur', function() {
+                        var currentSlug = $slugInput.val().trim();
+                        if (currentSlug === '') {
+                            var name = $(this).val();
+                            var slug = generateSlug(name);
+                            $slugInput.val(slug);
+                            $slugInput.trigger('change');
                         }
                     });
                 }
