@@ -795,8 +795,23 @@ class Quotation_Form_Plugin {
         // Check if at least one item has a price (only generate PDF when prices are set)
         // This prevents PDF generation when quotation is first submitted without prices
         $has_priced_items = false;
-        foreach ($basket_items as $item) {
-            if (isset($item['item_price']) && !empty($item['item_price']) && is_numeric($item['item_price']) && floatval($item['item_price']) > 0) {
+        foreach ($basket_items as $index => $item) {
+            // Debug: Log the entire item structure
+            error_log("PDF Generation: Checking item #$index: " . print_r($item, true));
+
+            // Debug: Log each validation step
+            $isset_check = isset($item['item_price']);
+            $empty_check = !empty($item['item_price']);
+            $numeric_check = is_numeric($item['item_price'] ?? '');
+            $value_check = floatval($item['item_price'] ?? 0) > 0;
+
+            error_log("PDF Generation: Item #$index validation - isset: " . ($isset_check ? 'true' : 'false') .
+                     ", !empty: " . ($empty_check ? 'true' : 'false') .
+                     ", is_numeric: " . ($numeric_check ? 'true' : 'false') .
+                     ", value>0: " . ($value_check ? 'true' : 'false'));
+
+            // Use the same simple check as the notice display for consistency
+            if (isset($item['item_price']) && floatval($item['item_price']) > 0) {
                 $has_priced_items = true;
                 error_log("PDF Generation: Found priced item with price: " . $item['item_price']);
                 break;
