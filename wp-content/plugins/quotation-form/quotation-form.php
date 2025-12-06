@@ -977,7 +977,20 @@ class Quotation_Form_Plugin {
         // Configure cell padding and margins to respect CSS line-height
         $pdf->setCellPaddings(0, 0, 0, 0);
         $pdf->setCellMargins(0, 0, 0, 0);
-        $pdf->setCellHeightRatio(1.0);
+        $pdf->setCellHeightRatio(1.25);
+
+        // CRITICAL: Since CSS margins don't work properly in TCPDF, we need to use setHtmlVSpace()
+        // to control vertical spacing of HTML block tags
+        $tagvs = array(
+            'h1' => array('h' => 0, 'n' => 0),
+            'h2' => array('h' => 0, 'n' => 0),
+            'p' => array('h' => 0, 'n' => 0),
+            'div' => array('h' => 0, 'n' => 0),
+        );
+        $pdf->setHtmlVSpace($tagvs);
+
+        // Remove additional vertical space inside cells
+        $pdf->SetCellPadding(0);
 
         // Add a page
         $pdf->AddPage();
@@ -1126,7 +1139,20 @@ class Quotation_Form_Plugin {
         // Configure cell padding and margins to respect CSS line-height
         $pdf->setCellPaddings(0, 0, 0, 0);
         $pdf->setCellMargins(0, 0, 0, 0);
-        $pdf->setCellHeightRatio(1.0);
+        $pdf->setCellHeightRatio(1.25);
+
+        // CRITICAL: Since CSS margins don't work properly in TCPDF, we need to use setHtmlVSpace()
+        // to control vertical spacing of HTML block tags
+        $tagvs = array(
+            'h1' => array('h' => 0, 'n' => 0),
+            'h2' => array('h' => 0, 'n' => 0),
+            'p' => array('h' => 0, 'n' => 0),
+            'div' => array('h' => 0, 'n' => 0),
+        );
+        $pdf->setHtmlVSpace($tagvs);
+
+        // Remove additional vertical space inside cells
+        $pdf->SetCellPadding(0);
 
         // Add a page
         $pdf->AddPage();
