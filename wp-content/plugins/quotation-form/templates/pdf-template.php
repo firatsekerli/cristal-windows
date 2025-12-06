@@ -60,6 +60,7 @@
             padding: 12px;
             margin-bottom: 12px;
             page-break-inside: avoid;
+            page-break-after: always;
         }
         .item-header {
             font-weight: bold;
@@ -111,6 +112,7 @@
             border-top: 1px solid #cccccc;
             font-size: 8pt;
             color: #666666;
+            page-break-before: always;
         }
         .terms h3 {
             font-size: 10pt;
@@ -138,6 +140,7 @@
             padding: 15px;
             background-color: #ffffff;
             border-left: 4px solid #0066cc;
+            page-break-after: always;
         }
         .cover-letter p {
             margin: 8px 0;
@@ -290,7 +293,7 @@
 
             <?php if (isset($item['item_price']) && !empty($item['item_price'])): ?>
             <div class="item-price">
-                £<?php echo number_format((float)$item['item_price'], 2); ?>
+                Item Price: £<?php echo number_format((float)$item['item_price'], 2); ?>
             </div>
             <?php endif; ?>
         </div>

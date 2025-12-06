@@ -787,8 +787,8 @@ class Quotation_Form_Plugin {
         $customer_postcode = get_field('customer_postcode', $post_id);
         $quote_price = get_field('quote_price', $post_id);
 
-        // Create PDF content
-        $pdf_content = $this->generate_pdf_content($post_id, array(
+        // Generate and save PDF file
+        $data = array(
             'customer_name' => $customer_name,
             'customer_email' => $customer_email,
             'customer_phone' => $customer_phone,
@@ -796,12 +796,15 @@ class Quotation_Form_Plugin {
             'customer_postcode' => $customer_postcode,
             'basket_items' => $basket_items,
             'quote_price' => $quote_price
-        ));
+        );
 
-        // For now, we'll store the PDF URL in a meta field
-        // In a production environment, you would generate an actual PDF file
-        $pdf_url = admin_url('admin-ajax.php?action=download_quote_pdf&post_id=' . $post_id . '&nonce=' . wp_create_nonce('download_quote_pdf_' . $post_id));
-        update_field('quote_pdf_url', $pdf_url, $post_id);
+        // Generate PDF file and save it
+        $pdf_url = $this->save_pdf_file($post_id, $data);
+
+        // Update the PDF URL field with the actual file URL
+        if ($pdf_url) {
+            update_field('quote_pdf_url', $pdf_url, $post_id);
+        }
     }
 
     /**
@@ -811,6 +814,64 @@ class Quotation_Form_Plugin {
         ob_start();
         include QUOTATION_FORM_PLUGIN_DIR . 'templates/pdf-template.php';
         return ob_get_clean();
+    }
+
+    /**
+     * Save PDF file to uploads directory
+     */
+    private function save_pdf_file($post_id, $data) {
+        // Check if TCPDF is available
+        if (!class_exists('TCPDF')) {
+            return false;
+        }
+
+        // Create new PDF document
+        $pdf = new TCPDF('P', 'mm', 'A4', true, 'UTF-8', false);
+
+        // Set document information
+        $pdf->SetCreator('Cristal Windows');
+        $pdf->SetAuthor('Cristal Windows, Doors & Conservatories Ltd');
+        $pdf->SetTitle('Quotation - ' . $data['customer_name']);
+        $pdf->SetSubject('Quotation');
+
+        // Remove default header/footer
+        $pdf->setPrintHeader(false);
+        $pdf->setPrintFooter(false);
+
+        // Set margins
+        $pdf->SetMargins(15, 15, 15);
+        $pdf->SetAutoPageBreak(TRUE, 15);
+
+        // Set font
+        $pdf->SetFont('helvetica', '', 10);
+
+        // Add a page
+        $pdf->AddPage();
+
+        // Get HTML content
+        $html = $this->generate_pdf_content($post_id, $data);
+
+        // Output the HTML content
+        $pdf->writeHTML($html, true, false, true, false, '');
+
+        // Create uploads directory for quotes if it doesn't exist
+        $upload_dir = wp_upload_dir();
+        $quotes_dir = $upload_dir['basedir'] . '/quotes';
+        $quotes_url = $upload_dir['baseurl'] . '/quotes';
+
+        if (!file_exists($quotes_dir)) {
+            wp_mkdir_p($quotes_dir);
+        }
+
+        // Generate filename
+        $filename = 'quote-' . $post_id . '-' . sanitize_title($data['customer_name']) . '.pdf';
+        $file_path = $quotes_dir . '/' . $filename;
+
+        // Save PDF to file
+        $pdf->Output($file_path, 'F');
+
+        // Return the URL to the PDF file
+        return $quotes_url . '/' . $filename;
     }
 
     /**
