@@ -55,7 +55,7 @@ class Quotation_Form_Plugin {
      * Initialize hooks
      */
     private function init_hooks() {
-        add_action('init', array($this, 'register_quotation_cpt'));
+        // Note: quotation CPT is registered via ACF Pro UI
         add_action('acf/init', array($this, 'register_acf_options_page'));
         add_filter('acf/settings/save_json', array($this, 'acf_json_save_point'));
         add_filter('acf/settings/load_json', array($this, 'acf_json_load_point'));
@@ -77,42 +77,6 @@ class Quotation_Form_Plugin {
      */
     private function load_dependencies() {
         // Load additional files if needed
-    }
-
-    /**
-     * Register Quotation Custom Post Type
-     */
-    public function register_quotation_cpt() {
-        $labels = array(
-            'name'               => 'Quotations',
-            'singular_name'      => 'Quotation',
-            'menu_name'          => 'Quotations',
-            'add_new'            => 'Add New',
-            'add_new_item'       => 'Add New Quotation',
-            'edit_item'          => 'Edit Quotation',
-            'view_item'          => 'View Quotation',
-            'search_items'       => 'Search Quotations',
-            'not_found'          => 'No quotations found',
-            'not_found_in_trash' => 'No quotations found in trash'
-        );
-
-        $args = array(
-            'labels'              => $labels,
-            'public'              => false,
-            'show_ui'             => true,
-            'show_in_menu'        => true,
-            'menu_icon'           => 'dashicons-clipboard',
-            'menu_position'       => 26,
-            'capability_type'     => 'post',
-            'hierarchical'        => false,
-            'supports'            => array('title'),
-            'has_archive'         => false,
-            'rewrite'             => false,
-            'query_var'           => false,
-            'show_in_rest'        => false,
-        );
-
-        register_post_type('quotation', $args);
     }
 
     /**
