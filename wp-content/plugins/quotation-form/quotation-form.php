@@ -753,17 +753,20 @@ class Quotation_Form_Plugin {
     public function generate_quote_pdf($post_id) {
         // Only run for quotation post type
         if (get_post_type($post_id) !== 'quotation') {
+            error_log("PDF Generation: Not a quotation post type - " . get_post_type($post_id));
             return;
         }
 
         // Avoid infinite loops
         if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+            error_log("PDF Generation: Skipping autosave for post $post_id");
             return;
         }
 
         // Check if we have basket items with prices
         $basket_items = get_field('basket_items', $post_id);
         if (empty($basket_items)) {
+            error_log("PDF Generation: No basket items found for post $post_id");
             return;
         }
 
@@ -777,8 +780,11 @@ class Quotation_Form_Plugin {
         }
 
         if (!$has_prices) {
+            error_log("PDF Generation: No items with prices found for post $post_id. Basket items: " . print_r($basket_items, true));
             return;
         }
+
+        error_log("PDF Generation: Starting PDF generation for post $post_id");
 
         // Generate PDF using TCPDF or similar library
         // For now, we'll use WordPress's built-in capabilities
@@ -809,6 +815,9 @@ class Quotation_Form_Plugin {
         // Update the PDF URL field with the actual file URL
         if ($pdf_url) {
             update_field('quote_pdf_url', $pdf_url, $post_id);
+            error_log("PDF Generation: Successfully generated PDF for post $post_id. URL: $pdf_url");
+        } else {
+            error_log("PDF Generation: Failed to generate PDF for post $post_id");
         }
     }
 
@@ -827,11 +836,15 @@ class Quotation_Form_Plugin {
     private function save_pdf_file($post_id, $data) {
         // Check if TCPDF is available
         if (!class_exists('TCPDF')) {
+            error_log("PDF Generation: TCPDF class not found for post $post_id");
             return false;
         }
 
-        // Create new PDF document
-        $pdf = new TCPDF('P', 'mm', 'A4', true, 'UTF-8', false);
+        error_log("PDF Generation: TCPDF class found, creating PDF for post $post_id");
+
+        try {
+            // Create new PDF document
+            $pdf = new TCPDF('P', 'mm', 'A4', true, 'UTF-8', false);
 
         // Set document information
         $pdf->SetCreator('Cristal Windows');
@@ -859,24 +872,41 @@ class Quotation_Form_Plugin {
         // Output the HTML content
         $pdf->writeHTML($html, true, false, true, false, '');
 
-        // Create uploads directory for quotes if it doesn't exist
-        $upload_dir = wp_upload_dir();
-        $quotes_dir = $upload_dir['basedir'] . '/quotes';
-        $quotes_url = $upload_dir['baseurl'] . '/quotes';
+            // Create uploads directory for quotes if it doesn't exist
+            $upload_dir = wp_upload_dir();
+            $quotes_dir = $upload_dir['basedir'] . '/quotes';
+            $quotes_url = $upload_dir['baseurl'] . '/quotes';
 
-        if (!file_exists($quotes_dir)) {
-            wp_mkdir_p($quotes_dir);
+            error_log("PDF Generation: Upload dir basedir: " . $upload_dir['basedir']);
+            error_log("PDF Generation: Quotes directory: $quotes_dir");
+
+            if (!file_exists($quotes_dir)) {
+                wp_mkdir_p($quotes_dir);
+                error_log("PDF Generation: Created quotes directory: $quotes_dir");
+            }
+
+            // Generate filename
+            $filename = 'quote-' . $post_id . '-' . sanitize_title($data['customer_name']) . '.pdf';
+            $file_path = $quotes_dir . '/' . $filename;
+
+            error_log("PDF Generation: Saving PDF to: $file_path");
+
+            // Save PDF to file
+            $pdf->Output($file_path, 'F');
+
+            if (file_exists($file_path)) {
+                error_log("PDF Generation: PDF file successfully created at: $file_path");
+            } else {
+                error_log("PDF Generation: ERROR - PDF file not found after Output() call: $file_path");
+            }
+
+            // Return the URL to the PDF file
+            return $quotes_url . '/' . $filename;
+        } catch (Exception $e) {
+            error_log("PDF Generation: Exception occurred for post $post_id - " . $e->getMessage());
+            error_log("PDF Generation: Stack trace: " . $e->getTraceAsString());
+            return false;
         }
-
-        // Generate filename
-        $filename = 'quote-' . $post_id . '-' . sanitize_title($data['customer_name']) . '.pdf';
-        $file_path = $quotes_dir . '/' . $filename;
-
-        // Save PDF to file
-        $pdf->Output($file_path, 'F');
-
-        // Return the URL to the PDF file
-        return $quotes_url . '/' . $filename;
     }
 
     /**
