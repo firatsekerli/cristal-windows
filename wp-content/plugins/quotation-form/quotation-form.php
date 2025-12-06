@@ -757,38 +757,47 @@ class Quotation_Form_Plugin {
             return;
         }
 
-        // Avoid infinite loops
+        // Avoid infinite loops and autosaves
         if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
             error_log("PDF Generation: Skipping autosave for post $post_id");
             return;
         }
 
-        // Check if we have basket items with prices
-        $basket_items = get_field('basket_items', $post_id);
-        if (empty($basket_items)) {
-            error_log("PDF Generation: No basket items found for post $post_id");
+        // Don't run on revisions
+        if (wp_is_post_revision($post_id)) {
+            error_log("PDF Generation: Skipping revision for post $post_id");
             return;
         }
 
-        // Check if any item has a price
-        $has_prices = false;
-        foreach ($basket_items as $item) {
-            if (isset($item['item_price']) && !empty($item['item_price'])) {
-                $has_prices = true;
-                break;
-            }
+        // Don't run if this is just a draft
+        $post_status = get_post_status($post_id);
+        if ($post_status === 'auto-draft' || $post_status === 'trash') {
+            error_log("PDF Generation: Skipping post with status: $post_status");
+            return;
         }
 
-        if (!$has_prices) {
-            error_log("PDF Generation: No items with prices found for post $post_id. Basket items: " . print_r($basket_items, true));
+        error_log("PDF Generation: Starting PDF generation check for post $post_id");
+
+        // Get basket items - these should be saved now since we're at priority 25
+        $basket_items = get_field('basket_items', $post_id);
+
+        if (empty($basket_items)) {
+            error_log("PDF Generation: No basket items found for post $post_id - skipping PDF generation");
+            return;
+        }
+
+        error_log("PDF Generation: Found " . count($basket_items) . " basket items");
+
+        // Check if at least one item exists (don't require prices - admin might add them later)
+        // Generate PDF whenever there are basket items, even if prices aren't set yet
+        $has_valid_items = !empty($basket_items) && is_array($basket_items);
+
+        if (!$has_valid_items) {
+            error_log("PDF Generation: No valid items found for post $post_id");
             return;
         }
 
         error_log("PDF Generation: Starting PDF generation for post $post_id");
-
-        // Generate PDF using TCPDF or similar library
-        // For now, we'll use WordPress's built-in capabilities
-        // You may want to install a PDF library like TCPDF or mPDF
 
         // Get customer data
         $customer_name = get_field('customer_name', $post_id);
@@ -813,12 +822,18 @@ class Quotation_Form_Plugin {
         $pdf_url = $this->save_pdf_file($post_id, $data);
 
         // Update the PDF URL field with the actual file URL
+        // Use remove_action to prevent infinite loop
+        remove_action('acf/save_post', array($this, 'generate_quote_pdf'), 25);
+
         if ($pdf_url) {
             update_field('quote_pdf_url', $pdf_url, $post_id);
             error_log("PDF Generation: Successfully generated PDF for post $post_id. URL: $pdf_url");
         } else {
             error_log("PDF Generation: Failed to generate PDF for post $post_id");
         }
+
+        // Re-add the action for next time
+        add_action('acf/save_post', array($this, 'generate_quote_pdf'), 25);
     }
 
     /**
