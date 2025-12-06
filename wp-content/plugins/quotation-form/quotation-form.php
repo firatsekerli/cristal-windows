@@ -61,6 +61,8 @@ class Quotation_Form_Plugin {
         add_filter('acf/settings/load_json', array($this, 'acf_json_load_point'));
         add_action('wp_ajax_submit_quotation_form', array($this, 'handle_form_submission'));
         add_action('wp_ajax_nopriv_submit_quotation_form', array($this, 'handle_form_submission'));
+        add_action('wp_ajax_download_quote_pdf', array($this, 'handle_pdf_download'));
+        add_action('wp_ajax_nopriv_download_quote_pdf', array($this, 'handle_pdf_download'));
         add_shortcode('quotation_form', array($this, 'render_form_shortcode'));
 
         // Populate select field choices dynamically
@@ -70,6 +72,12 @@ class Quotation_Form_Plugin {
 
         // Add admin scripts for auto-slug generation
         add_action('acf/input/admin_enqueue_scripts', array($this, 'enqueue_admin_scripts'));
+
+        // Auto-calculate quote price when quotation is saved
+        add_action('acf/save_post', array($this, 'auto_calculate_quote_price'), 20);
+
+        // Generate PDF when quotation is saved
+        add_action('acf/save_post', array($this, 'generate_quote_pdf'), 25);
     }
 
     /**
@@ -165,6 +173,41 @@ class Quotation_Form_Plugin {
      */
     public function enqueue_admin_scripts() {
         ?>
+        <style>
+        .acf-field[data-name="quote_price"] input {
+            background: #f0f7ff !important;
+            font-weight: bold;
+            font-size: 16px;
+            color: #0066cc !important;
+        }
+        .acf-field[data-name="quote_pdf_url"] .acf-input-wrap {
+            position: relative;
+        }
+        .acf-field[data-name="quote_pdf_url"] input {
+            padding-right: 120px;
+        }
+        .pdf-download-button {
+            position: absolute;
+            right: 5px;
+            top: 5px;
+            background: #0066cc;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 3px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 12px;
+            display: inline-block;
+            transition: background 0.3s;
+        }
+        .pdf-download-button:hover {
+            background: #0052a3;
+            color: white;
+        }
+        .pdf-download-button:before {
+            content: "📄 ";
+        }
+        </style>
         <script type="text/javascript">
         (function($) {
             if (typeof acf === 'undefined') return;
@@ -179,6 +222,84 @@ class Quotation_Form_Plugin {
                     .replace(/-+/g, '-')             // Replace multiple hyphens with single
                     .replace(/^-+|-+$/g, '');        // Remove leading/trailing hyphens
             }
+
+            // Auto-calculate quote price from item prices
+            function calculateQuotePrice() {
+                var total = 0;
+                var $basketItemsRepeater = $('.acf-field[data-name="basket_items"]');
+
+                if ($basketItemsRepeater.length) {
+                    $basketItemsRepeater.find('.acf-row:not(.acf-clone)').each(function() {
+                        var $row = $(this);
+                        var $priceInput = $row.find('[data-name="item_price"] input[type="number"]');
+
+                        if ($priceInput.length) {
+                            var price = parseFloat($priceInput.val()) || 0;
+                            total += price;
+                        }
+                    });
+                }
+
+                // Update the quote price field
+                var $quotePriceField = $('.acf-field[data-name="quote_price"] input[type="number"]');
+                if ($quotePriceField.length) {
+                    $quotePriceField.val(total.toFixed(2));
+                    $quotePriceField.trigger('change');
+                }
+            }
+
+            // Listen for changes to item prices
+            acf.addAction('ready', function() {
+                // Calculate on page load
+                calculateQuotePrice();
+
+                // Recalculate when item price changes
+                $(document).on('change keyup', '.acf-field[data-name="item_price"] input', function() {
+                    calculateQuotePrice();
+                });
+
+                // Recalculate when rows are added or removed
+                acf.addAction('append', function($el) {
+                    if ($el.closest('.acf-field[data-name="basket_items"]').length) {
+                        calculateQuotePrice();
+                    }
+                });
+
+                acf.addAction('remove', function($el) {
+                    if ($el.closest('.acf-field[data-name="basket_items"]').length) {
+                        setTimeout(calculateQuotePrice, 100);
+                    }
+                });
+
+                // Add download button to PDF URL field
+                var $pdfUrlField = $('.acf-field[data-name="quote_pdf_url"]');
+                if ($pdfUrlField.length) {
+                    var $input = $pdfUrlField.find('input');
+                    var pdfUrl = $input.val();
+
+                    if (pdfUrl && !$pdfUrlField.find('.pdf-download-button').length) {
+                        var $button = $('<a href="' + pdfUrl + '" target="_blank" class="pdf-download-button">Download PDF</a>');
+                        $pdfUrlField.find('.acf-input-wrap').append($button);
+                    }
+
+                    // Update button when URL changes
+                    $input.on('change', function() {
+                        var url = $(this).val();
+                        var $existingButton = $pdfUrlField.find('.pdf-download-button');
+
+                        if (url) {
+                            if ($existingButton.length) {
+                                $existingButton.attr('href', url);
+                            } else {
+                                var $button = $('<a href="' + url + '" target="_blank" class="pdf-download-button">Download PDF</a>');
+                                $pdfUrlField.find('.acf-input-wrap').append($button);
+                            }
+                        } else {
+                            $existingButton.remove();
+                        }
+                    });
+                }
+            });
 
             // Auto-generate slug from name - works for all repeaters
             acf.addAction('ready_field/name=name', function($field) {
@@ -581,6 +702,203 @@ class Quotation_Form_Plugin {
 
             wp_mail($customer_email, $customer_subject, $customer_message);
         }
+    }
+
+    /**
+     * Auto-calculate quote price from item prices
+     */
+    public function auto_calculate_quote_price($post_id) {
+        // Only run for quotation post type
+        if (get_post_type($post_id) !== 'quotation') {
+            return;
+        }
+
+        // Avoid infinite loops
+        if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+            return;
+        }
+
+        // Get basket items
+        $basket_items = get_field('basket_items', $post_id);
+
+        if (empty($basket_items) || !is_array($basket_items)) {
+            return;
+        }
+
+        // Calculate total price
+        $total = 0;
+        foreach ($basket_items as $item) {
+            if (isset($item['item_price']) && is_numeric($item['item_price'])) {
+                $total += floatval($item['item_price']);
+            }
+        }
+
+        // Update quote price field
+        update_field('quote_price', $total, $post_id);
+    }
+
+    /**
+     * Generate quote PDF
+     */
+    public function generate_quote_pdf($post_id) {
+        // Only run for quotation post type
+        if (get_post_type($post_id) !== 'quotation') {
+            return;
+        }
+
+        // Avoid infinite loops
+        if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+            return;
+        }
+
+        // Check if we have basket items with prices
+        $basket_items = get_field('basket_items', $post_id);
+        if (empty($basket_items)) {
+            return;
+        }
+
+        // Check if any item has a price
+        $has_prices = false;
+        foreach ($basket_items as $item) {
+            if (isset($item['item_price']) && !empty($item['item_price'])) {
+                $has_prices = true;
+                break;
+            }
+        }
+
+        if (!$has_prices) {
+            return;
+        }
+
+        // Generate PDF using TCPDF or similar library
+        // For now, we'll use WordPress's built-in capabilities
+        // You may want to install a PDF library like TCPDF or mPDF
+
+        // Get customer data
+        $customer_name = get_field('customer_name', $post_id);
+        $customer_email = get_field('customer_email', $post_id);
+        $customer_phone = get_field('customer_phone', $post_id);
+        $customer_address = get_field('customer_address', $post_id);
+        $customer_postcode = get_field('customer_postcode', $post_id);
+        $quote_price = get_field('quote_price', $post_id);
+
+        // Create PDF content
+        $pdf_content = $this->generate_pdf_content($post_id, array(
+            'customer_name' => $customer_name,
+            'customer_email' => $customer_email,
+            'customer_phone' => $customer_phone,
+            'customer_address' => $customer_address,
+            'customer_postcode' => $customer_postcode,
+            'basket_items' => $basket_items,
+            'quote_price' => $quote_price
+        ));
+
+        // For now, we'll store the PDF URL in a meta field
+        // In a production environment, you would generate an actual PDF file
+        $pdf_url = admin_url('admin-ajax.php?action=download_quote_pdf&post_id=' . $post_id . '&nonce=' . wp_create_nonce('download_quote_pdf_' . $post_id));
+        update_field('quote_pdf_url', $pdf_url, $post_id);
+    }
+
+    /**
+     * Generate PDF content
+     */
+    private function generate_pdf_content($post_id, $data) {
+        ob_start();
+        include QUOTATION_FORM_PLUGIN_DIR . 'templates/pdf-template.php';
+        return ob_get_clean();
+    }
+
+    /**
+     * Handle PDF download via AJAX
+     */
+    public function handle_pdf_download() {
+        $post_id = isset($_GET['post_id']) ? intval($_GET['post_id']) : 0;
+        $nonce = isset($_GET['nonce']) ? $_GET['nonce'] : '';
+
+        // Verify nonce
+        if (!wp_verify_nonce($nonce, 'download_quote_pdf_' . $post_id)) {
+            wp_die('Security check failed');
+        }
+
+        // Verify post exists and is a quotation
+        if (get_post_type($post_id) !== 'quotation') {
+            wp_die('Invalid quotation');
+        }
+
+        // Get data
+        $customer_name = get_field('customer_name', $post_id);
+        $customer_email = get_field('customer_email', $post_id);
+        $customer_phone = get_field('customer_phone', $post_id);
+        $customer_address = get_field('customer_address', $post_id);
+        $customer_postcode = get_field('customer_postcode', $post_id);
+        $basket_items = get_field('basket_items', $post_id);
+        $quote_price = get_field('quote_price', $post_id);
+
+        $data = array(
+            'customer_name' => $customer_name,
+            'customer_email' => $customer_email,
+            'customer_phone' => $customer_phone,
+            'customer_address' => $customer_address,
+            'customer_postcode' => $customer_postcode,
+            'basket_items' => $basket_items,
+            'quote_price' => $quote_price
+        );
+
+        // Check if TCPDF is available
+        if (class_exists('TCPDF')) {
+            $this->generate_pdf_with_tcpdf($post_id, $data);
+        } else {
+            // Fallback: Output HTML that can be printed as PDF
+            $this->output_printable_quote($post_id, $data);
+        }
+    }
+
+    /**
+     * Generate PDF using TCPDF library
+     */
+    private function generate_pdf_with_tcpdf($post_id, $data) {
+        require_once(ABSPATH . 'wp-includes/class-phpass.php');
+
+        // Create new PDF document
+        $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+
+        // Set document information
+        $pdf->SetCreator('Cristal Windows');
+        $pdf->SetAuthor('Cristal Windows, Doors & Conservatories Ltd');
+        $pdf->SetTitle('Quotation - ' . $data['customer_name']);
+        $pdf->SetSubject('Quotation');
+
+        // Remove default header/footer
+        $pdf->setPrintHeader(false);
+        $pdf->setPrintFooter(false);
+
+        // Set margins
+        $pdf->SetMargins(15, 15, 15);
+        $pdf->SetAutoPageBreak(TRUE, 15);
+
+        // Add a page
+        $pdf->AddPage();
+
+        // Get HTML content
+        $html = $this->generate_pdf_content($post_id, $data);
+
+        // Output the HTML content
+        $pdf->writeHTML($html, true, false, true, false, '');
+
+        // Close and output PDF document
+        $filename = 'quote-' . $post_id . '-' . sanitize_title($data['customer_name']) . '.pdf';
+        $pdf->Output($filename, 'D');
+        exit;
+    }
+
+    /**
+     * Output printable HTML quote (fallback when no PDF library available)
+     */
+    private function output_printable_quote($post_id, $data) {
+        header('Content-Type: text/html; charset=utf-8');
+        echo $this->generate_pdf_content($post_id, $data);
+        echo '<script>window.print();</script>';
+        exit;
     }
 
 }

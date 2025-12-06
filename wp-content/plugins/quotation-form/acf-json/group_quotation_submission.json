@@ -163,6 +163,16 @@
                     "label": "Location",
                     "name": "location",
                     "type": "text"
+                },
+                {
+                    "key": "field_item_price",
+                    "label": "Item Price (£)",
+                    "name": "item_price",
+                    "type": "number",
+                    "instructions": "Enter the price for this item",
+                    "prepend": "£",
+                    "step": 0.01,
+                    "min": 0
                 }
             ]
         },
@@ -193,7 +203,10 @@
             "label": "Quote Price (£)",
             "name": "quote_price",
             "type": "number",
-            "prepend": "£"
+            "instructions": "Auto-calculated from item prices. Add prices to individual items in the Basket Items tab.",
+            "prepend": "£",
+            "readonly": 1,
+            "disabled": 1
         },
         {
             "key": "field_quote_sent_date",
@@ -221,12 +234,22 @@
             "media_upload": 0
         },
         {
-            "key": "field_quote_pdf",
+            "key": "field_generate_quote_pdf",
+            "label": "Generate Quote PDF",
+            "name": "generate_quote_pdf",
+            "type": "message",
+            "message": "The quote PDF will be automatically generated when you save this quotation with item prices.",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_quote_pdf_url",
             "label": "Quote PDF",
-            "name": "quote_pdf",
-            "type": "file",
-            "return_format": "array",
-            "mime_types": "pdf"
+            "name": "quote_pdf_url",
+            "type": "url",
+            "instructions": "The PDF will be auto-generated and the link will appear here after saving.",
+            "readonly": 1,
+            "disabled": 1
         }
     ],
     "location": [
@@ -243,5 +266,5 @@
     "style": "default",
     "label_placement": "top",
     "instruction_placement": "label",
-    "modified": 1732113600
+    "modified": 1733503600
 }
