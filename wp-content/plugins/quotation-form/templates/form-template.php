@@ -16,6 +16,10 @@ $categories = function_exists('get_field') ? get_field('product_categories', 'op
 $product_types = function_exists('get_field') ? get_field('product_types', 'option') : array();
 $materials = function_exists('get_field') ? get_field('materials', 'option') : array();
 $styles = function_exists('get_field') ? get_field('styles', 'option') : array();
+$cill_options = function_exists('get_field') ? get_field('cill_options', 'option') : array();
+$glazing_types = function_exists('get_field') ? get_field('glazing_types', 'option') : array();
+$glazing_features = function_exists('get_field') ? get_field('glazing_features', 'option') : array();
+$hardware_colours = function_exists('get_field') ? get_field('hardware_colours', 'option') : array();
 
 // Group product types by category
 $window_types = array();
@@ -305,9 +309,22 @@ if (!$use_acf) {
                         <label for="cill">Cill</label>
                         <select id="cill" name="cill">
                             <option value="">Select Cill</option>
-                            <option value="150mm">150mm Sill</option>
-                            <option value="200mm">200mm Sill</option>
-                            <option value="none">No Sill</option>
+                            <?php
+                            if (!empty($cill_options) && is_array($cill_options)) {
+                                foreach ($cill_options as $option) {
+                                    $label = isset($option['label']) ? $option['label'] : '';
+                                    $value = isset($option['value']) ? $option['value'] : '';
+                                    if ($label && $value) {
+                                        echo '<option value="' . esc_attr($value) . '">' . esc_html($label) . '</option>';
+                                    }
+                                }
+                            } else {
+                                // Fallback hardcoded options
+                                echo '<option value="85mm">85 mm</option>';
+                                echo '<option value="150mm">150 mm</option>';
+                                echo '<option value="180mm">180 mm</option>';
+                            }
+                            ?>
                         </select>
                     </div>
 
@@ -343,20 +360,46 @@ if (!$use_acf) {
                         <label for="glazing-type">Glazing Type</label>
                         <select id="glazing-type" name="glazing_type">
                             <option value="">Select Glazing Type</option>
-                            <option value="clear">Clear</option>
-                            <option value="obscured">Obscured</option>
-                            <option value="tinted">Tinted</option>
-                            <option value="self-cleaning">Self Cleaning</option>
+                            <?php
+                            if (!empty($glazing_types) && is_array($glazing_types)) {
+                                foreach ($glazing_types as $option) {
+                                    $label = isset($option['label']) ? $option['label'] : '';
+                                    $value = isset($option['value']) ? $option['value'] : '';
+                                    if ($label && $value) {
+                                        echo '<option value="' . esc_attr($value) . '">' . esc_html($label) . '</option>';
+                                    }
+                                }
+                            } else {
+                                // Fallback hardcoded options
+                                echo '<option value="clear">Clear</option>';
+                                echo '<option value="obscured">Obscured</option>';
+                                echo '<option value="tinted">Tinted</option>';
+                                echo '<option value="self-cleaning">Self Cleaning</option>';
+                            }
+                            ?>
                         </select>
                     </div>
 
                     <div class="form-group">
                         <label for="glazing-features">Glazing Features</label>
                         <select id="glazing-features" name="glazing_features">
-                            <option value="not-required">Not Required</option>
-                            <option value="acoustic">Acoustic</option>
-                            <option value="security">Security</option>
-                            <option value="thermal">Thermal</option>
+                            <option value="">Not Required</option>
+                            <?php
+                            if (!empty($glazing_features) && is_array($glazing_features)) {
+                                foreach ($glazing_features as $option) {
+                                    $label = isset($option['label']) ? $option['label'] : '';
+                                    $value = isset($option['value']) ? $option['value'] : '';
+                                    if ($label && $value) {
+                                        echo '<option value="' . esc_attr($value) . '">' . esc_html($label) . '</option>';
+                                    }
+                                }
+                            } else {
+                                // Fallback hardcoded options
+                                echo '<option value="acoustic">Acoustic</option>';
+                                echo '<option value="security">Security</option>';
+                                echo '<option value="thermal">Thermal</option>';
+                            }
+                            ?>
                         </select>
                     </div>
 
@@ -364,10 +407,23 @@ if (!$use_acf) {
                         <label for="hardware-colour">Hardware Colour</label>
                         <select id="hardware-colour" name="hardware_colour">
                             <option value="">Select Hardware Colour</option>
-                            <option value="white">White</option>
-                            <option value="chrome">Chrome</option>
-                            <option value="gold">Gold</option>
-                            <option value="black">Black</option>
+                            <?php
+                            if (!empty($hardware_colours) && is_array($hardware_colours)) {
+                                foreach ($hardware_colours as $option) {
+                                    $label = isset($option['label']) ? $option['label'] : '';
+                                    $value = isset($option['value']) ? $option['value'] : '';
+                                    if ($label && $value) {
+                                        echo '<option value="' . esc_attr($value) . '">' . esc_html($label) . '</option>';
+                                    }
+                                }
+                            } else {
+                                // Fallback hardcoded options
+                                echo '<option value="white">White</option>';
+                                echo '<option value="chrome">Chrome</option>';
+                                echo '<option value="gold">Gold</option>';
+                                echo '<option value="black">Black</option>';
+                            }
+                            ?>
                         </select>
                     </div>
 
