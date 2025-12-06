@@ -88,6 +88,10 @@ class Quotation_Form_Plugin {
         add_filter('manage_quotation_posts_columns', array($this, 'add_quotation_columns'));
         add_action('manage_quotation_posts_custom_column', array($this, 'populate_quotation_columns'), 10, 2);
         add_filter('manage_edit-quotation_sortable_columns', array($this, 'sortable_quotation_columns'));
+
+        // Add manual PDF generation button in admin
+        add_action('admin_notices', array($this, 'show_pdf_generation_notices'));
+        add_action('admin_post_generate_quote_pdf', array($this, 'handle_manual_pdf_generation'));
     }
 
     /**
@@ -1130,6 +1134,106 @@ class Quotation_Form_Plugin {
         $columns['follow_up_date'] = 'follow_up_date';
         $columns['quote_status'] = 'quote_status';
         return $columns;
+    }
+
+    /**
+     * Show PDF generation notices in admin
+     */
+    public function show_pdf_generation_notices() {
+        global $pagenow, $post;
+
+        // Only show on quotation edit pages
+        if ($pagenow === 'post.php' && isset($_GET['post'])) {
+            $post_id = intval($_GET['post']);
+            if (get_post_type($post_id) === 'quotation') {
+                $basket_items = get_field('basket_items', $post_id);
+                $pdf_url = get_field('quote_pdf_url', $post_id);
+
+                // Check if we need to show PDF generation status
+                if (!empty($basket_items) && empty($pdf_url)) {
+                    // Check if items have prices
+                    $has_priced_items = false;
+                    foreach ($basket_items as $item) {
+                        if (isset($item['item_price']) && floatval($item['item_price']) > 0) {
+                            $has_priced_items = true;
+                            break;
+                        }
+                    }
+
+                    if ($has_priced_items) {
+                        $generate_url = admin_url('admin-post.php?action=generate_quote_pdf&post_id=' . $post_id);
+                        $generate_url = wp_nonce_url($generate_url, 'generate_pdf_' . $post_id);
+
+                        echo '<div class="notice notice-warning is-dismissible">';
+                        echo '<p><strong>PDF not generated yet.</strong> This quotation has priced items but no PDF. ';
+                        echo '<a href="' . esc_url($generate_url) . '" class="button button-primary">Generate PDF Now</a></p>';
+                        echo '</div>';
+                    } else {
+                        echo '<div class="notice notice-info is-dismissible">';
+                        echo '<p><strong>PDF will be generated automatically</strong> once you add prices to the items and save this quotation.</p>';
+                        echo '</div>';
+                    }
+                }
+            }
+        }
+
+        // Show success/error messages from manual PDF generation
+        if (isset($_GET['pdf_generated'])) {
+            if ($_GET['pdf_generated'] === 'success') {
+                echo '<div class="notice notice-success is-dismissible">';
+                echo '<p><strong>Success!</strong> PDF has been generated successfully.</p>';
+                echo '</div>';
+            } else if ($_GET['pdf_generated'] === 'error') {
+                $error_msg = isset($_GET['error_msg']) ? urldecode($_GET['error_msg']) : 'Unknown error';
+                echo '<div class="notice notice-error is-dismissible">';
+                echo '<p><strong>Error generating PDF:</strong> ' . esc_html($error_msg) . '</p>';
+                echo '</div>';
+            }
+        }
+    }
+
+    /**
+     * Handle manual PDF generation from admin
+     */
+    public function handle_manual_pdf_generation() {
+        if (!isset($_GET['post_id'])) {
+            wp_die('No quotation specified');
+        }
+
+        $post_id = intval($_GET['post_id']);
+
+        // Verify nonce
+        if (!isset($_GET['_wpnonce']) || !wp_verify_nonce($_GET['_wpnonce'], 'generate_pdf_' . $post_id)) {
+            wp_die('Security check failed');
+        }
+
+        // Check permissions
+        if (!current_user_can('edit_post', $post_id)) {
+            wp_die('You do not have permission to generate PDFs for this quotation');
+        }
+
+        // Verify it's a quotation
+        if (get_post_type($post_id) !== 'quotation') {
+            wp_die('Invalid quotation');
+        }
+
+        // Attempt to generate PDF
+        try {
+            $this->generate_quote_pdf($post_id);
+
+            // Check if PDF was created
+            $pdf_url = get_field('quote_pdf_url', $post_id);
+
+            if ($pdf_url) {
+                wp_redirect(admin_url('post.php?post=' . $post_id . '&action=edit&pdf_generated=success'));
+            } else {
+                wp_redirect(admin_url('post.php?post=' . $post_id . '&action=edit&pdf_generated=error&error_msg=' . urlencode('PDF was not created. Check that items have prices.')));
+            }
+        } catch (Exception $e) {
+            wp_redirect(admin_url('post.php?post=' . $post_id . '&action=edit&pdf_generated=error&error_msg=' . urlencode($e->getMessage())));
+        }
+
+        exit;
     }
 
 }
