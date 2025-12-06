@@ -28,6 +28,14 @@ if (file_exists(QUOTATION_FORM_PLUGIN_DIR . 'vendor/autoload.php')) {
     require_once QUOTATION_FORM_PLUGIN_DIR . 'vendor/autoload.php';
 }
 
+// Fallback: Load TCPDF directly if class is not available
+if (!class_exists('TCPDF')) {
+    $tcpdf_path = QUOTATION_FORM_PLUGIN_DIR . 'vendor/tecnickcom/tcpdf/tcpdf.php';
+    if (file_exists($tcpdf_path)) {
+        require_once $tcpdf_path;
+    }
+}
+
 /**
  * Main Plugin Class
  */
@@ -919,11 +927,29 @@ class Quotation_Form_Plugin {
         if (!class_exists('TCPDF')) {
             $debug_log[] = "❌ ERROR: TCPDF class not found";
             $debug_log[] = "This usually means the TCPDF library is not properly installed";
-            error_log("PDF Generation: TCPDF class not found for post $post_id");
-            return array('url' => false, 'debug_log' => $debug_log);
+
+            // Try to load TCPDF directly as a last resort
+            $tcpdf_path = QUOTATION_FORM_PLUGIN_DIR . 'vendor/tecnickcom/tcpdf/tcpdf.php';
+            if (file_exists($tcpdf_path)) {
+                $debug_log[] = "Attempting to load TCPDF directly from: $tcpdf_path";
+                require_once $tcpdf_path;
+
+                if (class_exists('TCPDF')) {
+                    $debug_log[] = "✓ TCPDF loaded successfully via direct require";
+                } else {
+                    $debug_log[] = "❌ Failed to load TCPDF even after direct require";
+                    error_log("PDF Generation: TCPDF class not found for post $post_id");
+                    return array('url' => false, 'debug_log' => $debug_log);
+                }
+            } else {
+                $debug_log[] = "❌ TCPDF file not found at: $tcpdf_path";
+                error_log("PDF Generation: TCPDF class not found for post $post_id");
+                return array('url' => false, 'debug_log' => $debug_log);
+            }
+        } else {
+            $debug_log[] = "✓ TCPDF class found and ready";
         }
 
-        $debug_log[] = "✓ TCPDF class found";
         error_log("PDF Generation: TCPDF class found, creating PDF for post $post_id");
 
         try {
