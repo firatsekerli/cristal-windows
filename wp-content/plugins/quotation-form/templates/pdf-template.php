@@ -23,7 +23,7 @@
         .company-info h1 {
             color: #0066cc;
             margin: 0 0 2px 0;
-            font-size: 12pt;
+            font-size: 9pt;
             font-weight: bold;
         }
         .company-info p {
@@ -68,7 +68,7 @@
             page-break-after: always;
         }
         .item:first-of-type {
-            margin-top: 15px;
+            margin-top: 25px;
         }
         .item:last-child {
             page-break-after: auto;
@@ -173,7 +173,7 @@
 <body>
     <!-- Header -->
     <div class="header">
-        <table style="width: 100%; border: 0; padding: 0; margin: 0;" cellpadding="0" cellspacing="0">
+        <table style="width: 100%; border: none; padding: 0; margin: 0;" cellpadding="0" cellspacing="0">
             <tr>
                 <td style="width: 35%; vertical-align: top;">
                     <?php
@@ -191,7 +191,7 @@
                     }
 
                     if ($logo_url): ?>
-                        <img src="<?php echo esc_url($logo_url); ?>" alt="Company Logo" style="max-width: 100px;">
+                        <img src="<?php echo esc_url($logo_url); ?>" alt="Company Logo" style="max-width: 50px;">
                     <?php endif; ?>
                 </td>
                 <td style="width: 65%; vertical-align: top;">
