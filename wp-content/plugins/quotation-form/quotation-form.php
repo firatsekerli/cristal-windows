@@ -974,6 +974,11 @@ class Quotation_Form_Plugin {
         // Set font - use dejavusans for better Unicode/Turkish character support
         $pdf->SetFont('dejavusans', '', 10);
 
+        // Configure cell padding and margins to respect CSS line-height
+        $pdf->setCellPaddings(0, 0, 0, 0);
+        $pdf->setCellMargins(0, 0, 0, 0);
+        $pdf->setCellHeightRatio(1.0);
+
         // Add a page
         $pdf->AddPage();
 
@@ -1117,6 +1122,11 @@ class Quotation_Form_Plugin {
 
         // Set font - use dejavusans for better Unicode/Turkish character support
         $pdf->SetFont('dejavusans', '', 10);
+
+        // Configure cell padding and margins to respect CSS line-height
+        $pdf->setCellPaddings(0, 0, 0, 0);
+        $pdf->setCellMargins(0, 0, 0, 0);
+        $pdf->setCellHeightRatio(1.0);
 
         // Add a page
         $pdf->AddPage();

@@ -11,7 +11,7 @@
         }
         .header {
             width: 100%;
-            margin-bottom: 8px;
+            margin-bottom: 4px;
             margin-top: 0;
             padding-top: 0;
             border-bottom: 3px solid #0066cc;
@@ -52,7 +52,7 @@
         }
         .items-section h2 {
             font-size: 12pt;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             color: #0066cc;
             border-bottom: 3px solid #0066cc;
             padding-bottom: 6px;
@@ -61,9 +61,13 @@
         .item {
             background-color: #f9f9f9;
             padding: 12px;
+            margin-top: 12px;
             margin-bottom: 10px;
             page-break-inside: avoid;
             page-break-after: always;
+        }
+        .item:first-of-type {
+            margin-top: 15px;
         }
         .item:last-child {
             page-break-after: auto;
@@ -142,22 +146,26 @@
         }
         .cover-letter {
             margin-bottom: 12px;
+            margin-top: 0;
             padding: 0;
             background-color: #ffffff;
         }
         .cover-letter p {
-            margin: 4px 0;
-            line-height: 1.3;
+            margin: 3px 0;
+            line-height: 1.1;
+        }
+        .cover-letter p:first-child {
+            margin-top: 0;
         }
         .customer-info-inline {
-            margin: 8px 0;
-            padding: 8px;
+            margin: 6px 0;
+            padding: 6px 12px;
             background-color: #f9f9f9;
         }
         .customer-info-inline p {
             margin: 1px 0;
             font-size: 9pt;
-            line-height: 1.2;
+            line-height: 1.1;
         }
     </style>
 </head>
