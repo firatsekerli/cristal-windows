@@ -6,75 +6,75 @@
         body {
             font-family: helvetica, arial, sans-serif;
             font-size: 10pt;
-            line-height: 1.4;
+            line-height: 1.2;
             color: #000000;
         }
         .header {
             width: 100%;
-            margin-bottom: 20px;
+            margin-bottom: 12px;
             border-bottom: 3px solid #0066cc;
-            padding-bottom: 10px;
+            padding-bottom: 8px;
         }
         .company-info {
             text-align: right;
         }
         .company-info h1 {
             color: #0066cc;
-            margin: 0 0 8px 0;
-            font-size: 18pt;
+            margin: 0 0 4px 0;
+            font-size: 16pt;
             font-weight: bold;
         }
         .company-info p {
-            margin: 1px 0;
-            font-size: 9pt;
+            margin: 0.5px 0;
+            font-size: 8.5pt;
+            line-height: 1.1;
         }
         .customer-section {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
         .customer-section h2 {
             font-size: 11pt;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             color: #333333;
             font-weight: bold;
         }
         .customer-details {
-            line-height: 1.6;
+            line-height: 1.3;
         }
         .customer-details p {
-            margin: 3px 0;
+            margin: 2px 0;
         }
         .items-section {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
         .items-section h2 {
             font-size: 12pt;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             color: #0066cc;
             border-bottom: 2px solid #0066cc;
-            padding-bottom: 5px;
+            padding-bottom: 4px;
             font-weight: bold;
         }
         .item {
             background-color: #f9f9f9;
             border: 1px solid #cccccc;
-            padding: 12px;
-            margin-bottom: 12px;
+            padding: 10px;
+            margin-bottom: 10px;
             page-break-inside: avoid;
-            page-break-after: always;
         }
         .item-header {
             font-weight: bold;
             font-size: 11pt;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             color: #0066cc;
         }
         .item-details {
-            margin-top: 8px;
+            margin-top: 6px;
         }
         .item-detail {
-            padding: 4px 0;
+            padding: 3px 0;
             border-bottom: 1px solid #eeeeee;
-            line-height: 1.4;
+            line-height: 1.2;
         }
         .item-detail:last-child {
             border-bottom: none;
@@ -84,18 +84,18 @@
             font-weight: bold;
         }
         .item-price {
-            font-size: 12pt;
+            font-size: 11pt;
             font-weight: bold;
             color: #0066cc;
-            margin-top: 8px;
+            margin-top: 6px;
             text-align: right;
         }
         .total-section {
-            margin-top: 20px;
+            margin-top: 12px;
             text-align: right;
-            font-size: 14pt;
+            font-size: 13pt;
             font-weight: bold;
-            padding: 12px;
+            padding: 10px;
             background-color: #f0f7ff;
             border: 2px solid #0066cc;
         }
@@ -104,47 +104,44 @@
         }
         .total-section .total-amount {
             color: #0066cc;
-            font-size: 18pt;
+            font-size: 16pt;
         }
         .terms {
-            margin-top: 20px;
-            padding-top: 15px;
+            margin-top: 15px;
+            padding-top: 12px;
             border-top: 1px solid #cccccc;
             font-size: 8pt;
             color: #666666;
-            page-break-before: always;
         }
         .terms h3 {
             font-size: 10pt;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             color: #333333;
             font-weight: bold;
         }
         .terms p {
-            margin: 5px 0;
-            line-height: 1.4;
+            margin: 4px 0;
+            line-height: 1.2;
         }
         .footer {
-            margin-top: 20px;
+            margin-top: 15px;
             text-align: center;
             font-size: 8pt;
             color: #666666;
             border-top: 1px solid #cccccc;
-            padding-top: 12px;
+            padding-top: 10px;
         }
         .footer p {
-            margin: 3px 0;
+            margin: 2px 0;
         }
         .cover-letter {
-            margin-bottom: 25px;
-            padding: 15px;
+            margin-bottom: 18px;
+            padding: 0;
             background-color: #ffffff;
-            border-left: 4px solid #0066cc;
-            page-break-after: always;
         }
         .cover-letter p {
-            margin: 8px 0;
-            line-height: 1.6;
+            margin: 5px 0;
+            line-height: 1.3;
         }
     </style>
 </head>
@@ -177,6 +174,13 @@
         <p>Thank you for your recent enquiry regarding windows, doors and conservatories. We are pleased to provide you with the following quotation based on your requirements.</p>
 
         <p>This quotation is based on a supply and installation service. All prices are given in good faith and are subject to a signed company contract and final survey. Prices are inclusive of VAT at 20%.</p>
+
+        <?php if (!empty($data['quote_price'])): ?>
+        <div class="total-section">
+            <span class="total-label">TOTAL QUOTE PRICE:</span>
+            <span class="total-amount">£<?php echo number_format((float)$data['quote_price'], 2); ?></span>
+        </div>
+        <?php endif; ?>
 
         <p>We look forward to working with you on this project. Should you have any questions or require any clarification, please do not hesitate to contact us.</p>
 
@@ -302,14 +306,6 @@
         endforeach;
         ?>
     </div>
-
-    <!-- Total -->
-    <?php if (!empty($data['quote_price'])): ?>
-    <div class="total-section">
-        <span class="total-label">TOTAL QUOTE PRICE:</span>
-        <span class="total-amount">£<?php echo number_format((float)$data['quote_price'], 2); ?></span>
-    </div>
-    <?php endif; ?>
 
     <!-- Terms and Conditions -->
     <div class="terms">
