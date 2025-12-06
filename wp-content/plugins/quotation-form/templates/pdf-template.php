@@ -12,6 +12,8 @@
         .header {
             width: 100%;
             margin-bottom: 8px;
+            margin-top: 0;
+            padding-top: 0;
             border-bottom: 3px solid #0066cc;
             padding-bottom: 6px;
         }
@@ -20,14 +22,14 @@
         }
         .company-info h1 {
             color: #0066cc;
-            margin: 0 0 4px 0;
+            margin: 0 0 2px 0;
             font-size: 16pt;
             font-weight: bold;
         }
         .company-info p {
-            margin: 0.5px 0;
+            margin: 0;
             font-size: 8.5pt;
-            line-height: 1.1;
+            line-height: 1.0;
         }
         .customer-section {
             margin-bottom: 15px;
@@ -46,6 +48,7 @@
         }
         .items-section {
             margin-bottom: 15px;
+            page-break-before: always;
         }
         .items-section h2 {
             font-size: 12pt;
@@ -57,8 +60,6 @@
         }
         .item {
             background-color: #f9f9f9;
-            border: 2px solid #0066cc;
-            border-top: 4px solid #0066cc;
             padding: 12px;
             margin-bottom: 10px;
             page-break-inside: avoid;
@@ -117,7 +118,6 @@
             border-top: 1px solid #cccccc;
             font-size: 8pt;
             color: #666666;
-            page-break-before: always;
         }
         .terms h3 {
             font-size: 10pt;
@@ -153,11 +153,11 @@
             margin: 8px 0;
             padding: 8px;
             background-color: #f9f9f9;
-            border-left: 3px solid #0066cc;
         }
         .customer-info-inline p {
-            margin: 2px 0;
+            margin: 1px 0;
             font-size: 9pt;
+            line-height: 1.2;
         }
     </style>
 </head>
@@ -185,10 +185,8 @@
     <div class="cover-letter">
         <p><strong>Date:</strong> <?php echo date('d F Y'); ?></p>
 
-        <p>Dear <?php echo esc_html($data['customer_name']); ?>,</p>
-
         <div class="customer-info-inline">
-            <p><strong><?php echo esc_html($data['customer_name']); ?></strong></p>
+            <p><strong>Dear <?php echo esc_html($data['customer_name']); ?>,</strong></p>
             <?php if (!empty($data['customer_address'])): ?>
                 <p><?php echo nl2br(esc_html($data['customer_address'])); ?></p>
             <?php endif; ?>
@@ -209,8 +207,7 @@
 
         <p>We look forward to working with you on this project. Should you have any questions or require any clarification, please do not hesitate to contact us.</p>
 
-        <p>Best regards,<br>
-        <strong>Cristal Windows, Doors &amp; Conservatories Ltd</strong></p>
+        <p>Best regards,<br><strong>Cristal Windows, Doors &amp; Conservatories Ltd</strong></p>
     </div>
 
     <!-- Items -->
