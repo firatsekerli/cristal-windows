@@ -23,7 +23,7 @@
         .company-info h1 {
             color: #0066cc;
             margin: 0 0 2px 0;
-            font-size: 16pt;
+            font-size: 12pt;
             font-weight: bold;
         }
         .company-info p {
@@ -52,6 +52,7 @@
         }
         .items-section h2 {
             font-size: 12pt;
+            margin-top: 15px;
             margin-bottom: 8px;
             color: #0066cc;
             border-bottom: 3px solid #0066cc;
@@ -172,32 +173,38 @@
 <body>
     <!-- Header -->
     <div class="header">
-        <div>
-            <?php
-            $logo_url = '';
-            if (function_exists('get_field')):
-                $logo = get_field('company_logo', 'option');
-                if ($logo && isset($logo['url'])) {
-                    $logo_url = $logo['url'];
-                }
-            endif;
+        <table style="width: 100%; border: 0; padding: 0; margin: 0;" cellpadding="0" cellspacing="0">
+            <tr>
+                <td style="width: 35%; vertical-align: top;">
+                    <?php
+                    $logo_url = '';
+                    if (function_exists('get_field')):
+                        $logo = get_field('company_logo', 'option');
+                        if ($logo && isset($logo['url'])) {
+                            $logo_url = $logo['url'];
+                        }
+                    endif;
 
-            // Fallback to default logo if not set in ACF
-            if (empty($logo_url)) {
-                $logo_url = 'https://cristalwindows.co.uk/wp-content/uploads/2025/02/Cristal-Windows-LOGO-01.png';
-            }
+                    // Fallback to default logo if not set in ACF
+                    if (empty($logo_url)) {
+                        $logo_url = 'https://cristalwindows.co.uk/wp-content/uploads/2025/02/Cristal-Windows-LOGO-01.png';
+                    }
 
-            if ($logo_url): ?>
-                <img src="<?php echo esc_url($logo_url); ?>" alt="Company Logo" style="max-width: 200px;">
-            <?php endif; ?>
-        </div>
-        <div class="company-info">
-            <h1>Cristal Windows, Doors &amp; Conservatories Ltd</h1>
-            <p>23 Cedar Drive, Fleet, Hampshire GU51 3HD</p>
-            <p>www.cristalwindows.co.uk</p>
-            <p>tel: 01252 810777</p>
-            <p>enquiries@cristalwindows.co.uk</p>
-        </div>
+                    if ($logo_url): ?>
+                        <img src="<?php echo esc_url($logo_url); ?>" alt="Company Logo" style="max-width: 100px;">
+                    <?php endif; ?>
+                </td>
+                <td style="width: 65%; vertical-align: top;">
+                    <div class="company-info">
+                        <h1>Cristal Windows, Doors &amp; Conservatories Ltd</h1>
+                        <p>23 Cedar Drive, Fleet, Hampshire GU51 3HD</p>
+                        <p>www.cristalwindows.co.uk</p>
+                        <p>tel: 01252 810777</p>
+                        <p>enquiries@cristalwindows.co.uk</p>
+                    </div>
+                </td>
+            </tr>
+        </table>
     </div>
 
     <!-- Cover Letter -->
