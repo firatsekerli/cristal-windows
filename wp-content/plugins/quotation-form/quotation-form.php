@@ -788,12 +788,19 @@ class Quotation_Form_Plugin {
 
         error_log("PDF Generation: Found " . count($basket_items) . " basket items");
 
-        // Check if at least one item exists (don't require prices - admin might add them later)
-        // Generate PDF whenever there are basket items, even if prices aren't set yet
-        $has_valid_items = !empty($basket_items) && is_array($basket_items);
+        // Check if at least one item has a price (only generate PDF when prices are set)
+        // This prevents PDF generation when quotation is first submitted without prices
+        $has_priced_items = false;
+        foreach ($basket_items as $item) {
+            if (isset($item['item_price']) && !empty($item['item_price']) && is_numeric($item['item_price']) && floatval($item['item_price']) > 0) {
+                $has_priced_items = true;
+                error_log("PDF Generation: Found priced item with price: " . $item['item_price']);
+                break;
+            }
+        }
 
-        if (!$has_valid_items) {
-            error_log("PDF Generation: No valid items found for post $post_id");
+        if (!$has_priced_items) {
+            error_log("PDF Generation: No priced items found for post $post_id - skipping PDF generation (PDFs are only generated when items have prices)");
             return;
         }
 
