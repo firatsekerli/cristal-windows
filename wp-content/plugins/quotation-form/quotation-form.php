@@ -399,6 +399,9 @@ class Quotation_Form_Plugin {
             return false;
         }
 
+        // Normalize basket items - convert from JS camelCase to ACF snake_case
+        $normalized_basket_items = $this->normalize_basket_items($basket_items);
+
         // Save customer data to ACF fields (if ACF is available)
         if (function_exists('update_field')) {
             update_field('customer_name', $normalized_data['customer_name'], $post_id);
@@ -410,19 +413,46 @@ class Quotation_Form_Plugin {
             update_field('additional_notes', $normalized_data['additional_notes'], $post_id);
             update_field('submission_date', current_time('Y-m-d H:i:s'), $post_id);
 
-            // Save basket items
-            update_field('basket_items', $basket_items, $post_id);
+            // Save normalized basket items
+            update_field('basket_items', $normalized_basket_items, $post_id);
 
             // Set default quote status
             update_field('quote_status', 'pending', $post_id);
         } else {
             // Fallback: Save as post meta if ACF not available
             update_post_meta($post_id, 'customer_data', $normalized_data);
-            update_post_meta($post_id, 'basket_items', $basket_items);
+            update_post_meta($post_id, 'basket_items', $normalized_basket_items);
             update_post_meta($post_id, 'submission_date', current_time('mysql'));
         }
 
         return $post_id;
+    }
+
+    /**
+     * Normalize basket items from JS camelCase to ACF snake_case
+     */
+    private function normalize_basket_items($basket_items) {
+        $normalized = array();
+
+        foreach ($basket_items as $item) {
+            $normalized[] = array(
+                'category' => isset($item['category']) ? $item['category'] : '',
+                'type_name' => isset($item['typeName']) ? $item['typeName'] : '',
+                'material_name' => isset($item['materialName']) ? $item['materialName'] : '',
+                'style_name' => isset($item['styleName']) ? $item['styleName'] : '',
+                'width' => isset($item['width']) ? $item['width'] : '',
+                'height' => isset($item['height']) ? $item['height'] : '',
+                'cill' => isset($item['cill']) ? $item['cill'] : '',
+                'inside_colour' => isset($item['insideColour']) ? $item['insideColour'] : '',
+                'outside_colour' => isset($item['outsideColour']) ? $item['outsideColour'] : '',
+                'glazing_type' => isset($item['glazingType']) ? $item['glazingType'] : '',
+                'glazing_features' => isset($item['glazingFeatures']) ? $item['glazingFeatures'] : '',
+                'hardware_colour' => isset($item['hardwareColour']) ? $item['hardwareColour'] : '',
+                'location' => isset($item['location']) ? $item['location'] : '',
+            );
+        }
+
+        return $normalized;
     }
 
     /**
@@ -519,8 +549,35 @@ class Quotation_Form_Plugin {
             $customer_message = "Dear " . $customer_name . ",\n\n";
             $customer_message .= "Thank you for requesting a quotation. We have received your request and will get back to you shortly.\n\n";
             $customer_message .= "Items requested: " . count($basket_items) . "\n\n";
+
+            // Add detailed item information
+            foreach ($basket_items as $index => $item) {
+                $customer_message .= "--- Item " . ($index + 1) . " ---\n";
+                $customer_message .= "Category: " . ucfirst($item['category']) . "\n";
+                $customer_message .= "Type: " . $item['typeName'] . "\n";
+
+                if (isset($item['materialName']) && $item['materialName'] !== 'N/A') {
+                    $customer_message .= "Material: " . $item['materialName'] . "\n";
+                }
+
+                $customer_message .= "Style: " . $item['styleName'] . "\n";
+                $customer_message .= "Dimensions: " . $item['width'] . "mm (W) x " . $item['height'] . "mm (H)\n";
+                $customer_message .= "Cill: " . $item['cill'] . "\n";
+                $customer_message .= "Inside Colour: " . $item['insideColour'] . "\n";
+                $customer_message .= "Outside Colour: " . $item['outsideColour'] . "\n";
+                $customer_message .= "Glazing Type: " . ucfirst($item['glazingType']) . "\n";
+                $customer_message .= "Glazing Features: " . ucfirst($item['glazingFeatures']) . "\n";
+                $customer_message .= "Hardware Colour: " . ucfirst($item['hardwareColour']) . "\n";
+
+                if (!empty($item['location'])) {
+                    $customer_message .= "Location: " . $item['location'] . "\n";
+                }
+
+                $customer_message .= "\n";
+            }
+
             $customer_message .= "Best regards,\n";
-            $customer_message .= get_bloginfo('name');
+            $customer_message .= get_bloginfo('name') . " & Doors";
 
             wp_mail($customer_email, $customer_subject, $customer_message);
         }
