@@ -1,5 +1,7 @@
 # Composer dependencies
-/vendor/
+# Note: For WordPress plugins, we commit vendor/ to make the plugin distribution-ready
+# Uncomment the line below if you're developing and want to ignore vendor/
+# /vendor/
 
 # Composer lock file (optional - you may want to commit this in production)
 # composer.lock
