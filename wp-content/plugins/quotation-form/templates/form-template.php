@@ -116,7 +116,7 @@ if (!$use_acf) {
 
             <!-- Sub-Step 1A: Product Category -->
             <div class="sub-step active" data-substep="1a">
-                <h2>Select Product Category</h2>
+                <h2 class="quotation-heading">Select Product Category</h2>
                 <div class="card-grid category-grid">
                     <?php foreach ($categories as $category):
                         $image_url = isset($category['image']['url']) ? $category['image']['url'] : '';
@@ -129,7 +129,7 @@ if (!$use_acf) {
                                 <img src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($name); ?>">
                             <?php endif; ?>
                         </div>
-                        <h3><?php echo esc_html($name); ?></h3>
+                        <h3 class="quotation-subheading"><?php echo esc_html($name); ?></h3>
                     </div>
                     <?php endforeach; ?>
                 </div>
@@ -137,7 +137,7 @@ if (!$use_acf) {
 
             <!-- Sub-Step 1B: Windows Type Selection -->
             <div class="sub-step" data-substep="1b-windows" data-parent-category="windows">
-                <h2>Select Type</h2>
+                <h2 class="quotation-heading">Select Type</h2>
                 <div class="card-grid type-grid">
                     <?php foreach ($window_types as $type):
                         $image_url = isset($type['image']['url']) ? $type['image']['url'] : '';
@@ -150,7 +150,7 @@ if (!$use_acf) {
                                 <img src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($name); ?>">
                             <?php endif; ?>
                         </div>
-                        <h3><?php echo esc_html($name); ?></h3>
+                        <h3 class="quotation-subheading"><?php echo esc_html($name); ?></h3>
                     </div>
                     <?php endforeach; ?>
                 </div>
@@ -158,7 +158,7 @@ if (!$use_acf) {
 
             <!-- Sub-Step 1B: Doors Type Selection -->
             <div class="sub-step" data-substep="1b-doors" data-parent-category="doors">
-                <h2>Select Type</h2>
+                <h2 class="quotation-heading">Select Type</h2>
                 <div class="card-grid type-grid">
                     <?php foreach ($door_types as $type):
                         $image_url = isset($type['image']['url']) ? $type['image']['url'] : '';
@@ -171,7 +171,7 @@ if (!$use_acf) {
                                 <img src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($name); ?>">
                             <?php endif; ?>
                         </div>
-                        <h3><?php echo esc_html($name); ?></h3>
+                        <h3 class="quotation-subheading"><?php echo esc_html($name); ?></h3>
                     </div>
                     <?php endforeach; ?>
                 </div>
@@ -179,7 +179,7 @@ if (!$use_acf) {
 
             <!-- Sub-Step 1B: Bay Windows Type Selection -->
             <div class="sub-step" data-substep="1b-bay-windows" data-parent-category="bay-windows">
-                <h2>Select Type</h2>
+                <h2 class="quotation-heading">Select Type</h2>
                 <div class="card-grid type-grid">
                     <?php foreach ($bay_types as $type):
                         $image_url = isset($type['image']['url']) ? $type['image']['url'] : '';
@@ -192,7 +192,7 @@ if (!$use_acf) {
                                 <img src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($name); ?>">
                             <?php endif; ?>
                         </div>
-                        <h3><?php echo esc_html($name); ?></h3>
+                        <h3 class="quotation-subheading"><?php echo esc_html($name); ?></h3>
                     </div>
                     <?php endforeach; ?>
                 </div>
@@ -200,7 +200,7 @@ if (!$use_acf) {
 
             <!-- Sub-Step 1C: Material Selection -->
             <div class="sub-step" data-substep="1c-material">
-                <h2>Select Material</h2>
+                <h2 class="quotation-heading">Select Material</h2>
                 <div class="card-grid material-grid">
                     <?php foreach ($materials as $material):
                         $image_url = isset($material['image']['url']) ? $material['image']['url'] : '';
@@ -218,7 +218,7 @@ if (!$use_acf) {
                                 <img src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($name); ?>">
                             <?php endif; ?>
                         </div>
-                        <h3><?php echo esc_html($name); ?></h3>
+                        <h3 class="quotation-subheading"><?php echo esc_html($name); ?></h3>
                     </div>
                     <?php endforeach; ?>
                 </div>
@@ -228,7 +228,7 @@ if (!$use_acf) {
 
         <!-- STEP 2: STYLE -->
         <div class="form-step" data-step="2">
-            <h2>Select Configuration Style</h2>
+            <h2 class="quotation-heading">Select Configuration Style</h2>
             <div class="card-grid style-grid">
                 <?php
                 if (!empty($styles)) {
@@ -248,7 +248,7 @@ if (!$use_acf) {
                                 <img src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($name); ?>">
                             <?php endif; ?>
                         </div>
-                        <h3><?php echo esc_html($name); ?></h3>
+                        <h3 class="quotation-subheading"><?php echo esc_html($name); ?></h3>
                     </div>
                     <?php
                     endforeach;
@@ -259,7 +259,7 @@ if (!$use_acf) {
                         <div class="card-image">
                             <img src="<?php echo $plugin_url; ?>assets/images/styles/w<?php echo $i; ?>.jpg" alt="Style W<?php echo $i; ?>">
                         </div>
-                        <h3>Style W<?php echo $i; ?></h3>
+                        <h3 class="quotation-subheading">Style W<?php echo $i; ?></h3>
                     </div>
                     <?php endfor;
                 }
@@ -273,7 +273,7 @@ if (!$use_acf) {
 
                 <!-- Left Side: Visual Preview -->
                 <div class="configuration-preview">
-                    <h3>Preview</h3>
+                    <h3 class="quotation-subheading">Preview</h3>
                     <div class="preview-image">
                         <img id="style-preview" src="" alt="Selected Style">
                     </div>
@@ -287,7 +287,7 @@ if (!$use_acf) {
 
                 <!-- Right Side: Configuration Form -->
                 <div class="configuration-form">
-                    <h2>Configure Your Product</h2>
+                    <h2 class="quotation-heading">Configure Your Product</h2>
 
                     <div class="form-group">
                         <label for="width">Width (mm)</label>
@@ -387,7 +387,7 @@ if (!$use_acf) {
 
         <!-- BASKET REVIEW -->
         <div class="form-step basket-review" data-step="basket">
-            <h2>Your Basket</h2>
+            <h2 class="quotation-heading">Your Basket</h2>
             <p class="basket-count">Your basket contains <strong id="basket-item-count">0</strong> item(s)</p>
 
             <div id="basket-items-container">
@@ -402,7 +402,7 @@ if (!$use_acf) {
 
         <!-- STEP 4: REVIEW & SUBMISSION -->
         <div class="form-step" data-step="4">
-            <h2>Contact Information</h2>
+            <h2 class="quotation-heading">Contact Information</h2>
 
             <div class="review-container">
                 <div class="customer-details-form">
@@ -447,7 +447,7 @@ if (!$use_acf) {
                 </div>
 
                 <div class="order-summary">
-                    <h3>Order Summary</h3>
+                    <h3 class="quotation-subheading">Order Summary</h3>
                     <div id="final-basket-summary">
                         <!-- Will be populated by JavaScript -->
                     </div>
@@ -468,7 +468,7 @@ if (!$use_acf) {
     <div id="edit-item-modal" class="modal" style="display: none;">
         <div class="modal-content">
             <span class="modal-close">&times;</span>
-            <h3>Edit Item</h3>
+            <h3 class="quotation-subheading">Edit Item</h3>
             <div id="edit-item-content">
                 <!-- Will be populated dynamically -->
             </div>

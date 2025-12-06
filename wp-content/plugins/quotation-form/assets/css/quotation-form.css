@@ -151,6 +151,14 @@
     font-weight: 600;
 }
 
+/* Quotation heading classes to override Breakdance styles */
+.quotation-heading {
+    font-size: 24px !important;
+    font-weight: 600 !important;
+    color: var(--text-dark) !important;
+    margin-bottom: 30px !important;
+}
+
 /* Sub-Steps */
 .sub-step {
     display: none;
@@ -210,7 +218,7 @@
 .image-card .card-image {
     width: 100%;
     height: 150px;
-    background: var(--background-light);
+    background: #fff;
     border-radius: 4px;
     margin-bottom: 15px;
     overflow: hidden;
@@ -231,6 +239,13 @@
     font-size: 18px;
     color: var(--text-dark);
     font-weight: 600;
+}
+
+/* Quotation subheading class to override Breakdance styles */
+.quotation-subheading {
+    font-size: 18px !important;
+    font-weight: 600 !important;
+    color: var(--text-dark) !important;
 }
 
 .style-card .card-image {
