@@ -55,6 +55,7 @@ class Quotation_Form_Plugin {
      * Initialize hooks
      */
     private function init_hooks() {
+        add_action('init', array($this, 'register_quotation_cpt'));
         add_action('acf/init', array($this, 'register_acf_options_page'));
         add_filter('acf/settings/save_json', array($this, 'acf_json_save_point'));
         add_filter('acf/settings/load_json', array($this, 'acf_json_load_point'));
@@ -76,6 +77,42 @@ class Quotation_Form_Plugin {
      */
     private function load_dependencies() {
         // Load additional files if needed
+    }
+
+    /**
+     * Register Quotation Custom Post Type
+     */
+    public function register_quotation_cpt() {
+        $labels = array(
+            'name'               => 'Quotations',
+            'singular_name'      => 'Quotation',
+            'menu_name'          => 'Quotations',
+            'add_new'            => 'Add New',
+            'add_new_item'       => 'Add New Quotation',
+            'edit_item'          => 'Edit Quotation',
+            'view_item'          => 'View Quotation',
+            'search_items'       => 'Search Quotations',
+            'not_found'          => 'No quotations found',
+            'not_found_in_trash' => 'No quotations found in trash'
+        );
+
+        $args = array(
+            'labels'              => $labels,
+            'public'              => false,
+            'show_ui'             => true,
+            'show_in_menu'        => true,
+            'menu_icon'           => 'dashicons-clipboard',
+            'menu_position'       => 26,
+            'capability_type'     => 'post',
+            'hierarchical'        => false,
+            'supports'            => array('title'),
+            'has_archive'         => false,
+            'rewrite'             => false,
+            'query_var'           => false,
+            'show_in_rest'        => false,
+        );
+
+        register_post_type('quotation', $args);
     }
 
     /**
@@ -371,9 +408,25 @@ class Quotation_Form_Plugin {
      * Save submission to quotation custom post type
      */
     private function save_to_quotation_cpt($basket_items, $customer_data) {
+        // Normalize field names - convert from JS format to ACF format
+        $normalized_data = array(
+            'customer_name' => isset($customer_data['name']) ? $customer_data['name'] :
+                              (isset($customer_data['customer_name']) ? $customer_data['customer_name'] : ''),
+            'customer_email' => isset($customer_data['email']) ? $customer_data['email'] :
+                               (isset($customer_data['customer_email']) ? $customer_data['customer_email'] : ''),
+            'customer_phone' => isset($customer_data['phone']) ? $customer_data['phone'] :
+                               (isset($customer_data['customer_phone']) ? $customer_data['customer_phone'] : ''),
+            'customer_address' => isset($customer_data['address']) ? $customer_data['address'] :
+                                 (isset($customer_data['customer_address']) ? $customer_data['customer_address'] : ''),
+            'customer_postcode' => isset($customer_data['postcode']) ? $customer_data['postcode'] :
+                                  (isset($customer_data['customer_postcode']) ? $customer_data['customer_postcode'] : ''),
+            'preferred_contact' => isset($customer_data['preferred_contact']) ? $customer_data['preferred_contact'] : 'email',
+            'additional_notes' => isset($customer_data['additional_notes']) ? $customer_data['additional_notes'] : '',
+        );
+
         // Create post in quotation CPT
         $post_id = wp_insert_post(array(
-            'post_title'  => $customer_data['customer_name'] . ' - ' . date('d M Y'),
+            'post_title'  => $normalized_data['customer_name'] . ' - ' . date('d M Y'),
             'post_type'   => 'quotation',
             'post_status' => 'publish',
         ));
@@ -384,13 +437,13 @@ class Quotation_Form_Plugin {
 
         // Save customer data to ACF fields (if ACF is available)
         if (function_exists('update_field')) {
-            update_field('customer_name', $customer_data['customer_name'], $post_id);
-            update_field('customer_email', $customer_data['customer_email'], $post_id);
-            update_field('customer_phone', $customer_data['customer_phone'], $post_id);
-            update_field('customer_address', isset($customer_data['customer_address']) ? $customer_data['customer_address'] : '', $post_id);
-            update_field('customer_postcode', isset($customer_data['customer_postcode']) ? $customer_data['customer_postcode'] : '', $post_id);
-            update_field('preferred_contact', isset($customer_data['preferred_contact']) ? $customer_data['preferred_contact'] : 'email', $post_id);
-            update_field('additional_notes', isset($customer_data['additional_notes']) ? $customer_data['additional_notes'] : '', $post_id);
+            update_field('customer_name', $normalized_data['customer_name'], $post_id);
+            update_field('customer_email', $normalized_data['customer_email'], $post_id);
+            update_field('customer_phone', $normalized_data['customer_phone'], $post_id);
+            update_field('customer_address', $normalized_data['customer_address'], $post_id);
+            update_field('customer_postcode', $normalized_data['customer_postcode'], $post_id);
+            update_field('preferred_contact', $normalized_data['preferred_contact'], $post_id);
+            update_field('additional_notes', $normalized_data['additional_notes'], $post_id);
             update_field('submission_date', current_time('Y-m-d H:i:s'), $post_id);
 
             // Save basket items
@@ -400,7 +453,7 @@ class Quotation_Form_Plugin {
             update_field('quote_status', 'pending', $post_id);
         } else {
             // Fallback: Save as post meta if ACF not available
-            update_post_meta($post_id, 'customer_data', $customer_data);
+            update_post_meta($post_id, 'customer_data', $normalized_data);
             update_post_meta($post_id, 'basket_items', $basket_items);
             update_post_meta($post_id, 'submission_date', current_time('mysql'));
         }
@@ -412,6 +465,22 @@ class Quotation_Form_Plugin {
      * Send email notification
      */
     private function send_email_notification($basket_items, $customer_data, $post_id = null) {
+        // Normalize field names - convert from JS format to display format
+        $normalized_data = array(
+            'Name' => isset($customer_data['name']) ? $customer_data['name'] :
+                     (isset($customer_data['customer_name']) ? $customer_data['customer_name'] : ''),
+            'Email' => isset($customer_data['email']) ? $customer_data['email'] :
+                      (isset($customer_data['customer_email']) ? $customer_data['customer_email'] : ''),
+            'Phone' => isset($customer_data['phone']) ? $customer_data['phone'] :
+                      (isset($customer_data['customer_phone']) ? $customer_data['customer_phone'] : ''),
+            'Address' => isset($customer_data['address']) ? $customer_data['address'] :
+                        (isset($customer_data['customer_address']) ? $customer_data['customer_address'] : ''),
+            'Postcode' => isset($customer_data['postcode']) ? $customer_data['postcode'] :
+                         (isset($customer_data['customer_postcode']) ? $customer_data['customer_postcode'] : ''),
+            'Preferred Contact' => isset($customer_data['preferred_contact']) ? $customer_data['preferred_contact'] : 'email',
+            'Additional Notes' => isset($customer_data['additional_notes']) ? $customer_data['additional_notes'] : '',
+        );
+
         // Get email settings from ACF or use defaults
         $email_recipients = function_exists('get_field') ? get_field('email_recipients', 'option') : '';
         $email_subject = function_exists('get_field') ? get_field('email_subject', 'option') : '';
@@ -425,14 +494,15 @@ class Quotation_Form_Plugin {
             $admin_email = get_option('admin_email');
         }
 
-        $subject = !empty($email_subject) ? $email_subject : 'New Quotation Request from ' . $customer_data['customer_name'];
+        $subject = !empty($email_subject) ? $email_subject : 'New Quotation Request from ' . $normalized_data['Name'];
 
         $message = "New quotation request received:\n\n";
         $message .= "=== CUSTOMER DETAILS ===\n\n";
 
-        foreach ($customer_data as $key => $value) {
-            $label = ucfirst(str_replace('_', ' ', str_replace('customer_', '', $key)));
-            $message .= $label . ": " . $value . "\n";
+        foreach ($normalized_data as $label => $value) {
+            if (!empty($value)) {
+                $message .= $label . ": " . $value . "\n";
+            }
         }
 
         $message .= "\n\n=== ITEMS (" . count($basket_items) . ") ===\n\n";
@@ -475,15 +545,20 @@ class Quotation_Form_Plugin {
         wp_mail($admin_email, $subject, $message);
 
         // Send confirmation email to customer (if enabled)
-        if ($send_customer_confirmation && !empty($customer_data['customer_email'])) {
+        $customer_email = isset($customer_data['email']) ? $customer_data['email'] :
+                         (isset($customer_data['customer_email']) ? $customer_data['customer_email'] : '');
+        $customer_name = isset($customer_data['name']) ? $customer_data['name'] :
+                        (isset($customer_data['customer_name']) ? $customer_data['customer_name'] : '');
+
+        if ($send_customer_confirmation && !empty($customer_email)) {
             $customer_subject = 'Thank you for your quotation request';
-            $customer_message = "Dear " . $customer_data['customer_name'] . ",\n\n";
+            $customer_message = "Dear " . $customer_name . ",\n\n";
             $customer_message .= "Thank you for requesting a quotation. We have received your request and will get back to you shortly.\n\n";
             $customer_message .= "Items requested: " . count($basket_items) . "\n\n";
             $customer_message .= "Best regards,\n";
             $customer_message .= get_bloginfo('name');
 
-            wp_mail($customer_data['customer_email'], $customer_subject, $customer_message);
+            wp_mail($customer_email, $customer_subject, $customer_message);
         }
     }
 
