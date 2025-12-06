@@ -83,6 +83,11 @@ class Quotation_Form_Plugin {
 
         // Generate PDF when quotation is saved
         add_action('acf/save_post', array($this, 'generate_quote_pdf'), 25);
+
+        // Add custom admin columns
+        add_filter('manage_quotation_posts_columns', array($this, 'add_quotation_columns'));
+        add_action('manage_quotation_posts_custom_column', array($this, 'populate_quotation_columns'), 10, 2);
+        add_filter('manage_edit-quotation_sortable_columns', array($this, 'sortable_quotation_columns'));
     }
 
     /**
@@ -966,6 +971,113 @@ class Quotation_Form_Plugin {
         echo $this->generate_pdf_content($post_id, $data);
         echo '<script>window.print();</script>';
         exit;
+    }
+
+    /**
+     * Add custom columns to quotations list
+     */
+    public function add_quotation_columns($columns) {
+        // Remove the date column, we'll add it back later
+        $date = $columns['date'];
+        unset($columns['date']);
+
+        // Add custom columns
+        $columns['quote_status'] = 'Quote Status';
+        $columns['quote_price'] = 'Quote Price (£)';
+        $columns['quote_sent_date'] = 'Quote Sent Date';
+        $columns['follow_up_date'] = 'Follow-up Date';
+        $columns['quote_pdf'] = 'Quote PDF';
+
+        // Add date column back at the end
+        $columns['date'] = $date;
+
+        return $columns;
+    }
+
+    /**
+     * Populate custom columns with data
+     */
+    public function populate_quotation_columns($column, $post_id) {
+        switch ($column) {
+            case 'quote_status':
+                $status = get_field('quote_status', $post_id);
+                if ($status) {
+                    // Add color coding for different statuses
+                    $status_colors = array(
+                        'pending' => '#f0ad4e',
+                        'sent' => '#5bc0de',
+                        'accepted' => '#5cb85c',
+                        'rejected' => '#d9534f'
+                    );
+                    $color = isset($status_colors[$status]) ? $status_colors[$status] : '#777';
+                    echo '<span style="display: inline-block; padding: 4px 10px; background-color: ' . esc_attr($color) . '; color: white; border-radius: 3px; font-size: 11px; font-weight: 600;">' . esc_html(ucfirst($status)) . '</span>';
+                } else {
+                    echo '—';
+                }
+                break;
+
+            case 'quote_price':
+                $price = get_field('quote_price', $post_id);
+                if ($price) {
+                    echo '<strong>£' . number_format((float)$price, 2) . '</strong>';
+                } else {
+                    echo '—';
+                }
+                break;
+
+            case 'quote_sent_date':
+                $sent_date = get_field('quote_sent_date', $post_id);
+                if ($sent_date) {
+                    echo date('d M Y', strtotime($sent_date));
+                } else {
+                    echo '—';
+                }
+                break;
+
+            case 'follow_up_date':
+                $follow_up = get_field('follow_up_date', $post_id);
+                if ($follow_up) {
+                    $follow_up_timestamp = strtotime($follow_up);
+                    $today = strtotime(date('Y-m-d'));
+
+                    // Highlight if follow-up date is today or overdue
+                    if ($follow_up_timestamp <= $today) {
+                        echo '<span style="color: #d9534f; font-weight: bold;">' . date('d M Y', $follow_up_timestamp) . '</span>';
+                    } else {
+                        echo date('d M Y', $follow_up_timestamp);
+                    }
+                } else {
+                    echo '—';
+                }
+                break;
+
+            case 'quote_pdf':
+                $pdf_url = get_field('quote_pdf_url', $post_id);
+                $customer_name = get_field('customer_name', $post_id);
+
+                if ($pdf_url) {
+                    $quotation_name = $customer_name ? $customer_name : 'Quote #' . $post_id;
+                    echo '<a href="' . esc_url($pdf_url) . '" target="_blank" style="text-decoration: none;">';
+                    echo '<span style="display: inline-block; padding: 4px 8px; background-color: #0066cc; color: white; border-radius: 3px; font-size: 11px;">';
+                    echo '<span class="dashicons dashicons-pdf" style="font-size: 14px; vertical-align: middle; margin-right: 4px;"></span>';
+                    echo esc_html($quotation_name);
+                    echo '</span></a>';
+                } else {
+                    echo '—';
+                }
+                break;
+        }
+    }
+
+    /**
+     * Make columns sortable
+     */
+    public function sortable_quotation_columns($columns) {
+        $columns['quote_price'] = 'quote_price';
+        $columns['quote_sent_date'] = 'quote_sent_date';
+        $columns['follow_up_date'] = 'follow_up_date';
+        $columns['quote_status'] = 'quote_status';
+        return $columns;
     }
 
 }
