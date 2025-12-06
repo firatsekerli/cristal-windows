@@ -147,7 +147,7 @@
 .form-step h2 {
     margin-bottom: 30px;
     color: var(--text-dark);
-    font-size: 28px;
+    font-size: 24px;
     font-weight: 600;
 }
 
@@ -220,6 +220,7 @@
 }
 
 .image-card .card-image img {
+    width: 100%;
     max-width: 100%;
     max-height: 100%;
     object-fit: cover;
@@ -227,7 +228,7 @@
 
 .image-card h3 {
     margin: 0;
-    font-size: 16px;
+    font-size: 18px;
     color: var(--text-dark);
     font-weight: 600;
 }
