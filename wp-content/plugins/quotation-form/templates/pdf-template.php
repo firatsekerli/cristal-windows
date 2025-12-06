@@ -4,133 +4,144 @@
     <meta charset="UTF-8">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            font-size: 12px;
-            line-height: 1.6;
-            color: #000;
-            margin: 0;
-            padding: 20px;
+            font-family: helvetica, arial, sans-serif;
+            font-size: 10pt;
+            line-height: 1.4;
+            color: #000000;
         }
         .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 30px;
+            width: 100%;
+            margin-bottom: 20px;
             border-bottom: 3px solid #0066cc;
-            padding-bottom: 15px;
+            padding-bottom: 10px;
         }
         .company-info {
             text-align: right;
         }
         .company-info h1 {
             color: #0066cc;
-            margin: 0 0 10px 0;
-            font-size: 24px;
+            margin: 0 0 8px 0;
+            font-size: 18pt;
+            font-weight: bold;
         }
         .company-info p {
-            margin: 2px 0;
-            font-size: 11px;
+            margin: 1px 0;
+            font-size: 9pt;
         }
         .customer-section {
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
         .customer-section h2 {
-            font-size: 14px;
-            margin-bottom: 10px;
-            color: #333;
+            font-size: 11pt;
+            margin-bottom: 8px;
+            color: #333333;
+            font-weight: bold;
         }
         .customer-details {
-            line-height: 1.8;
+            line-height: 1.6;
+        }
+        .customer-details p {
+            margin: 3px 0;
         }
         .items-section {
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
         .items-section h2 {
-            font-size: 16px;
-            margin-bottom: 15px;
+            font-size: 12pt;
+            margin-bottom: 10px;
             color: #0066cc;
             border-bottom: 2px solid #0066cc;
             padding-bottom: 5px;
+            font-weight: bold;
         }
         .item {
-            background: #f9f9f9;
-            border: 1px solid #ddd;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-radius: 5px;
+            background-color: #f9f9f9;
+            border: 1px solid #cccccc;
+            padding: 12px;
+            margin-bottom: 12px;
+            page-break-inside: avoid;
         }
         .item-header {
             font-weight: bold;
-            font-size: 14px;
-            margin-bottom: 10px;
+            font-size: 11pt;
+            margin-bottom: 8px;
             color: #0066cc;
         }
         .item-details {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
+            margin-top: 8px;
         }
         .item-detail {
-            padding: 3px 0;
+            padding: 4px 0;
+            border-bottom: 1px solid #eeeeee;
+            line-height: 1.4;
+        }
+        .item-detail:last-child {
+            border-bottom: none;
         }
         .item-detail strong {
-            display: inline-block;
-            width: 150px;
-            color: #555;
+            color: #555555;
+            font-weight: bold;
         }
         .item-price {
-            font-size: 16px;
+            font-size: 12pt;
             font-weight: bold;
             color: #0066cc;
-            margin-top: 10px;
+            margin-top: 8px;
             text-align: right;
         }
         .total-section {
-            margin-top: 30px;
+            margin-top: 20px;
             text-align: right;
-            font-size: 18px;
+            font-size: 14pt;
             font-weight: bold;
-            padding: 15px;
-            background: #f0f7ff;
+            padding: 12px;
+            background-color: #f0f7ff;
             border: 2px solid #0066cc;
-            border-radius: 5px;
         }
         .total-section .total-label {
-            color: #333;
+            color: #333333;
         }
         .total-section .total-amount {
             color: #0066cc;
-            font-size: 24px;
+            font-size: 18pt;
         }
         .terms {
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #ddd;
-            font-size: 10px;
-            color: #666;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #cccccc;
+            font-size: 8pt;
+            color: #666666;
         }
         .terms h3 {
-            font-size: 12px;
-            margin-bottom: 10px;
-            color: #333;
+            font-size: 10pt;
+            margin-bottom: 8px;
+            color: #333333;
+            font-weight: bold;
+        }
+        .terms p {
+            margin: 5px 0;
+            line-height: 1.4;
         }
         .footer {
-            margin-top: 30px;
+            margin-top: 20px;
             text-align: center;
-            font-size: 10px;
-            color: #666;
-            border-top: 1px solid #ddd;
-            padding-top: 15px;
+            font-size: 8pt;
+            color: #666666;
+            border-top: 1px solid #cccccc;
+            padding-top: 12px;
+        }
+        .footer p {
+            margin: 3px 0;
         }
         .cover-letter {
-            margin-bottom: 40px;
-            padding: 20px;
-            background: #fff;
+            margin-bottom: 25px;
+            padding: 15px;
+            background-color: #ffffff;
             border-left: 4px solid #0066cc;
         }
         .cover-letter p {
-            margin: 10px 0;
-            line-height: 1.8;
+            margin: 8px 0;
+            line-height: 1.6;
         }
     </style>
 </head>

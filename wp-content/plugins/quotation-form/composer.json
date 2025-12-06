@@ -1,0 +1,14 @@
+{
+    "name": "cristal-windows/quotation-form",
+    "description": "Multi-Step Quotation Form Plugin with PDF Generation",
+    "type": "wordpress-plugin",
+    "require": {
+        "php": ">=7.2",
+        "tecnickcom/tcpdf": "^6.6"
+    },
+    "autoload": {
+        "classmap": [
+            "vendor/tecnickcom/tcpdf/"
+        ]
+    }
+}

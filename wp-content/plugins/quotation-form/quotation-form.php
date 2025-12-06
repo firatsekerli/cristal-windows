@@ -23,6 +23,11 @@ define('QUOTATION_FORM_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('QUOTATION_FORM_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('QUOTATION_FORM_PLUGIN_BASENAME', plugin_basename(__FILE__));
 
+// Load Composer autoloader for TCPDF
+if (file_exists(QUOTATION_FORM_PLUGIN_DIR . 'vendor/autoload.php')) {
+    require_once QUOTATION_FORM_PLUGIN_DIR . 'vendor/autoload.php';
+}
+
 /**
  * Main Plugin Class
  */
@@ -857,10 +862,8 @@ class Quotation_Form_Plugin {
      * Generate PDF using TCPDF library
      */
     private function generate_pdf_with_tcpdf($post_id, $data) {
-        require_once(ABSPATH . 'wp-includes/class-phpass.php');
-
         // Create new PDF document
-        $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+        $pdf = new TCPDF('P', 'mm', 'A4', true, 'UTF-8', false);
 
         // Set document information
         $pdf->SetCreator('Cristal Windows');
@@ -875,6 +878,9 @@ class Quotation_Form_Plugin {
         // Set margins
         $pdf->SetMargins(15, 15, 15);
         $pdf->SetAutoPageBreak(TRUE, 15);
+
+        // Set font
+        $pdf->SetFont('helvetica', '', 10);
 
         // Add a page
         $pdf->AddPage();

@@ -1,0 +1,19 @@
+# Composer dependencies
+/vendor/
+
+# Composer lock file (optional - you may want to commit this in production)
+# composer.lock
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Log files
+*.log
