@@ -173,12 +173,23 @@
     <!-- Header -->
     <div class="header">
         <div>
-            <?php if (function_exists('get_field')):
+            <?php
+            $logo_url = '';
+            if (function_exists('get_field')):
                 $logo = get_field('company_logo', 'option');
-                if ($logo): ?>
-                    <img src="<?php echo esc_url($logo['url']); ?>" alt="Company Logo" style="max-width: 200px;">
-                <?php endif;
-            endif; ?>
+                if ($logo && isset($logo['url'])) {
+                    $logo_url = $logo['url'];
+                }
+            endif;
+
+            // Fallback to default logo if not set in ACF
+            if (empty($logo_url)) {
+                $logo_url = 'https://cristalwindows.co.uk/wp-content/uploads/2025/02/Cristal-Windows-LOGO-01.png';
+            }
+
+            if ($logo_url): ?>
+                <img src="<?php echo esc_url($logo_url); ?>" alt="Company Logo" style="max-width: 200px;">
+            <?php endif; ?>
         </div>
         <div class="company-info">
             <h1>Cristal Windows, Doors &amp; Conservatories Ltd</h1>
