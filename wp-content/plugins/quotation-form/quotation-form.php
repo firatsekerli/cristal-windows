@@ -755,6 +755,9 @@ class Quotation_Form_Plugin {
      * Generate quote PDF
      */
     public function generate_quote_pdf($post_id) {
+        // Initialize debug log array to capture all steps
+        $debug_log = array();
+
         // Only run for quotation post type
         if (get_post_type($post_id) !== 'quotation') {
             error_log("PDF Generation: Not a quotation post type - " . get_post_type($post_id));
@@ -780,23 +783,32 @@ class Quotation_Form_Plugin {
             return;
         }
 
+        $debug_log[] = "=== PDF GENERATION DEBUG LOG ===";
+        $debug_log[] = "Quotation ID: #$post_id";
+        $debug_log[] = "Timestamp: " . date('Y-m-d H:i:s');
         error_log("PDF Generation: Starting PDF generation check for post $post_id");
 
         // Get basket items - these should be saved now since we're at priority 25
         $basket_items = get_field('basket_items', $post_id);
 
         if (empty($basket_items)) {
+            $debug_log[] = "❌ ERROR: No basket items found";
             error_log("PDF Generation: No basket items found for post $post_id - skipping PDF generation");
+            set_transient('pdf_debug_log_' . $post_id, $debug_log, 300);
             return;
         }
 
+        $debug_log[] = "✓ Found " . count($basket_items) . " basket items";
         error_log("PDF Generation: Found " . count($basket_items) . " basket items");
 
         // Check if at least one item has a price (only generate PDF when prices are set)
         // This prevents PDF generation when quotation is first submitted without prices
         $has_priced_items = false;
+        $debug_log[] = "\n--- PRICE VALIDATION ---";
         foreach ($basket_items as $index => $item) {
             // Debug: Log the entire item structure
+            $debug_log[] = "\nItem #" . ($index + 1) . ":";
+            $debug_log[] = "  Data: " . json_encode($item, JSON_PRETTY_PRINT);
             error_log("PDF Generation: Checking item #$index: " . print_r($item, true));
 
             // Debug: Log each validation step
@@ -804,6 +816,13 @@ class Quotation_Form_Plugin {
             $empty_check = !empty($item['item_price']);
             $numeric_check = is_numeric($item['item_price'] ?? '');
             $value_check = floatval($item['item_price'] ?? 0) > 0;
+
+            $debug_log[] = "  Validation:";
+            $debug_log[] = "    - isset(item_price): " . ($isset_check ? 'YES' : 'NO');
+            $debug_log[] = "    - !empty(item_price): " . ($empty_check ? 'YES' : 'NO');
+            $debug_log[] = "    - is_numeric(item_price): " . ($numeric_check ? 'YES' : 'NO');
+            $debug_log[] = "    - value > 0: " . ($value_check ? 'YES' : 'NO');
+            $debug_log[] = "    - item_price value: " . ($isset_check ? var_export($item['item_price'], true) : 'NOT SET');
 
             error_log("PDF Generation: Item #$index validation - isset: " . ($isset_check ? 'true' : 'false') .
                      ", !empty: " . ($empty_check ? 'true' : 'false') .
@@ -813,16 +832,25 @@ class Quotation_Form_Plugin {
             // Use the same simple check as the notice display for consistency
             if (isset($item['item_price']) && floatval($item['item_price']) > 0) {
                 $has_priced_items = true;
+                $debug_log[] = "  ✓ VALID: Item has price £" . $item['item_price'];
                 error_log("PDF Generation: Found priced item with price: " . $item['item_price']);
                 break;
+            } else {
+                $debug_log[] = "  ✗ INVALID: Item does not meet pricing criteria";
             }
         }
 
         if (!$has_priced_items) {
+            $debug_log[] = "\n❌ VALIDATION FAILED: No priced items found";
+            $debug_log[] = "Requirement: At least one item must have item_price > 0";
+            $debug_log[] = "Result: PDF generation skipped";
             error_log("PDF Generation: No priced items found for post $post_id - skipping PDF generation (PDFs are only generated when items have prices)");
+            set_transient('pdf_debug_log_' . $post_id, $debug_log, 300);
             return;
         }
 
+        $debug_log[] = "\n✓ VALIDATION PASSED: Priced items found";
+        $debug_log[] = "\n--- PDF FILE GENERATION ---";
         error_log("PDF Generation: Starting PDF generation for post $post_id");
 
         // Get customer data
@@ -832,6 +860,9 @@ class Quotation_Form_Plugin {
         $customer_address = get_field('customer_address', $post_id);
         $customer_postcode = get_field('customer_postcode', $post_id);
         $quote_price = get_field('quote_price', $post_id);
+
+        $debug_log[] = "Customer: " . $customer_name;
+        $debug_log[] = "Total quote price: £" . $quote_price;
 
         // Generate and save PDF file
         $data = array(
@@ -845,7 +876,9 @@ class Quotation_Form_Plugin {
         );
 
         // Generate PDF file and save it
-        $pdf_url = $this->save_pdf_file($post_id, $data);
+        $result = $this->save_pdf_file($post_id, $data, $debug_log);
+        $pdf_url = $result['url'];
+        $debug_log = $result['debug_log'];
 
         // Update the PDF URL field with the actual file URL
         // Use remove_action to prevent infinite loop
@@ -853,10 +886,17 @@ class Quotation_Form_Plugin {
 
         if ($pdf_url) {
             update_field('quote_pdf_url', $pdf_url, $post_id);
+            $debug_log[] = "\n✓ SUCCESS: PDF generated and saved";
+            $debug_log[] = "PDF URL: " . $pdf_url;
             error_log("PDF Generation: Successfully generated PDF for post $post_id. URL: $pdf_url");
         } else {
+            $debug_log[] = "\n❌ FAILED: PDF file was not created";
+            $debug_log[] = "Check the error details above";
             error_log("PDF Generation: Failed to generate PDF for post $post_id");
         }
+
+        // Store debug log in transient for display in admin (expires after 5 minutes)
+        set_transient('pdf_debug_log_' . $post_id, $debug_log, 300);
 
         // Re-add the action for next time
         add_action('acf/save_post', array($this, 'generate_quote_pdf'), 25);
@@ -874,16 +914,20 @@ class Quotation_Form_Plugin {
     /**
      * Save PDF file to uploads directory
      */
-    private function save_pdf_file($post_id, $data) {
+    private function save_pdf_file($post_id, $data, $debug_log = array()) {
         // Check if TCPDF is available
         if (!class_exists('TCPDF')) {
+            $debug_log[] = "❌ ERROR: TCPDF class not found";
+            $debug_log[] = "This usually means the TCPDF library is not properly installed";
             error_log("PDF Generation: TCPDF class not found for post $post_id");
-            return false;
+            return array('url' => false, 'debug_log' => $debug_log);
         }
 
+        $debug_log[] = "✓ TCPDF class found";
         error_log("PDF Generation: TCPDF class found, creating PDF for post $post_id");
 
         try {
+            $debug_log[] = "Creating PDF document...";
             // Create new PDF document
             $pdf = new TCPDF('P', 'mm', 'A4', true, 'UTF-8', false);
 
@@ -907,28 +951,46 @@ class Quotation_Form_Plugin {
         // Add a page
         $pdf->AddPage();
 
+            $debug_log[] = "✓ PDF document configured";
+            $debug_log[] = "Generating HTML content...";
+
         // Get HTML content
         $html = $this->generate_pdf_content($post_id, $data);
 
+            $debug_log[] = "✓ HTML content generated";
+            $debug_log[] = "Writing HTML to PDF...";
+
         // Output the HTML content
         $pdf->writeHTML($html, true, false, true, false, '');
+
+            $debug_log[] = "✓ HTML written to PDF";
 
             // Create uploads directory for quotes if it doesn't exist
             $upload_dir = wp_upload_dir();
             $quotes_dir = $upload_dir['basedir'] . '/quotes';
             $quotes_url = $upload_dir['baseurl'] . '/quotes';
 
+            $debug_log[] = "Upload directory: " . $upload_dir['basedir'];
+            $debug_log[] = "Quotes directory: $quotes_dir";
+
             error_log("PDF Generation: Upload dir basedir: " . $upload_dir['basedir']);
             error_log("PDF Generation: Quotes directory: $quotes_dir");
 
             if (!file_exists($quotes_dir)) {
                 wp_mkdir_p($quotes_dir);
+                $debug_log[] = "✓ Created quotes directory";
                 error_log("PDF Generation: Created quotes directory: $quotes_dir");
+            } else {
+                $debug_log[] = "✓ Quotes directory exists";
             }
 
             // Generate filename
             $filename = 'quote-' . $post_id . '-' . sanitize_title($data['customer_name']) . '.pdf';
             $file_path = $quotes_dir . '/' . $filename;
+
+            $debug_log[] = "Filename: $filename";
+            $debug_log[] = "Full path: $file_path";
+            $debug_log[] = "Saving PDF to file...";
 
             error_log("PDF Generation: Saving PDF to: $file_path");
 
@@ -936,17 +998,28 @@ class Quotation_Form_Plugin {
             $pdf->Output($file_path, 'F');
 
             if (file_exists($file_path)) {
+                $file_size = filesize($file_path);
+                $debug_log[] = "✓ PDF file created successfully";
+                $debug_log[] = "File size: " . round($file_size / 1024, 2) . " KB";
                 error_log("PDF Generation: PDF file successfully created at: $file_path");
             } else {
+                $debug_log[] = "❌ ERROR: PDF file not found after save operation";
+                $debug_log[] = "Expected path: $file_path";
                 error_log("PDF Generation: ERROR - PDF file not found after Output() call: $file_path");
             }
 
             // Return the URL to the PDF file
-            return $quotes_url . '/' . $filename;
+            $pdf_url = $quotes_url . '/' . $filename;
+            return array('url' => $pdf_url, 'debug_log' => $debug_log);
         } catch (Exception $e) {
+            $debug_log[] = "❌ EXCEPTION OCCURRED:";
+            $debug_log[] = "Message: " . $e->getMessage();
+            $debug_log[] = "File: " . $e->getFile() . " (Line " . $e->getLine() . ")";
+            $debug_log[] = "Stack trace:";
+            $debug_log[] = $e->getTraceAsString();
             error_log("PDF Generation: Exception occurred for post $post_id - " . $e->getMessage());
             error_log("PDF Generation: Stack trace: " . $e->getTraceAsString());
-            return false;
+            return array('url' => false, 'debug_log' => $debug_log);
         }
     }
 
@@ -1203,6 +1276,25 @@ class Quotation_Form_Plugin {
                 echo '<div class="notice notice-error is-dismissible">';
                 echo '<p><strong>Error generating PDF:</strong> ' . esc_html($error_msg) . '</p>';
                 echo '</div>';
+            }
+        }
+
+        // Show debug log if available (after PDF generation attempt)
+        if ($pagenow === 'post.php' && isset($_GET['post'])) {
+            $post_id = intval($_GET['post']);
+            if (get_post_type($post_id) === 'quotation') {
+                $debug_log = get_transient('pdf_debug_log_' . $post_id);
+                if ($debug_log && is_array($debug_log)) {
+                    echo '<div class="notice notice-info">';
+                    echo '<p><strong>PDF Generation Debug Information:</strong></p>';
+                    echo '<div style="background: #f5f5f5; padding: 15px; border-left: 4px solid #2271b1; font-family: monospace; font-size: 12px; max-height: 500px; overflow-y: auto;">';
+                    foreach ($debug_log as $log_entry) {
+                        echo '<div style="margin: 2px 0;">' . esc_html($log_entry) . '</div>';
+                    }
+                    echo '</div>';
+                    echo '<p><em>This debug information will automatically disappear after 5 minutes.</em></p>';
+                    echo '</div>';
+                }
             }
         }
     }
