@@ -971,8 +971,8 @@ class Quotation_Form_Plugin {
         $pdf->SetMargins(15, 15, 15);
         $pdf->SetAutoPageBreak(TRUE, 15);
 
-        // Set font
-        $pdf->SetFont('helvetica', '', 10);
+        // Set font - use dejavusans for better Unicode/Turkish character support
+        $pdf->SetFont('dejavusans', '', 10);
 
         // Add a page
         $pdf->AddPage();
@@ -1115,8 +1115,8 @@ class Quotation_Form_Plugin {
         $pdf->SetMargins(15, 15, 15);
         $pdf->SetAutoPageBreak(TRUE, 15);
 
-        // Set font
-        $pdf->SetFont('helvetica', '', 10);
+        // Set font - use dejavusans for better Unicode/Turkish character support
+        $pdf->SetFont('dejavusans', '', 10);
 
         // Add a page
         $pdf->AddPage();

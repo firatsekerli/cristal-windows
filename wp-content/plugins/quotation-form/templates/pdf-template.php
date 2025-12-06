@@ -4,16 +4,16 @@
     <meta charset="UTF-8">
     <style>
         body {
-            font-family: helvetica, arial, sans-serif;
+            font-family: dejavusans, sans-serif;
             font-size: 10pt;
             line-height: 1.2;
             color: #000000;
         }
         .header {
             width: 100%;
-            margin-bottom: 12px;
+            margin-bottom: 8px;
             border-bottom: 3px solid #0066cc;
-            padding-bottom: 8px;
+            padding-bottom: 6px;
         }
         .company-info {
             text-align: right;
@@ -49,18 +49,23 @@
         }
         .items-section h2 {
             font-size: 12pt;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             color: #0066cc;
-            border-bottom: 2px solid #0066cc;
-            padding-bottom: 4px;
+            border-bottom: 3px solid #0066cc;
+            padding-bottom: 6px;
             font-weight: bold;
         }
         .item {
             background-color: #f9f9f9;
-            border: 1px solid #cccccc;
-            padding: 10px;
+            border: 2px solid #0066cc;
+            border-top: 4px solid #0066cc;
+            padding: 12px;
             margin-bottom: 10px;
             page-break-inside: avoid;
+            page-break-after: always;
+        }
+        .item:last-child {
+            page-break-after: auto;
         }
         .item-header {
             font-weight: bold;
@@ -112,6 +117,7 @@
             border-top: 1px solid #cccccc;
             font-size: 8pt;
             color: #666666;
+            page-break-before: always;
         }
         .terms h3 {
             font-size: 10pt;
@@ -135,13 +141,23 @@
             margin: 2px 0;
         }
         .cover-letter {
-            margin-bottom: 18px;
+            margin-bottom: 12px;
             padding: 0;
             background-color: #ffffff;
         }
         .cover-letter p {
-            margin: 5px 0;
+            margin: 4px 0;
             line-height: 1.3;
+        }
+        .customer-info-inline {
+            margin: 8px 0;
+            padding: 8px;
+            background-color: #f9f9f9;
+            border-left: 3px solid #0066cc;
+        }
+        .customer-info-inline p {
+            margin: 2px 0;
+            font-size: 9pt;
         }
     </style>
 </head>
@@ -171,27 +187,7 @@
 
         <p>Dear <?php echo esc_html($data['customer_name']); ?>,</p>
 
-        <p>Thank you for your recent enquiry regarding windows, doors and conservatories. We are pleased to provide you with the following quotation based on your requirements.</p>
-
-        <p>This quotation is based on a supply and installation service. All prices are given in good faith and are subject to a signed company contract and final survey. Prices are inclusive of VAT at 20%.</p>
-
-        <?php if (!empty($data['quote_price'])): ?>
-        <div class="total-section">
-            <span class="total-label">TOTAL QUOTE PRICE:</span>
-            <span class="total-amount">£<?php echo number_format((float)$data['quote_price'], 2); ?></span>
-        </div>
-        <?php endif; ?>
-
-        <p>We look forward to working with you on this project. Should you have any questions or require any clarification, please do not hesitate to contact us.</p>
-
-        <p>Best regards,<br>
-        <strong>Cristal Windows, Doors &amp; Conservatories Ltd</strong></p>
-    </div>
-
-    <!-- Customer Details -->
-    <div class="customer-section">
-        <h2>Quotation For:</h2>
-        <div class="customer-details">
+        <div class="customer-info-inline">
             <p><strong><?php echo esc_html($data['customer_name']); ?></strong></p>
             <?php if (!empty($data['customer_address'])): ?>
                 <p><?php echo nl2br(esc_html($data['customer_address'])); ?></p>
@@ -202,6 +198,19 @@
             <p><?php echo esc_html($data['customer_phone']); ?></p>
             <p><a href="mailto:<?php echo esc_attr($data['customer_email']); ?>"><?php echo esc_html($data['customer_email']); ?></a></p>
         </div>
+
+        <p>Thank you for your recent enquiry regarding windows, doors and conservatories. We are pleased to provide you with the following quotation based on your requirements.</p>
+
+        <p>This quotation is based on a supply and installation service. All prices are given in good faith and are subject to a signed company contract and final survey. Prices are inclusive of VAT at 20%.</p>
+
+        <?php if (!empty($data['quote_price'])): ?>
+        <p><strong>TOTAL QUOTE PRICE: £<?php echo number_format((float)$data['quote_price'], 2); ?></strong></p>
+        <?php endif; ?>
+
+        <p>We look forward to working with you on this project. Should you have any questions or require any clarification, please do not hesitate to contact us.</p>
+
+        <p>Best regards,<br>
+        <strong>Cristal Windows, Doors &amp; Conservatories Ltd</strong></p>
     </div>
 
     <!-- Items -->
