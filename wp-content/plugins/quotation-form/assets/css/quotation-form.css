@@ -1024,8 +1024,6 @@
 }
 
 .modal-colour-grid {
-    max-height: 250px;
-    overflow-y: auto;
     border: 1px solid var(--border-color);
     border-radius: 4px;
     padding: 10px;
@@ -1039,7 +1037,6 @@
 
 #edit-item-content:has(.modal-colour-picker) {
     max-height: 600px;
-    overflow-y: auto;
 }
 
 /* Modal Glazing Features Picker */
