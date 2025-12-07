@@ -417,9 +417,12 @@ class Quotation_Form_Plugin {
         // Get colours and ensure image data is included
         $colours = $this->get_acf_field_or_default('colours', 'option');
 
+        // Process colours to ensure image data is properly formatted for JavaScript
+        $colours = $this->process_colour_data($colours);
+
         // Debug: Log the colours data to see what we're getting
         if (!empty($colours)) {
-            error_log('Colours data structure: ' . print_r($colours, true));
+            error_log('Processed colours data: ' . print_r($colours, true));
         }
 
         $config = array(
@@ -452,6 +455,63 @@ class Quotation_Form_Plugin {
             return $value ? $value : array();
         }
         return array();
+    }
+
+    /**
+     * Process colour data to ensure image URLs are properly formatted
+     */
+    private function process_colour_data($colours) {
+        if (empty($colours) || !is_array($colours)) {
+            return array();
+        }
+
+        $processed = array();
+        foreach ($colours as $colour) {
+            // Ensure the colour has the basic fields
+            if (!isset($colour['name'])) {
+                continue;
+            }
+
+            $processed_colour = array(
+                'name' => $colour['name'],
+                'category' => isset($colour['category']) ? $colour['category'] : 'Colour',
+                'hex' => isset($colour['hex']) ? $colour['hex'] : '#FFFFFF'
+            );
+
+            // Handle colour_image field - ensure it's in the correct format
+            if (!empty($colour['colour_image'])) {
+                // If it's an array (ACF return format 'array'), extract the URL
+                if (is_array($colour['colour_image'])) {
+                    $processed_colour['colour_image'] = array(
+                        'url' => isset($colour['colour_image']['url']) ? $colour['colour_image']['url'] : '',
+                        'id' => isset($colour['colour_image']['id']) ? $colour['colour_image']['id'] : '',
+                        'alt' => isset($colour['colour_image']['alt']) ? $colour['colour_image']['alt'] : $colour['name']
+                    );
+                }
+                // If it's a numeric ID (ACF return format 'id'), get the URL
+                elseif (is_numeric($colour['colour_image'])) {
+                    $image_url = wp_get_attachment_image_url($colour['colour_image'], 'thumbnail');
+                    if ($image_url) {
+                        $processed_colour['colour_image'] = array(
+                            'url' => $image_url,
+                            'id' => $colour['colour_image'],
+                            'alt' => $colour['name']
+                        );
+                    }
+                }
+                // If it's a URL string (ACF return format 'url')
+                elseif (is_string($colour['colour_image']) && filter_var($colour['colour_image'], FILTER_VALIDATE_URL)) {
+                    $processed_colour['colour_image'] = array(
+                        'url' => $colour['colour_image'],
+                        'alt' => $colour['name']
+                    );
+                }
+            }
+
+            $processed[] = $processed_colour;
+        }
+
+        return $processed;
     }
 
     /**
