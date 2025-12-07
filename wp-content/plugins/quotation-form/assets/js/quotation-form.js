@@ -31,6 +31,11 @@ jQuery(document).ready(function($) {
                 { name: 'Rosewood', category: 'Colour', hex: '#65000B' },
             ],
 
+        // Available glazing features - Use dynamic features from config if available
+        glazingFeatures: (typeof quotationFormAjax !== 'undefined' && quotationFormAjax.config && quotationFormAjax.config.glazingFeatures)
+            ? quotationFormAjax.config.glazingFeatures
+            : [],
+
         debugColours: function() {
             console.log('=== COLOUR DEBUG INFO ===');
             console.log('Total colours:', this.colours.length);
@@ -50,6 +55,7 @@ jQuery(document).ready(function($) {
             this.debugColours(); // Debug colour data
             this.bindEvents();
             this.initializeColourPickers();
+            this.initializeGlazingFeaturesPicker();
             this.updateNavigationButtons();
             this.updateProgressIndicator();
         },
@@ -168,6 +174,12 @@ jQuery(document).ready(function($) {
                 const searchTerm = $(this).val().toLowerCase();
                 const gridId = $(this).attr('id').replace('-search', '-grid');
                 self.filterColours(gridId, searchTerm);
+            });
+
+            // Glazing features search
+            $('#glazing-features-search').on('input', function() {
+                const searchTerm = $(this).val().toLowerCase();
+                self.filterGlazingFeatures('glazing-features-grid', searchTerm);
             });
 
             // Modal close
@@ -470,6 +482,105 @@ jQuery(document).ready(function($) {
             });
         },
 
+        initializeGlazingFeaturesPicker: function() {
+            this.renderGlazingFeaturesGrid('glazing-features-grid');
+        },
+
+        renderGlazingFeaturesGrid: function(gridId) {
+            const self = this;
+            const $grid = $('#' + gridId);
+
+            $grid.empty();
+
+            // Add "Not Required" option first
+            const $notRequiredCategory = $('<div class="glazing-feature-category"></div>');
+            $notRequiredCategory.append('<h5>Not Required</h5>');
+
+            const $notRequiredItems = $('<div class="glazing-feature-items"></div>');
+            const $notRequiredItem = $('<div class="glazing-feature-item" data-feature="not-required"></div>');
+            const $notRequiredSwatch = $('<div class="glazing-feature-swatch"></div>');
+            $notRequiredSwatch.text('None');
+            const $notRequiredLabel = $('<span class="glazing-feature-label">Not Required</span>');
+            $notRequiredItem.append($notRequiredSwatch).append($notRequiredLabel);
+
+            $notRequiredItem.on('click', function() {
+                self.selectGlazingFeature('glazing-features-grid', 'not-required', 'Not Required');
+            });
+
+            $notRequiredItems.append($notRequiredItem);
+            $notRequiredCategory.append($notRequiredItems);
+            $grid.append($notRequiredCategory);
+
+            // Group by category
+            const categories = {};
+            this.glazingFeatures.forEach(feature => {
+                if (!categories[feature.category]) {
+                    categories[feature.category] = [];
+                }
+                categories[feature.category].push(feature);
+            });
+
+            // Render features by category
+            Object.keys(categories).forEach(category => {
+                const $categoryGroup = $('<div class="glazing-feature-category"></div>');
+                $categoryGroup.append('<h5>' + category + '</h5>');
+
+                const $featureItems = $('<div class="glazing-feature-items"></div>');
+                categories[category].forEach(feature => {
+                    const $featureSwatch = $('<div class="glazing-feature-swatch" data-feature="' + feature.value + '"></div>');
+
+                    // Check if feature has an image
+                    if (feature.feature_image && feature.feature_image.url) {
+                        const $img = $('<img src="' + feature.feature_image.url + '" alt="' + feature.name + '" />');
+                        $featureSwatch.addClass('has-image').append($img);
+                    } else {
+                        $featureSwatch.text(feature.name);
+                    }
+
+                    $featureSwatch.attr('title', feature.name);
+
+                    const $featureLabel = $('<span class="glazing-feature-label">' + feature.name + '</span>');
+
+                    const $featureItem = $('<div class="glazing-feature-item"></div>');
+                    $featureItem.append($featureSwatch).append($featureLabel);
+
+                    $featureItem.on('click', function() {
+                        self.selectGlazingFeature('glazing-features-grid', feature.value, feature.name);
+                    });
+
+                    $featureItems.append($featureItem);
+                });
+
+                $categoryGroup.append($featureItems);
+                $grid.append($categoryGroup);
+            });
+        },
+
+        selectGlazingFeature: function(gridId, featureValue, featureName) {
+            // Update hidden field
+            $('#glazing-features').val(featureValue);
+
+            // Update display
+            $('#glazing-features-name').text(featureName);
+
+            // Update visual selection
+            $('#' + gridId + ' .glazing-feature-item').removeClass('selected');
+            $('#' + gridId + ' .glazing-feature-item').filter(function() {
+                return $(this).find('.glazing-feature-swatch').data('feature') === featureValue;
+            }).addClass('selected');
+        },
+
+        filterGlazingFeatures: function(gridId, searchTerm) {
+            $('#' + gridId + ' .glazing-feature-item').each(function() {
+                const featureName = $(this).find('.glazing-feature-label').text().toLowerCase();
+                if (featureName.includes(searchTerm)) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        },
+
         updateConfigurationPreview: function() {
             $('#style-preview').attr('src', this.currentItem.styleImage);
             $('#preview-category').text(this.currentItem.category || '');
@@ -575,9 +686,11 @@ jQuery(document).ready(function($) {
             $('#outside-colour-name').text('None');
             $('#glazing-type').val('');
             $('#glazing-features').val('not-required');
+            $('#glazing-features-name').text('Not Required');
             $('#hardware-colour').val('');
             $('#frame-image').val('');
             $('.colour-item').removeClass('selected');
+            $('.glazing-feature-item').removeClass('selected');
         },
 
         showBasketReview: function() {
@@ -729,7 +842,35 @@ jQuery(document).ready(function($) {
             } else if (field === 'glazing') {
                 $content.append('<div class="edit-field-group"><label>Glazing Type:</label><select id="edit-glazing-type"><option value="clear"' + (item.glazingType === 'clear' ? ' selected' : '') + '>Clear</option><option value="obscured"' + (item.glazingType === 'obscured' ? ' selected' : '') + '>Obscured</option><option value="tinted"' + (item.glazingType === 'tinted' ? ' selected' : '') + '>Tinted</option><option value="self-cleaning"' + (item.glazingType === 'self-cleaning' ? ' selected' : '') + '>Self Cleaning</option></select></div>');
             } else if (field === 'glazingFeatures') {
-                $content.append('<div class="edit-field-group"><label>Glazing Features:</label><select id="edit-glazing-features"><option value="not-required"' + (item.glazingFeatures === 'not-required' ? ' selected' : '') + '>Not Required</option><option value="acoustic"' + (item.glazingFeatures === 'acoustic' ? ' selected' : '') + '>Acoustic</option><option value="security"' + (item.glazingFeatures === 'security' ? ' selected' : '') + '>Security</option><option value="thermal"' + (item.glazingFeatures === 'thermal' ? ' selected' : '') + '>Thermal</option></select></div>');
+                // Store modal selected glazing feature
+                this.modalSelectedGlazingFeature = item.glazingFeatures || 'not-required';
+
+                // Get the feature name for display
+                let featureName = 'Not Required';
+                if (item.glazingFeatures && item.glazingFeatures !== 'not-required') {
+                    const feature = this.glazingFeatures.find(f => f.value === item.glazingFeatures);
+                    if (feature) {
+                        featureName = feature.name;
+                    }
+                }
+
+                // Create glazing features picker
+                $content.append('<div class="edit-field-group modal-glazing-features-picker">' +
+                    '<label>Glazing Features:</label>' +
+                    '<div class="glazing-features-selection-display">Selected: <strong id="modal-glazing-features-name">' + featureName + '</strong></div>' +
+                    '<input type="text" id="modal-glazing-features-search" class="modal-glazing-features-search" placeholder="Search glazing features...">' +
+                    '<div id="modal-glazing-features-grid" class="glazing-features-grid modal-glazing-features-grid"></div>' +
+                    '</div>');
+
+                // Render glazing features grid after a brief delay to ensure DOM is ready
+                setTimeout(function() {
+                    self.renderModalGlazingFeaturesGrid('modal-glazing-features-grid', item.glazingFeatures || 'not-required');
+                }, 10);
+
+                // Add search functionality
+                $('#modal-glazing-features-search').on('input', function() {
+                    self.filterGlazingFeatures('modal-glazing-features-grid', $(this).val().toLowerCase());
+                });
             } else if (field === 'hardware') {
                 $content.append('<div class="edit-field-group"><label>Hardware Colour:</label><select id="edit-hardware-colour"><option value="white"' + (item.hardwareColour === 'white' ? ' selected' : '') + '>White</option><option value="chrome"' + (item.hardwareColour === 'chrome' ? ' selected' : '') + '>Chrome</option><option value="gold"' + (item.hardwareColour === 'gold' ? ' selected' : '') + '>Gold</option><option value="black"' + (item.hardwareColour === 'black' ? ' selected' : '') + '>Black</option></select></div>');
             }
@@ -748,7 +889,7 @@ jQuery(document).ready(function($) {
                 } else if (field === 'glazing') {
                     item.glazingType = $('#edit-glazing-type').val();
                 } else if (field === 'glazingFeatures') {
-                    item.glazingFeatures = $('#edit-glazing-features').val();
+                    item.glazingFeatures = self.modalSelectedGlazingFeature;
                 } else if (field === 'hardware') {
                     item.hardwareColour = $('#edit-hardware-colour').val();
                 }
@@ -835,6 +976,100 @@ jQuery(document).ready(function($) {
             $('#' + gridId + ' .colour-item').removeClass('selected');
             $('#' + gridId + ' .colour-item').filter(function() {
                 return $(this).find('.colour-swatch').data('colour') === colourName;
+            }).addClass('selected');
+        },
+
+        renderModalGlazingFeaturesGrid: function(gridId, selectedFeature) {
+            const self = this;
+            const $grid = $('#' + gridId);
+
+            $grid.empty();
+
+            // Add "Not Required" option first
+            const $notRequiredCategory = $('<div class="glazing-feature-category"></div>');
+            $notRequiredCategory.append('<h5>Not Required</h5>');
+
+            const $notRequiredItems = $('<div class="glazing-feature-items"></div>');
+            const $notRequiredItem = $('<div class="glazing-feature-item" data-feature="not-required"></div>');
+            const $notRequiredSwatch = $('<div class="glazing-feature-swatch"></div>');
+            $notRequiredSwatch.text('None');
+            const $notRequiredLabel = $('<span class="glazing-feature-label">Not Required</span>');
+            $notRequiredItem.append($notRequiredSwatch).append($notRequiredLabel);
+
+            // Mark selected if it matches
+            if (selectedFeature === 'not-required') {
+                $notRequiredItem.addClass('selected');
+            }
+
+            $notRequiredItem.on('click', function() {
+                self.selectModalGlazingFeature('modal-glazing-features-grid', 'not-required', 'Not Required');
+            });
+
+            $notRequiredItems.append($notRequiredItem);
+            $notRequiredCategory.append($notRequiredItems);
+            $grid.append($notRequiredCategory);
+
+            // Group by category
+            const categories = {};
+            this.glazingFeatures.forEach(feature => {
+                if (!categories[feature.category]) {
+                    categories[feature.category] = [];
+                }
+                categories[feature.category].push(feature);
+            });
+
+            // Render features by category
+            Object.keys(categories).forEach(category => {
+                const $categoryGroup = $('<div class="glazing-feature-category"></div>');
+                $categoryGroup.append('<h5>' + category + '</h5>');
+
+                const $featureItems = $('<div class="glazing-feature-items"></div>');
+                categories[category].forEach(feature => {
+                    const $featureSwatch = $('<div class="glazing-feature-swatch" data-feature="' + feature.value + '"></div>');
+
+                    // Check if feature has an image
+                    if (feature.feature_image && feature.feature_image.url) {
+                        const $img = $('<img src="' + feature.feature_image.url + '" alt="' + feature.name + '" />');
+                        $featureSwatch.addClass('has-image').append($img);
+                    } else {
+                        $featureSwatch.text(feature.name);
+                    }
+
+                    $featureSwatch.attr('title', feature.name);
+
+                    const $featureLabel = $('<span class="glazing-feature-label">' + feature.name + '</span>');
+
+                    const $featureItem = $('<div class="glazing-feature-item"></div>');
+                    $featureItem.append($featureSwatch).append($featureLabel);
+
+                    // Mark selected if it matches
+                    if (feature.value === selectedFeature) {
+                        $featureItem.addClass('selected');
+                    }
+
+                    $featureItem.on('click', function() {
+                        self.selectModalGlazingFeature('modal-glazing-features-grid', feature.value, feature.name);
+                    });
+
+                    $featureItems.append($featureItem);
+                });
+
+                $categoryGroup.append($featureItems);
+                $grid.append($categoryGroup);
+            });
+        },
+
+        selectModalGlazingFeature: function(gridId, featureValue, featureName) {
+            // Update the modalSelectedGlazingFeature value
+            this.modalSelectedGlazingFeature = featureValue;
+
+            // Update display
+            $('#modal-glazing-features-name').text(featureName);
+
+            // Update visual selection
+            $('#' + gridId + ' .glazing-feature-item').removeClass('selected');
+            $('#' + gridId + ' .glazing-feature-item').filter(function() {
+                return $(this).find('.glazing-feature-swatch').data('feature') === featureValue;
             }).addClass('selected');
         },
 

@@ -321,10 +321,32 @@
             "button_label": "Add Feature",
             "sub_fields": [
                 {
-                    "key": "field_feature_label",
-                    "label": "Label",
-                    "name": "label",
+                    "key": "field_feature_name",
+                    "label": "Name",
+                    "name": "name",
                     "type": "text",
+                    "required": 1
+                },
+                {
+                    "key": "field_feature_category",
+                    "label": "Category",
+                    "name": "category",
+                    "type": "select",
+                    "choices": {
+                        "Special Designs": "Special Designs",
+                        "Georgians": "Georgians",
+                        "Diamond Leads": "Diamond Leads"
+                    },
+                    "default_value": "Georgians"
+                },
+                {
+                    "key": "field_feature_image",
+                    "label": "Feature Image",
+                    "name": "feature_image",
+                    "type": "image",
+                    "instructions": "Upload an image for this glazing feature",
+                    "return_format": "array",
+                    "preview_size": "thumbnail",
                     "required": 1
                 },
                 {
@@ -332,7 +354,8 @@
                     "label": "Value",
                     "name": "value",
                     "type": "text",
-                    "required": 1
+                    "required": 1,
+                    "instructions": "Internal value for the feature (e.g., slug)"
                 }
             ]
         },
@@ -407,5 +430,5 @@
     "style": "default",
     "label_placement": "top",
     "instruction_placement": "label",
-    "modified": 1733584800
+    "modified": 1733587200
 }

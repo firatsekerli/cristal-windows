@@ -425,6 +425,12 @@ class Quotation_Form_Plugin {
             error_log('Processed colours data: ' . print_r($colours, true));
         }
 
+        // Get glazing features and ensure image data is included
+        $glazing_features = $this->get_acf_field_or_default('glazing_features', 'option');
+
+        // Process glazing features to ensure image data is properly formatted for JavaScript
+        $glazing_features = $this->process_glazing_feature_data($glazing_features);
+
         $config = array(
             'categories' => $this->get_acf_field_or_default('product_categories', 'option'),
             'productTypes' => $product_types,
@@ -434,6 +440,7 @@ class Quotation_Form_Plugin {
             'materials' => $materials,
             'styles' => $styles,
             'colours' => $colours,
+            'glazingFeatures' => $glazing_features,
             'useAcfData' => function_exists('get_field') && get_field('product_categories', 'option') ? true : false
         );
 
@@ -509,6 +516,63 @@ class Quotation_Form_Plugin {
             }
 
             $processed[] = $processed_colour;
+        }
+
+        return $processed;
+    }
+
+    /**
+     * Process glazing feature data to ensure image URLs are properly formatted
+     */
+    private function process_glazing_feature_data($features) {
+        if (empty($features) || !is_array($features)) {
+            return array();
+        }
+
+        $processed = array();
+        foreach ($features as $feature) {
+            // Ensure the feature has the basic fields
+            if (!isset($feature['name'])) {
+                continue;
+            }
+
+            $processed_feature = array(
+                'name' => $feature['name'],
+                'category' => isset($feature['category']) ? $feature['category'] : 'Georgians',
+                'value' => isset($feature['value']) ? $feature['value'] : strtolower(str_replace(' ', '-', $feature['name']))
+            );
+
+            // Handle feature_image field - ensure it's in the correct format
+            if (!empty($feature['feature_image'])) {
+                // If it's an array (ACF return format 'array'), extract the URL
+                if (is_array($feature['feature_image'])) {
+                    $processed_feature['feature_image'] = array(
+                        'url' => isset($feature['feature_image']['url']) ? $feature['feature_image']['url'] : '',
+                        'id' => isset($feature['feature_image']['id']) ? $feature['feature_image']['id'] : '',
+                        'alt' => isset($feature['feature_image']['alt']) ? $feature['feature_image']['alt'] : $feature['name']
+                    );
+                }
+                // If it's a numeric ID (ACF return format 'id'), get the URL
+                elseif (is_numeric($feature['feature_image'])) {
+                    $image_url = wp_get_attachment_image_url($feature['feature_image'], 'thumbnail');
+                    if ($image_url) {
+                        $processed_feature['feature_image'] = array(
+                            'url' => $image_url,
+                            'id' => $feature['feature_image'],
+                            'alt' => $feature['name']
+                        );
+                    }
+                }
+                // If it's a URL string (ACF return format 'url')
+                elseif (is_string($feature['feature_image']) && filter_var($feature['feature_image'], FILTER_VALIDATE_URL)) {
+                    $processed_feature['feature_image'] = array(
+                        'url' => $feature['feature_image'],
+                        'alt' => $feature['name']
+                    );
+                }
+            }
+
+            $processed[] = $processed_feature;
         }
 
         return $processed;

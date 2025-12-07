@@ -446,6 +446,93 @@
     color: var(--primary-color);
 }
 
+/* Glazing Features Grid */
+.glazing-features-grid {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.glazing-feature-category {
+    margin-bottom: 15px;
+}
+
+.glazing-feature-category h5 {
+    margin: 0 0 10px 0;
+    font-size: 13px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.glazing-feature-items {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 10px;
+}
+
+.glazing-feature-item {
+    cursor: pointer;
+    padding: 8px;
+    border: 2px solid transparent;
+    border-radius: 4px;
+    transition: all var(--transition-speed);
+}
+
+.glazing-feature-item:hover {
+    border-color: var(--primary-color);
+    background: white;
+}
+
+.glazing-feature-item.selected {
+    border-color: var(--primary-color);
+    background: rgba(0, 102, 204, 0.1);
+}
+
+.glazing-feature-swatch {
+    width: 100%;
+    height: 80px;
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f5f5f5;
+    font-size: 11px;
+    text-align: center;
+    padding: 5px;
+}
+
+.glazing-feature-swatch.has-image {
+    padding: 0;
+    overflow: hidden;
+    background: white;
+}
+
+.glazing-feature-swatch img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    border-radius: 3px;
+}
+
+.glazing-feature-label {
+    display: block;
+    font-size: 12px;
+    text-align: center;
+    color: var(--text-dark);
+}
+
+.glazing-features-selection-display {
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+.glazing-features-selection-display strong {
+    color: var(--primary-color);
+}
+
 /* Configuration Actions */
 .configuration-actions {
     display: flex;
@@ -815,6 +902,45 @@
     overflow-y: auto;
 }
 
+/* Modal Glazing Features Picker */
+.modal-glazing-features-picker {
+    margin-bottom: 25px;
+}
+
+.modal-glazing-features-picker label {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.modal-glazing-features-search {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.modal-glazing-features-grid {
+    max-height: 250px;
+    overflow-y: auto;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 10px;
+    background: #fafafa;
+}
+
+/* Adjust modal content for glazing features pickers */
+.modal-content:has(.modal-glazing-features-picker) {
+    max-width: 800px;
+}
+
+#edit-item-content:has(.modal-glazing-features-picker) {
+    max-height: 600px;
+    overflow-y: auto;
+}
+
 /* ====================================
    Responsive Design
    ==================================== */
@@ -901,6 +1027,10 @@
     }
 
     .colour-items {
+        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    }
+
+    .glazing-feature-items {
         grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
     }
 

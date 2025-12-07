@@ -382,25 +382,16 @@ if (!$use_acf) {
 
                     <div class="form-group">
                         <label for="glazing-features">Glazing Features</label>
-                        <select id="glazing-features" name="glazing_features">
-                            <option value="">Not Required</option>
-                            <?php
-                            if (!empty($glazing_features) && is_array($glazing_features)) {
-                                foreach ($glazing_features as $option) {
-                                    $label = isset($option['label']) ? $option['label'] : '';
-                                    $value = isset($option['value']) ? $option['value'] : '';
-                                    if ($label && $value) {
-                                        echo '<option value="' . esc_attr($value) . '">' . esc_html($label) . '</option>';
-                                    }
-                                }
-                            } else {
-                                // Fallback hardcoded options
-                                echo '<option value="acoustic">Acoustic</option>';
-                                echo '<option value="security">Security</option>';
-                                echo '<option value="thermal">Thermal</option>';
-                            }
-                            ?>
-                        </select>
+                        <div class="glazing-features-selection">
+                            <div class="glazing-features-picker-container">
+                                <input type="text" id="glazing-features-search" placeholder="Search glazing features...">
+                                <div class="glazing-features-grid" id="glazing-features-grid">
+                                    <!-- Glazing features will be populated by JavaScript -->
+                                </div>
+                                <input type="hidden" id="glazing-features" name="glazing_features">
+                                <p class="glazing-features-selection-display">Selected: <strong id="glazing-features-name">Not Required</strong></p>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="form-group">
