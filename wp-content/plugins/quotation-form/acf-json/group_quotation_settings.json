@@ -258,8 +258,8 @@
             ]
         },
         {
-            "key": "field_tab_form_options",
-            "label": "Form Options",
+            "key": "field_tab_cill_options",
+            "label": "Cill Options",
             "name": "",
             "type": "tab",
             "placement": "left"
@@ -289,6 +289,13 @@
             ]
         },
         {
+            "key": "field_tab_glazing_types",
+            "label": "Glazing Types",
+            "name": "",
+            "type": "tab",
+            "placement": "left"
+        },
+        {
             "key": "field_glazing_types",
             "label": "Glazing Types",
             "name": "glazing_types",
@@ -311,6 +318,13 @@
                     "required": 1
                 }
             ]
+        },
+        {
+            "key": "field_tab_glazing_features",
+            "label": "Glazing Features",
+            "name": "",
+            "type": "tab",
+            "placement": "left"
         },
         {
             "key": "field_glazing_features",
@@ -358,6 +372,13 @@
                     "instructions": "Internal value for the feature (e.g., slug)"
                 }
             ]
+        },
+        {
+            "key": "field_tab_hardware_colours",
+            "label": "Hardware Colours",
+            "name": "",
+            "type": "tab",
+            "placement": "left"
         },
         {
             "key": "field_hardware_colours",
@@ -438,5 +459,5 @@
     "style": "default",
     "label_placement": "top",
     "instruction_placement": "label",
-    "modified": 1733587800
+    "modified": 1733593200
 }
