@@ -559,6 +559,16 @@ jQuery(document).ready(function($) {
 
                 self.selectGlazingType(glazingType, glazingTypeName, patterns);
             });
+
+            // Auto-select first glazing type (Low E Double) on page load
+            const $firstGlazingType = $('.glazing-type-card').first();
+            if ($firstGlazingType.length) {
+                const glazingType = $firstGlazingType.data('glazing-type');
+                const glazingTypeName = $firstGlazingType.find('.glazing-type-label').text();
+                const patterns = $firstGlazingType.data('patterns');
+
+                self.selectGlazingType(glazingType, glazingTypeName, patterns);
+            }
         },
 
         selectGlazingType: function(glazingType, glazingTypeName, patterns) {

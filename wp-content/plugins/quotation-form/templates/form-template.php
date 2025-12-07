@@ -410,16 +410,16 @@ if (!$use_acf) {
                             </div>
                             <input type="hidden" id="glazing-type" name="glazing_type">
                             <p class="glazing-type-selection-display">You have chosen: <strong id="glazing-type-name">None</strong></p>
-                        </div>
-                    </div>
 
-                    <div class="form-group" id="glazing-pattern-group" style="display: none;">
-                        <label>Select a Pattern</label>
-                        <div class="glazing-pattern-selection">
-                            <div class="glazing-pattern-grid" id="glazing-pattern-grid">
-                                <!-- Patterns will be populated by JavaScript based on selected type -->
+                            <div id="glazing-pattern-group" style="display: none;">
+                                <label>Select a Pattern</label>
+                                <div class="glazing-pattern-selection">
+                                    <div class="glazing-pattern-grid" id="glazing-pattern-grid">
+                                        <!-- Patterns will be populated by JavaScript based on selected type -->
+                                    </div>
+                                    <input type="hidden" id="glazing-pattern" name="glazing_pattern">
+                                </div>
                             </div>
-                            <input type="hidden" id="glazing-pattern" name="glazing_pattern">
                         </div>
                     </div>
 
