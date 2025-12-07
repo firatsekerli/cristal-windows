@@ -474,7 +474,8 @@ jQuery(document).ready(function($) {
                     $prevBtn.show();
                 }
             } else if (this.currentStep === 'basket') {
-                $prevBtn.show();
+                // Hide back button on basket step
+                $prevBtn.hide();
             } else if (this.currentStep === 4) {
                 $prevBtn.show();
                 $submitBtn.show();

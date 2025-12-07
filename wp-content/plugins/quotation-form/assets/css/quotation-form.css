@@ -133,13 +133,11 @@
 }
 
 .progress-step[data-step="basket"] .step-number {
-    display: flex !important;
     align-items: center;
     justify-content: center;
     background: var(--primary-color) !important;
     border-color: var(--primary-color) !important;
     color: white !important;
-    line-height: normal !important;
 }
 
 .progress-step[data-step="basket"] .step-title {
