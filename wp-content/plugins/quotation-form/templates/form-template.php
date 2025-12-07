@@ -378,11 +378,9 @@ if (!$use_acf) {
                                         if ($label && $value) {
                                             ?>
                                             <div class="glazing-type-card" data-glazing-type="<?php echo esc_attr($value); ?>" data-patterns='<?php echo esc_attr(json_encode($patterns)); ?>'>
-                                                <div class="glazing-type-icon">
-                                                    <?php if (!empty($icon)): ?>
-                                                        <img src="<?php echo esc_url($icon); ?>" alt="<?php echo esc_attr($label); ?>">
-                                                    <?php endif; ?>
-                                                </div>
+                                                <?php if (!empty($icon)): ?>
+                                                    <div class="glazing-type-image" style="background-image: url('<?php echo esc_url($icon); ?>');"></div>
+                                                <?php endif; ?>
                                                 <div class="glazing-type-label"><?php echo esc_html($label); ?></div>
                                             </div>
                                             <?php
