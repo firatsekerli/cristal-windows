@@ -903,7 +903,9 @@ jQuery(document).ready(function($) {
                 glazingTypeName: $('#glazing-type-name').text(),
                 glazingPattern: $('#glazing-pattern').val(),
                 glazingFeatures: $('#glazing-features').val(),
+                glazingFeaturesName: $('#glazing-features-name').text(),
                 hardwareColour: $('#hardware-colour').val(),
+                hardwareColourName: $('#hardware-colour-name').text(),
                 location: '' // Can be set later
             };
 
@@ -981,20 +983,25 @@ jQuery(document).ready(function($) {
             const $details = $('<div class="item-details"></div>');
             $details.append('<h3>Item ' + (index + 1) + '</h3>');
 
-            if (item.location) {
-                $details.append('<p class="item-location"><strong>Location:</strong> ' + item.location + '</p>');
-            } else {
-                const $locationLink = $('<a href="#" class="set-location-link">set location</a>');
-                $locationLink.on('click', function(e) {
-                    e.preventDefault();
-                    const location = prompt('Enter location for this item:');
-                    if (location) {
-                        item.location = location;
-                        self.renderBasket();
-                    }
-                });
-                $details.append($locationLink);
-            }
+            // Location - always editable
+            const $locationContainer = $('<p class="item-location"></p>');
+            const locationText = item.location ? item.location : 'set location';
+            const locationClass = item.location ? 'edit-location-link' : 'set-location-link';
+            const $locationLink = $('<a href="#" class="' + locationClass + '">' + (item.location ? '<strong>Location:</strong> ' + locationText : locationText) + '</a>');
+
+            $locationLink.on('click', function(e) {
+                e.preventDefault();
+                const currentLocation = item.location || '';
+                const location = prompt('Enter location for this item:', currentLocation);
+                if (location !== null && location !== currentLocation) {
+                    item.location = location;
+                    self.renderBasket();
+                    self.saveState(); // Save state after updating location
+                }
+            });
+
+            $locationContainer.append($locationLink);
+            $details.append($locationContainer);
 
             const $table = $('<table class="item-summary"></table>');
 
@@ -1003,13 +1010,17 @@ jQuery(document).ready(function($) {
                 ? glazingDisplay + ' - ' + item.glazingPattern
                 : glazingDisplay;
 
+            // Use display names for Glazing Features and Hardware Colour
+            const glazingFeaturesDisplay = item.glazingFeaturesName || item.glazingFeatures;
+            const hardwareColourDisplay = item.hardwareColourName || item.hardwareColour;
+
             const fields = [
                 { label: 'Product Template', value: item.typeName + ' ' + (item.materialName || ''), field: 'product' },
                 { label: 'Size', value: item.width + 'w x ' + item.height + 'h mm', field: 'size' },
                 { label: 'Section Colour', value: item.insideColour + ' / ' + item.outsideColour, field: 'colour' },
                 { label: 'Glazing', value: glazingValue, field: 'glazing' },
-                { label: 'Glazing Features', value: item.glazingFeatures, field: 'glazingFeatures' },
-                { label: 'Hardware Colour', value: item.hardwareColour, field: 'hardware' }
+                { label: 'Glazing Features', value: glazingFeaturesDisplay, field: 'glazingFeatures' },
+                { label: 'Hardware Colour', value: hardwareColourDisplay, field: 'hardware' }
             ];
 
             fields.forEach(field => {
@@ -1192,12 +1203,15 @@ jQuery(document).ready(function($) {
                     item.glazingPattern = self.modalSelectedGlazingPattern;
                 } else if (field === 'glazingFeatures') {
                     item.glazingFeatures = self.modalSelectedGlazingFeature;
+                    item.glazingFeaturesName = $('#modal-glazing-features-name').text();
                 } else if (field === 'hardware') {
                     item.hardwareColour = self.modalSelectedHardwareColour;
+                    item.hardwareColourName = $('#modal-hardware-colour-name').text();
                 }
 
                 $modal.hide();
                 self.renderBasket();
+                self.saveState(); // Save state after editing
             });
         },
 
