@@ -494,16 +494,26 @@
     background: rgba(0, 102, 204, 0.1);
 }
 
-.glazing-type-image {
-    width: 100%;
+.glazing-type-icon {
+    width: 80px;
     height: 80px;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+    margin: 0 auto 10px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.glazing-type-icon img {
+    width: 80px;
+    height: 50px;
+    object-fit: contain;
 }
 
 .glazing-type-label {
-    font-size: 13px;
+    font-size: 12px;
+    line-height: 1.4;
     font-weight: 500;
     color: var(--text-dark);
 }
@@ -524,7 +534,7 @@
 
 .glazing-pattern-grid {
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
+    grid-template-columns: repeat(8, 1fr);
     gap: 10px;
 }
 
