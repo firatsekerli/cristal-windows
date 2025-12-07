@@ -434,16 +434,21 @@ jQuery(document).ready(function($) {
 
                 // Handle basket step separately - it's always clickable
                 if (stepData === 'basket') {
+                    // Always keep clickable class
+                    $(this).addClass('clickable');
+
                     if (currentStep === 'basket') {
                         $(this).addClass('active').removeClass('completed');
                     } else {
-                        $(this).removeClass('active completed').addClass('clickable');
+                        $(this).removeClass('active completed');
                     }
                     return;
                 }
 
                 const stepNum = parseInt(stepData);
-                if (stepNum < currentStep) {
+                if (isNaN(stepNum)) return; // Skip if not a valid number
+
+                if (stepNum < currentStep && currentStep !== 'basket') {
                     $(this).addClass('completed').removeClass('active');
                 } else if (stepNum === currentStep) {
                     $(this).addClass('active').removeClass('completed');
