@@ -326,19 +326,6 @@
                     "return_format": "array",
                     "preview_size": "thumbnail",
                     "required": 0
-                },
-                {
-                    "key": "field_glazing_type_patterns",
-                    "label": "Available Patterns",
-                    "name": "patterns",
-                    "type": "checkbox",
-                    "instructions": "Select which patterns are available for this glazing type",
-                    "choices": {},
-                    "default_value": [],
-                    "allow_custom": 0,
-                    "layout": "vertical",
-                    "toggle": 0,
-                    "return_format": "value"
                 }
             ]
         },
@@ -382,6 +369,20 @@
                     "return_format": "array",
                     "preview_size": "thumbnail",
                     "required": 0
+                },
+                {
+                    "key": "field_pattern_available_glazing_types",
+                    "label": "Available for Glazing Types",
+                    "name": "available_glazing_types",
+                    "type": "select",
+                    "instructions": "Select which glazing types this pattern is available for",
+                    "choices": {},
+                    "default_value": [],
+                    "allow_null": 1,
+                    "multiple": 1,
+                    "ui": 1,
+                    "ajax": 0,
+                    "placeholder": "Select glazing types..."
                 }
             ]
         },
@@ -525,5 +526,5 @@
     "style": "default",
     "label_placement": "top",
     "instruction_placement": "label",
-    "modified": 1733594450
+    "modified": 1765126398
 }
