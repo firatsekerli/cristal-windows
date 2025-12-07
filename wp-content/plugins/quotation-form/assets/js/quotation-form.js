@@ -36,6 +36,16 @@ jQuery(document).ready(function($) {
             ? quotationFormAjax.config.glazingFeatures
             : [],
 
+        // Available hardware colours - Use dynamic colours from config if available
+        hardwareColours: (typeof quotationFormAjax !== 'undefined' && quotationFormAjax.config && quotationFormAjax.config.hardwareColours)
+            ? quotationFormAjax.config.hardwareColours
+            : [
+                { label: 'White', value: 'white', hex: '#FFFFFF' },
+                { label: 'Chrome', value: 'chrome', hex: '#C0C0C0' },
+                { label: 'Gold', value: 'gold', hex: '#FFD700' },
+                { label: 'Black', value: 'black', hex: '#000000' }
+            ],
+
         debugColours: function() {
             console.log('=== COLOUR DEBUG INFO ===');
             console.log('Total colours:', this.colours.length);
@@ -56,6 +66,7 @@ jQuery(document).ready(function($) {
             this.bindEvents();
             this.initializeColourPickers();
             this.initializeGlazingFeaturesPicker();
+            this.initializeHardwareColourPicker();
             this.updateNavigationButtons();
             this.updateProgressIndicator();
         },
@@ -482,6 +493,60 @@ jQuery(document).ready(function($) {
             });
         },
 
+        initializeHardwareColourPicker: function() {
+            this.renderHardwareColourGrid('hardware-colour-grid');
+        },
+
+        renderHardwareColourGrid: function(gridId) {
+            const self = this;
+            const $grid = $('#' + gridId);
+
+            $grid.empty();
+
+            // Render hardware colours (no categories, just a simple grid)
+            const $colourItems = $('<div class="colour-items"></div>');
+
+            this.hardwareColours.forEach(colour => {
+                const colourName = colour.label || colour.name;
+                const colourValue = colour.value || colour.label;
+                const colourHex = colour.hex || '#CCCCCC';
+
+                const $colourSwatch = $('<div class="colour-swatch" data-colour="' + colourValue + '" data-hex="' + colourHex + '"></div>');
+
+                // Use hex color (no images for hardware colours)
+                $colourSwatch.css('background-color', colourHex);
+                $colourSwatch.attr('title', colourName);
+
+                const $colourLabel = $('<span class="colour-label">' + colourName + '</span>');
+
+                const $colourItem = $('<div class="colour-item"></div>');
+                $colourItem.append($colourSwatch).append($colourLabel);
+
+                $colourItem.on('click', function() {
+                    const value = $(this).find('.colour-swatch').data('colour');
+                    self.selectHardwareColour(value, colourName);
+                });
+
+                $colourItems.append($colourItem);
+            });
+
+            $grid.append($colourItems);
+        },
+
+        selectHardwareColour: function(colourValue, colourName) {
+            // Update hidden field
+            $('#hardware-colour').val(colourValue);
+
+            // Update display
+            $('#hardware-colour-name').text(colourName);
+
+            // Update visual selection
+            $('#hardware-colour-grid .colour-item').removeClass('selected');
+            $('#hardware-colour-grid .colour-item').filter(function() {
+                return $(this).find('.colour-swatch').data('colour') === colourValue;
+            }).addClass('selected');
+        },
+
         initializeGlazingFeaturesPicker: function() {
             this.renderGlazingFeaturesGrid('glazing-features-grid');
         },
@@ -872,7 +937,27 @@ jQuery(document).ready(function($) {
                     self.filterGlazingFeatures('modal-glazing-features-grid', $(this).val().toLowerCase());
                 });
             } else if (field === 'hardware') {
-                $content.append('<div class="edit-field-group"><label>Hardware Colour:</label><select id="edit-hardware-colour"><option value="white"' + (item.hardwareColour === 'white' ? ' selected' : '') + '>White</option><option value="chrome"' + (item.hardwareColour === 'chrome' ? ' selected' : '') + '>Chrome</option><option value="gold"' + (item.hardwareColour === 'gold' ? ' selected' : '') + '>Gold</option><option value="black"' + (item.hardwareColour === 'black' ? ' selected' : '') + '>Black</option></select></div>');
+                // Store modal selected hardware colour
+                this.modalSelectedHardwareColour = item.hardwareColour;
+
+                // Get the colour name for display
+                let colourName = item.hardwareColour;
+                const colour = this.hardwareColours.find(c => (c.value || c.label) === item.hardwareColour);
+                if (colour) {
+                    colourName = colour.label || colour.name;
+                }
+
+                // Create hardware colour picker
+                $content.append('<div class="edit-field-group modal-hardware-colour-picker">' +
+                    '<label>Hardware Colour:</label>' +
+                    '<div class="colour-selection-display">Selected: <strong id="modal-hardware-colour-name">' + colourName + '</strong></div>' +
+                    '<div id="modal-hardware-colour-grid" class="hardware-colour-grid modal-hardware-colour-grid"></div>' +
+                    '</div>');
+
+                // Render hardware colour grid after a brief delay to ensure DOM is ready
+                setTimeout(function() {
+                    self.renderModalHardwareColourGrid('modal-hardware-colour-grid', item.hardwareColour);
+                }, 10);
             }
 
             $modal.show();
@@ -891,7 +976,7 @@ jQuery(document).ready(function($) {
                 } else if (field === 'glazingFeatures') {
                     item.glazingFeatures = self.modalSelectedGlazingFeature;
                 } else if (field === 'hardware') {
-                    item.hardwareColour = $('#edit-hardware-colour').val();
+                    item.hardwareColour = self.modalSelectedHardwareColour;
                 }
 
                 $modal.hide();
@@ -1070,6 +1155,61 @@ jQuery(document).ready(function($) {
             $('#' + gridId + ' .glazing-feature-item').removeClass('selected');
             $('#' + gridId + ' .glazing-feature-item').filter(function() {
                 return $(this).find('.glazing-feature-swatch').data('feature') === featureValue;
+            }).addClass('selected');
+        },
+
+        renderModalHardwareColourGrid: function(gridId, selectedColour) {
+            const self = this;
+            const $grid = $('#' + gridId);
+
+            $grid.empty();
+
+            // Render hardware colours (no categories, just a simple grid)
+            const $colourItems = $('<div class="colour-items"></div>');
+
+            this.hardwareColours.forEach(colour => {
+                const colourName = colour.label || colour.name;
+                const colourValue = colour.value || colour.label;
+                const colourHex = colour.hex || '#CCCCCC';
+
+                const $colourSwatch = $('<div class="colour-swatch" data-colour="' + colourValue + '" data-hex="' + colourHex + '"></div>');
+
+                // Use hex color (no images for hardware colours)
+                $colourSwatch.css('background-color', colourHex);
+                $colourSwatch.attr('title', colourName);
+
+                const $colourLabel = $('<span class="colour-label">' + colourName + '</span>');
+
+                const $colourItem = $('<div class="colour-item"></div>');
+                $colourItem.append($colourSwatch).append($colourLabel);
+
+                // Mark selected colour
+                if (colourValue === selectedColour) {
+                    $colourItem.addClass('selected');
+                }
+
+                $colourItem.on('click', function() {
+                    const value = $(this).find('.colour-swatch').data('colour');
+                    self.selectModalHardwareColour(value, colourName);
+                });
+
+                $colourItems.append($colourItem);
+            });
+
+            $grid.append($colourItems);
+        },
+
+        selectModalHardwareColour: function(colourValue, colourName) {
+            // Update the modalSelectedHardwareColour value
+            this.modalSelectedHardwareColour = colourValue;
+
+            // Update display
+            $('#modal-hardware-colour-name').text(colourName);
+
+            // Update visual selection
+            $('#modal-hardware-colour-grid .colour-item').removeClass('selected');
+            $('#modal-hardware-colour-grid .colour-item').filter(function() {
+                return $(this).find('.colour-swatch').data('colour') === colourValue;
             }).addClass('selected');
         },
 

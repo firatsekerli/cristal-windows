@@ -446,6 +446,18 @@
     color: var(--primary-color);
 }
 
+/* Hardware Colour Selection */
+.hardware-colour-selection {
+    padding: 15px;
+    background: var(--background-light);
+    border-radius: 4px;
+}
+
+.hardware-colour-grid {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
 /* Glazing Features Selection */
 .glazing-features-selection {
     margin-bottom: 20px;

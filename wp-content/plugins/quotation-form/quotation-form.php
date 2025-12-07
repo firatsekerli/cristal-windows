@@ -431,6 +431,9 @@ class Quotation_Form_Plugin {
         // Process glazing features to ensure image data is properly formatted for JavaScript
         $glazing_features = $this->process_glazing_feature_data($glazing_features);
 
+        // Get hardware colours
+        $hardware_colours = $this->get_acf_field_or_default('hardware_colours', 'option');
+
         $config = array(
             'categories' => $this->get_acf_field_or_default('product_categories', 'option'),
             'productTypes' => $product_types,
@@ -441,6 +444,7 @@ class Quotation_Form_Plugin {
             'styles' => $styles,
             'colours' => $colours,
             'glazingFeatures' => $glazing_features,
+            'hardwareColours' => $hardware_colours,
             'useAcfData' => function_exists('get_field') && get_field('product_categories', 'option') ? true : false
         );
 

@@ -380,6 +380,14 @@
                     "name": "value",
                     "type": "text",
                     "required": 1
+                },
+                {
+                    "key": "field_hardware_colour_hex",
+                    "label": "Hex Code",
+                    "name": "hex",
+                    "type": "text",
+                    "placeholder": "#FFFFFF",
+                    "required": 1
                 }
             ]
         },
@@ -430,5 +438,5 @@
     "style": "default",
     "label_placement": "top",
     "instruction_placement": "label",
-    "modified": 1733587200
+    "modified": 1733587800
 }

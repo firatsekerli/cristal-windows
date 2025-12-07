@@ -395,27 +395,14 @@ if (!$use_acf) {
                     </div>
 
                     <div class="form-group">
-                        <label for="hardware-colour">Hardware Colour</label>
-                        <select id="hardware-colour" name="hardware_colour">
-                            <option value="">Select Hardware Colour</option>
-                            <?php
-                            if (!empty($hardware_colours) && is_array($hardware_colours)) {
-                                foreach ($hardware_colours as $option) {
-                                    $label = isset($option['label']) ? $option['label'] : '';
-                                    $value = isset($option['value']) ? $option['value'] : '';
-                                    if ($label && $value) {
-                                        echo '<option value="' . esc_attr($value) . '">' . esc_html($label) . '</option>';
-                                    }
-                                }
-                            } else {
-                                // Fallback hardcoded options
-                                echo '<option value="white">White</option>';
-                                echo '<option value="chrome">Chrome</option>';
-                                echo '<option value="gold">Gold</option>';
-                                echo '<option value="black">Black</option>';
-                            }
-                            ?>
-                        </select>
+                        <label>Hardware Colour</label>
+                        <div class="hardware-colour-selection">
+                            <div class="hardware-colour-grid" id="hardware-colour-grid">
+                                <!-- Hardware colours will be populated by JavaScript -->
+                            </div>
+                            <input type="hidden" id="hardware-colour" name="hardware_colour">
+                            <p class="colour-selection-display">You have chosen: <strong id="hardware-colour-name">None</strong></p>
+                        </div>
                     </div>
 
                     <div class="form-group">
