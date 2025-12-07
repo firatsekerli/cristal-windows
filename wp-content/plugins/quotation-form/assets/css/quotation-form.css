@@ -1094,12 +1094,14 @@
 }
 
 .modal-glazing-type-grid {
-    max-height: 300px;
-    overflow-y: auto;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 15px;
     border: 1px solid var(--border-color);
     border-radius: 4px;
     padding: 15px;
     background: #fafafa;
+    margin-bottom: 15px;
 }
 
 .glazing-type-selection-display {
@@ -1123,8 +1125,9 @@
 }
 
 .modal-glazing-pattern-grid {
-    max-height: 250px;
-    overflow-y: auto;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 10px;
     border: 1px solid var(--border-color);
     border-radius: 4px;
     padding: 10px;

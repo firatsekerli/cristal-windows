@@ -575,7 +575,10 @@ jQuery(document).ready(function($) {
             // Update hidden field
             $('#glazing-type').val(glazingType);
 
-            // Update display
+            // Store current glazing type name for pattern display
+            this.currentGlazingTypeName = glazingTypeName;
+
+            // Update display (will be updated again if pattern is selected)
             $('#glazing-type-name').text(glazingTypeName);
 
             // Update visual selection
@@ -586,6 +589,9 @@ jQuery(document).ready(function($) {
             if (patterns && patterns.length > 0) {
                 this.renderGlazingPatterns(patterns);
                 $('#glazing-pattern-group').show();
+                // Reset pattern selection when changing glazing type
+                $('#glazing-pattern').val('');
+                $('.glazing-pattern-card').removeClass('selected');
             } else {
                 $('#glazing-pattern-group').hide();
                 $('#glazing-pattern').val('');
@@ -626,6 +632,11 @@ jQuery(document).ready(function($) {
         selectGlazingPattern: function(patternValue, patternName) {
             // Update hidden field
             $('#glazing-pattern').val(patternValue);
+
+            // Update display to include pattern name
+            if (this.currentGlazingTypeName && patternName) {
+                $('#glazing-type-name').text(this.currentGlazingTypeName + ' - ' + patternName);
+            }
 
             // Update visual selection
             $('.glazing-pattern-card').removeClass('selected');
@@ -1367,10 +1378,21 @@ jQuery(document).ready(function($) {
             if (selectedType) {
                 const $selectedCard = $('.glazing-type-card[data-glazing-type="' + selectedType + '"]');
                 if ($selectedCard.length > 0) {
+                    const typeName = $selectedCard.find('.glazing-type-label').text();
+                    self.modalSelectedGlazingTypeName = typeName;
+
                     const patterns = $selectedCard.data('patterns');
                     if (patterns && patterns.length > 0) {
                         self.renderModalGlazingPatternGrid(patterns, selectedPattern);
                         $('#modal-glazing-pattern-group').show();
+
+                        // Update display if there's a selected pattern
+                        if (selectedPattern) {
+                            const selectedPatternObj = patterns.find(p => p.value === selectedPattern);
+                            if (selectedPatternObj && selectedPatternObj.name) {
+                                $('#modal-glazing-type-name').text(typeName + ' - ' + selectedPatternObj.name);
+                            }
+                        }
                     }
                 }
             }
@@ -1379,6 +1401,7 @@ jQuery(document).ready(function($) {
         selectModalGlazingType: function(glazingType, glazingTypeName, patterns, selectedPattern) {
             // Update the modal selected values
             this.modalSelectedGlazingType = glazingType;
+            this.modalSelectedGlazingTypeName = glazingTypeName;
 
             // Update display
             $('#modal-glazing-type-name').text(glazingTypeName);
@@ -1391,6 +1414,8 @@ jQuery(document).ready(function($) {
             if (patterns && patterns.length > 0) {
                 this.renderModalGlazingPatternGrid(patterns, selectedPattern);
                 $('#modal-glazing-pattern-group').show();
+                // Reset pattern selection when changing glazing type
+                this.modalSelectedGlazingPattern = '';
             } else {
                 $('#modal-glazing-pattern-group').hide();
                 this.modalSelectedGlazingPattern = '';
@@ -1426,16 +1451,21 @@ jQuery(document).ready(function($) {
 
                 $patternCard.on('click', function() {
                     const value = $(this).data('pattern');
-                    self.selectModalGlazingPattern(value);
+                    self.selectModalGlazingPattern(value, patternName);
                 });
 
                 $grid.append($patternCard);
             });
         },
 
-        selectModalGlazingPattern: function(patternValue) {
+        selectModalGlazingPattern: function(patternValue, patternName) {
             // Update the modal selected pattern
             this.modalSelectedGlazingPattern = patternValue;
+
+            // Update display to include pattern name
+            if (this.modalSelectedGlazingTypeName && patternName) {
+                $('#modal-glazing-type-name').text(this.modalSelectedGlazingTypeName + ' - ' + patternName);
+            }
 
             // Update visual selection
             $('#modal-glazing-pattern-grid .glazing-pattern-card').removeClass('selected');
