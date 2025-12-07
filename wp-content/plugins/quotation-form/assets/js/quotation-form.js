@@ -690,8 +690,42 @@ jQuery(document).ready(function($) {
                 $content.append('<div class="edit-field-group"><label>Height (mm):</label><input type="number" id="edit-height" value="' + item.height + '" min="200" max="3200"></div>');
                 $content.append('<div class="edit-field-group"><label>Cill:</label><select id="edit-cill"><option value="150mm"' + (item.cill === '150mm' ? ' selected' : '') + '>150mm Sill</option><option value="200mm"' + (item.cill === '200mm' ? ' selected' : '') + '>200mm Sill</option><option value="none"' + (item.cill === 'none' ? ' selected' : '') + '>No Sill</option></select></div>');
             } else if (field === 'colour') {
-                $content.append('<div class="edit-field-group"><label>Inside Colour:</label><input type="text" id="edit-inside-colour" value="' + item.insideColour + '"></div>');
-                $content.append('<div class="edit-field-group"><label>Outside Colour:</label><input type="text" id="edit-outside-colour" value="' + item.outsideColour + '"></div>');
+                // Store modal selected colors
+                this.modalSelectedColors = {
+                    inside: item.insideColour,
+                    outside: item.outsideColour
+                };
+
+                // Create inside colour picker
+                $content.append('<div class="edit-field-group modal-colour-picker">' +
+                    '<label>Inside Colour:</label>' +
+                    '<div class="colour-selection-display">Selected: <strong id="modal-inside-colour-name">' + item.insideColour + '</strong></div>' +
+                    '<input type="text" id="modal-inside-colour-search" class="modal-colour-search" placeholder="Search colours...">' +
+                    '<div id="modal-inside-colour-grid" class="colour-grid modal-colour-grid"></div>' +
+                    '</div>');
+
+                // Create outside colour picker
+                $content.append('<div class="edit-field-group modal-colour-picker">' +
+                    '<label>Outside Colour:</label>' +
+                    '<div class="colour-selection-display">Selected: <strong id="modal-outside-colour-name">' + item.outsideColour + '</strong></div>' +
+                    '<input type="text" id="modal-outside-colour-search" class="modal-colour-search" placeholder="Search colours...">' +
+                    '<div id="modal-outside-colour-grid" class="colour-grid modal-colour-grid"></div>' +
+                    '</div>');
+
+                // Render colour grids after a brief delay to ensure DOM is ready
+                setTimeout(function() {
+                    self.renderModalColourGrid('modal-inside-colour-grid', item.insideColour);
+                    self.renderModalColourGrid('modal-outside-colour-grid', item.outsideColour);
+                }, 10);
+
+                // Add search functionality
+                $('#modal-inside-colour-search').on('input', function() {
+                    self.filterColours('modal-inside-colour-grid', $(this).val().toLowerCase());
+                });
+
+                $('#modal-outside-colour-search').on('input', function() {
+                    self.filterColours('modal-outside-colour-grid', $(this).val().toLowerCase());
+                });
             } else if (field === 'glazing') {
                 $content.append('<div class="edit-field-group"><label>Glazing Type:</label><select id="edit-glazing-type"><option value="clear"' + (item.glazingType === 'clear' ? ' selected' : '') + '>Clear</option><option value="obscured"' + (item.glazingType === 'obscured' ? ' selected' : '') + '>Obscured</option><option value="tinted"' + (item.glazingType === 'tinted' ? ' selected' : '') + '>Tinted</option><option value="self-cleaning"' + (item.glazingType === 'self-cleaning' ? ' selected' : '') + '>Self Cleaning</option></select></div>');
             } else if (field === 'glazingFeatures') {
@@ -709,8 +743,8 @@ jQuery(document).ready(function($) {
                     item.height = $('#edit-height').val();
                     item.cill = $('#edit-cill').val();
                 } else if (field === 'colour') {
-                    item.insideColour = $('#edit-inside-colour').val();
-                    item.outsideColour = $('#edit-outside-colour').val();
+                    item.insideColour = self.modalSelectedColors.inside;
+                    item.outsideColour = self.modalSelectedColors.outside;
                 } else if (field === 'glazing') {
                     item.glazingType = $('#edit-glazing-type').val();
                 } else if (field === 'glazingFeatures') {
@@ -722,6 +756,86 @@ jQuery(document).ready(function($) {
                 $modal.hide();
                 self.renderBasket();
             });
+        },
+
+        renderModalColourGrid: function(gridId, selectedColour) {
+            const self = this;
+            const $grid = $('#' + gridId);
+            const isInside = gridId.includes('inside');
+
+            $grid.empty();
+
+            // Group by category
+            const categories = {};
+            this.colours.forEach(colour => {
+                if (!categories[colour.category]) {
+                    categories[colour.category] = [];
+                }
+                categories[colour.category].push(colour);
+            });
+
+            // Render colours by category
+            Object.keys(categories).forEach(category => {
+                const $categoryGroup = $('<div class="colour-category"></div>');
+                $categoryGroup.append('<h5>' + category + '</h5>');
+
+                const $colourItems = $('<div class="colour-items"></div>');
+                categories[category].forEach(colour => {
+                    const $colourSwatch = $('<div class="colour-swatch" data-colour="' + colour.name + '" data-hex="' + colour.hex + '"></div>');
+
+                    // Check if colour has an image
+                    if (colour.colour_image && colour.colour_image.url) {
+                        // Use image instead of hex color
+                        const $img = $('<img src="' + colour.colour_image.url + '" alt="' + colour.name + '" />');
+                        $colourSwatch.addClass('has-image').append($img);
+                    } else {
+                        // Fall back to hex color
+                        $colourSwatch.css('background-color', colour.hex);
+                    }
+
+                    $colourSwatch.attr('title', colour.name);
+
+                    const $colourLabel = $('<span class="colour-label">' + colour.name + '</span>');
+
+                    const $colourItem = $('<div class="colour-item"></div>');
+                    $colourItem.append($colourSwatch).append($colourLabel);
+
+                    // Mark selected colour
+                    if (colour.name === selectedColour) {
+                        $colourItem.addClass('selected');
+                    }
+
+                    $colourItem.on('click', function() {
+                        const colourName = $(this).find('.colour-swatch').data('colour');
+                        self.selectModalColour(gridId, colourName, isInside);
+                    });
+
+                    $colourItems.append($colourItem);
+                });
+
+                $categoryGroup.append($colourItems);
+                $grid.append($categoryGroup);
+            });
+        },
+
+        selectModalColour: function(gridId, colourName, isInside) {
+            const prefix = isInside ? 'inside' : 'outside';
+
+            // Update the modalSelectedColors object
+            if (isInside) {
+                this.modalSelectedColors.inside = colourName;
+            } else {
+                this.modalSelectedColors.outside = colourName;
+            }
+
+            // Update display
+            $('#modal-' + prefix + '-colour-name').text(colourName);
+
+            // Update visual selection
+            $('#' + gridId + ' .colour-item').removeClass('selected');
+            $('#' + gridId + ' .colour-item').filter(function() {
+                return $(this).find('.colour-swatch').data('colour') === colourName;
+            }).addClass('selected');
         },
 
         copyBasketItem: function(itemId) {

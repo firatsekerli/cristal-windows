@@ -776,6 +776,45 @@
     justify-content: flex-end;
 }
 
+/* Modal Colour Picker Styles */
+.modal-colour-picker {
+    margin-bottom: 25px;
+}
+
+.modal-colour-picker label {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.modal-colour-search {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.modal-colour-grid {
+    max-height: 250px;
+    overflow-y: auto;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 10px;
+    background: #fafafa;
+}
+
+/* Adjust modal content for color pickers */
+.modal-content:has(.modal-colour-picker) {
+    max-width: 800px;
+}
+
+#edit-item-content:has(.modal-colour-picker) {
+    max-height: 600px;
+    overflow-y: auto;
+}
+
 /* ====================================
    Responsive Design
    ==================================== */
