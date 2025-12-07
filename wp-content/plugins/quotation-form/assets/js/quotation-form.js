@@ -259,9 +259,17 @@ jQuery(document).ready(function($) {
 
             // Progress indicator click
             $('.progress-step').on('click', function() {
-                const step = parseInt($(this).data('step'));
-                if (step < self.currentStep) {
-                    self.navigateToStep(step);
+                const step = $(this).data('step');
+
+                // Allow clicking on basket at any time
+                if (step === 'basket') {
+                    self.showBasketReview();
+                    return;
+                }
+
+                const stepNum = parseInt(step);
+                if (stepNum < self.currentStep) {
+                    self.navigateToStep(stepNum);
                 }
             });
         },
@@ -419,13 +427,25 @@ jQuery(document).ready(function($) {
         },
 
         updateProgressIndicator: function() {
-            const step = this.currentStep === 'basket' ? 3 : this.currentStep;
+            const currentStep = this.currentStep;
 
             $('.progress-step').each(function() {
-                const stepNum = parseInt($(this).data('step'));
-                if (stepNum < step) {
+                const stepData = $(this).data('step');
+
+                // Handle basket step separately - it's always clickable
+                if (stepData === 'basket') {
+                    if (currentStep === 'basket') {
+                        $(this).addClass('active').removeClass('completed');
+                    } else {
+                        $(this).removeClass('active completed').addClass('clickable');
+                    }
+                    return;
+                }
+
+                const stepNum = parseInt(stepData);
+                if (stepNum < currentStep) {
                     $(this).addClass('completed').removeClass('active');
-                } else if (stepNum === step) {
+                } else if (stepNum === currentStep) {
                     $(this).addClass('active').removeClass('completed');
                 } else {
                     $(this).removeClass('active completed');

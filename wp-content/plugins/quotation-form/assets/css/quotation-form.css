@@ -114,6 +114,43 @@
     justify-content: center;
 }
 
+/* Basket step - always clickable */
+.progress-step.clickable {
+    cursor: pointer;
+}
+
+.progress-step.clickable .step-number {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+}
+
+.progress-step.clickable .step-title {
+    color: var(--primary-color);
+    font-weight: 500;
+}
+
+.progress-step.clickable:hover .step-number {
+    transform: scale(1.05);
+    box-shadow: 0 2px 8px rgba(0, 102, 204, 0.3);
+}
+
+.progress-step.clickable:hover .step-title {
+    font-weight: 600;
+}
+
+/* Basket step icon styling */
+.progress-step[data-step="basket"] .step-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.progress-step[data-step="basket"] .step-number svg {
+    width: 20px;
+    height: 20px;
+}
+
 /* ====================================
    Form Steps
    ==================================== */
