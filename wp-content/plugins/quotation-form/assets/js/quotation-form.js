@@ -387,7 +387,17 @@ jQuery(document).ready(function($) {
                 const $colourItems = $('<div class="colour-items"></div>');
                 categories[category].forEach(colour => {
                     const $colourSwatch = $('<div class="colour-swatch" data-colour="' + colour.name + '" data-hex="' + colour.hex + '"></div>');
-                    $colourSwatch.css('background-color', colour.hex);
+
+                    // Check if colour has an image
+                    if (colour.colour_image && colour.colour_image.url) {
+                        // Use image instead of hex color
+                        const $img = $('<img src="' + colour.colour_image.url + '" alt="' + colour.name + '" />');
+                        $colourSwatch.addClass('has-image').append($img);
+                    } else {
+                        // Fall back to hex color
+                        $colourSwatch.css('background-color', colour.hex);
+                    }
+
                     $colourSwatch.attr('title', colour.name);
 
                     const $colourLabel = $('<span class="colour-label">' + colour.name + '</span>');

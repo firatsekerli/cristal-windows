@@ -244,6 +244,24 @@
                     "name": "hex",
                     "type": "text",
                     "placeholder": "#FFFFFF"
+                },
+                {
+                    "key": "field_colour_image",
+                    "label": "Colour Image",
+                    "name": "colour_image",
+                    "type": "image",
+                    "instructions": "Upload an image for this colour (optional, recommended for Woodgrain)",
+                    "return_format": "array",
+                    "preview_size": "thumbnail",
+                    "conditional_logic": [
+                        [
+                            {
+                                "field": "field_colour_category",
+                                "operator": "==",
+                                "value": "Woodgrain"
+                            }
+                        ]
+                    ]
                 }
             ]
         },
@@ -397,5 +415,5 @@
     "style": "default",
     "label_placement": "top",
     "instruction_placement": "label",
-    "modified": 1732115000
+    "modified": 1733584800
 }
