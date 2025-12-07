@@ -1035,10 +1035,6 @@
     max-width: 800px;
 }
 
-#edit-item-content:has(.modal-colour-picker) {
-    max-height: 600px;
-}
-
 /* Modal Glazing Features Picker */
 .modal-glazing-features-picker {
     margin-bottom: 25px;
