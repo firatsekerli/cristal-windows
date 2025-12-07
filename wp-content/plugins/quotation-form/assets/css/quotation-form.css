@@ -1028,6 +1028,7 @@
     border-radius: 4px;
     padding: 10px;
     background: #fafafa;
+    max-height: unset;
 }
 
 /* Adjust modal content for color pickers */
