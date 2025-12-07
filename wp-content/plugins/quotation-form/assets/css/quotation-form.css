@@ -359,7 +359,7 @@
 
 .colour-selection h4 {
     margin: 0 0 10px 0;
-    font-size: 16px;
+    font-size: 16px !important;
     color: var(--text-dark);
 }
 
@@ -379,7 +379,7 @@
 
 .colour-category h5 {
     margin: 0 0 10px 0;
-    font-size: 13px;
+    font-size: 15px !important;
     text-transform: uppercase;
     color: var(--text-muted);
     font-weight: 600;
@@ -446,6 +446,19 @@
     color: var(--primary-color);
 }
 
+/* Glazing Features Selection */
+.glazing-features-selection {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: var(--background-light);
+    border-radius: 4px;
+}
+
+.glazing-features-picker-container input[type="text"] {
+    width: 100%;
+    margin-bottom: 15px;
+}
+
 /* Glazing Features Grid */
 .glazing-features-grid {
     max-height: 300px;
@@ -458,7 +471,7 @@
 
 .glazing-feature-category h5 {
     margin: 0 0 10px 0;
-    font-size: 13px;
+    font-size: 15px !important;
     text-transform: uppercase;
     color: var(--text-muted);
     font-weight: 600;
@@ -869,7 +882,7 @@
 }
 
 .modal-colour-picker label {
-    font-size: 15px;
+    font-size: 16px !important;
     font-weight: 600;
     margin-bottom: 8px;
 }
@@ -908,7 +921,7 @@
 }
 
 .modal-glazing-features-picker label {
-    font-size: 15px;
+    font-size: 16px !important;
     font-weight: 600;
     margin-bottom: 8px;
 }
