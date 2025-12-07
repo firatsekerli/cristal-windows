@@ -61,13 +61,71 @@ jQuery(document).ready(function($) {
             console.log('=========================');
         },
 
+        saveState: function() {
+            const state = {
+                currentStep: this.currentStep,
+                currentSubStep: this.currentSubStep,
+                basket: this.basket,
+                currentItem: this.currentItem
+            };
+            try {
+                localStorage.setItem('quotationFormState', JSON.stringify(state));
+            } catch (e) {
+                console.error('Failed to save state:', e);
+            }
+        },
+
+        loadState: function() {
+            try {
+                const savedState = localStorage.getItem('quotationFormState');
+                if (savedState) {
+                    const state = JSON.parse(savedState);
+                    this.currentStep = state.currentStep || 1;
+                    this.currentSubStep = state.currentSubStep || '1a';
+                    this.basket = state.basket || [];
+                    this.currentItem = state.currentItem || {};
+                    return true;
+                }
+            } catch (e) {
+                console.error('Failed to load state:', e);
+            }
+            return false;
+        },
+
+        clearState: function() {
+            try {
+                localStorage.removeItem('quotationFormState');
+            } catch (e) {
+                console.error('Failed to clear state:', e);
+            }
+        },
+
         init: function() {
             this.debugColours(); // Debug colour data
+            this.loadState(); // Restore saved state if available
             this.bindEvents();
             this.initializeColourPickers();
             this.initializeGlazingTypePicker();
             this.initializeGlazingFeaturesPicker();
             this.initializeHardwareColourPicker();
+
+            // Restore the current step
+            if (this.currentStep !== 1 || this.currentSubStep !== '1a') {
+                if (this.currentStep === 'basket') {
+                    this.showBasketReview();
+                } else {
+                    this.navigateToStep(this.currentStep);
+                    if (this.currentStep === 1 && this.currentSubStep !== '1a') {
+                        this.navigateToSubStep(this.currentSubStep);
+                    }
+                }
+            }
+
+            // Render basket if it has items
+            if (this.basket.length > 0) {
+                this.renderBasket();
+            }
+
             this.updateNavigationButtons();
             this.updateProgressIndicator();
         },
@@ -298,6 +356,7 @@ jQuery(document).ready(function($) {
             }
 
             this.updateNavigationButtons();
+            this.saveState(); // Save state after navigation
         },
 
         navigateToStep: function(step) {
@@ -320,6 +379,7 @@ jQuery(document).ready(function($) {
 
             this.updateProgressIndicator();
             this.updateNavigationButtons();
+            this.saveState(); // Save state after navigation
 
             // Scroll to top
             $('html, body').animate({ scrollTop: 0 }, 300);
@@ -837,6 +897,7 @@ jQuery(document).ready(function($) {
             // Reset current item
             this.currentItem = {};
             this.resetConfigurationForm();
+            this.saveState(); // Save state after adding/updating item
         },
 
         resetConfigurationForm: function() {
@@ -1482,11 +1543,13 @@ jQuery(document).ready(function($) {
 
             this.basket.push(newItem);
             this.renderBasket();
+            this.saveState(); // Save state after copying item
         },
 
         deleteBasketItem: function(itemId) {
             this.basket = this.basket.filter(i => i.id !== itemId);
             this.renderBasket();
+            this.saveState(); // Save state after deleting item
         },
 
         updateFinalSummary: function() {
@@ -1552,6 +1615,7 @@ jQuery(document).ready(function($) {
                         self.basket = [];
                         self.navigateToStep(1);
                         self.navigateToSubStep('1a');
+                        self.clearState(); // Clear saved state after successful submission
                     } else {
                         alert('There was an error submitting your request. Please try again.');
                     }
