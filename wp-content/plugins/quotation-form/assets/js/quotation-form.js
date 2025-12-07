@@ -31,7 +31,23 @@ jQuery(document).ready(function($) {
                 { name: 'Rosewood', category: 'Colour', hex: '#65000B' },
             ],
 
+        debugColours: function() {
+            console.log('=== COLOUR DEBUG INFO ===');
+            console.log('Total colours:', this.colours.length);
+            console.log('Sample colour data:', this.colours[0]);
+            console.log('Colours with images:', this.colours.filter(c => c.colour_image && c.colour_image.url).length);
+            if (this.colours.length > 0) {
+                this.colours.forEach((colour, index) => {
+                    if (colour.colour_image && colour.colour_image.url) {
+                        console.log(`Colour ${index} "${colour.name}" has image:`, colour.colour_image.url);
+                    }
+                });
+            }
+            console.log('=========================');
+        },
+
         init: function() {
+            this.debugColours(); // Debug colour data
             this.bindEvents();
             this.initializeColourPickers();
             this.updateNavigationButtons();
@@ -388,13 +404,22 @@ jQuery(document).ready(function($) {
                 categories[category].forEach(colour => {
                     const $colourSwatch = $('<div class="colour-swatch" data-colour="' + colour.name + '" data-hex="' + colour.hex + '"></div>');
 
+                    // Debug: Log colour data
+                    console.log('Rendering colour:', colour.name, {
+                        hasColourImage: !!(colour.colour_image),
+                        hasColourImageUrl: !!(colour.colour_image && colour.colour_image.url),
+                        colourImageData: colour.colour_image
+                    });
+
                     // Check if colour has an image
                     if (colour.colour_image && colour.colour_image.url) {
                         // Use image instead of hex color
+                        console.log('Using image for', colour.name, ':', colour.colour_image.url);
                         const $img = $('<img src="' + colour.colour_image.url + '" alt="' + colour.name + '" />');
                         $colourSwatch.addClass('has-image').append($img);
                     } else {
                         // Fall back to hex color
+                        console.log('Using hex color for', colour.name, ':', colour.hex);
                         $colourSwatch.css('background-color', colour.hex);
                     }
 

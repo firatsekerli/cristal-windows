@@ -253,15 +253,7 @@
                     "instructions": "Upload an image for this colour (optional, recommended for Woodgrain)",
                     "return_format": "array",
                     "preview_size": "thumbnail",
-                    "conditional_logic": [
-                        [
-                            {
-                                "field": "field_colour_category",
-                                "operator": "==",
-                                "value": "Woodgrain"
-                            }
-                        ]
-                    ]
+                    "conditional_logic": 0
                 }
             ]
         },

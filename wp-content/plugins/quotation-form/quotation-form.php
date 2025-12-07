@@ -414,6 +414,14 @@ class Quotation_Form_Plugin {
         // Group types by category for backwards compatibility
         $types_by_category = $this->group_types_by_category($product_types);
 
+        // Get colours and ensure image data is included
+        $colours = $this->get_acf_field_or_default('colours', 'option');
+
+        // Debug: Log the colours data to see what we're getting
+        if (!empty($colours)) {
+            error_log('Colours data structure: ' . print_r($colours, true));
+        }
+
         $config = array(
             'categories' => $this->get_acf_field_or_default('product_categories', 'option'),
             'productTypes' => $product_types,
@@ -422,7 +430,7 @@ class Quotation_Form_Plugin {
             'bayTypes' => $types_by_category['bay-windows'],
             'materials' => $materials,
             'styles' => $styles,
-            'colours' => $this->get_acf_field_or_default('colours', 'option'),
+            'colours' => $colours,
             'useAcfData' => function_exists('get_field') && get_field('product_categories', 'option') ? true : false
         );
 
