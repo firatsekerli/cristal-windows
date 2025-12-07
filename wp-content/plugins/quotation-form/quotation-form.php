@@ -619,10 +619,19 @@ class Quotation_Form_Plugin {
         $processed = array();
         foreach ($glazing_types as $type) {
             $type_value = isset($type['value']) ? $type['value'] : '';
+            // Extract icon URL directly from ACF image array
+            $icon_url = '';
+            if (isset($type['icon'])) {
+                if (is_array($type['icon']) && isset($type['icon']['url'])) {
+                    $icon_url = $type['icon']['url'];
+                } elseif (is_string($type['icon'])) {
+                    $icon_url = $type['icon'];
+                }
+            }
             $processed[$type_value] = array(
                 'label' => isset($type['label']) ? $type['label'] : '',
                 'value' => $type_value,
-                'icon' => isset($type['icon']) ? $type['icon'] : array(),
+                'icon' => $icon_url,
                 'patterns' => array()
             );
         }

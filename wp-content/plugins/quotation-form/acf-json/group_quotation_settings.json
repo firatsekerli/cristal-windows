@@ -331,7 +331,7 @@
         },
         {
             "key": "field_tab_patterns",
-            "label": "Patterns",
+            "label": "Glazing Patterns",
             "name": "",
             "type": "tab",
             "placement": "left"

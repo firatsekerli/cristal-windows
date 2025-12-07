@@ -372,14 +372,14 @@ if (!$use_acf) {
                                     foreach ($glazing_types as $type) {
                                         $label = isset($type['label']) ? $type['label'] : '';
                                         $value = isset($type['value']) ? $type['value'] : '';
-                                        $icon = isset($type['icon']['url']) ? $type['icon']['url'] : '';
+                                        $icon = isset($type['icon']) ? $type['icon'] : '';
                                         $patterns = isset($type['patterns']) ? $type['patterns'] : array();
 
                                         if ($label && $value) {
                                             ?>
                                             <div class="glazing-type-card" data-glazing-type="<?php echo esc_attr($value); ?>" data-patterns='<?php echo esc_attr(json_encode($patterns)); ?>'>
                                                 <div class="glazing-type-icon">
-                                                    <?php if ($icon): ?>
+                                                    <?php if (!empty($icon)): ?>
                                                         <img src="<?php echo esc_url($icon); ?>" alt="<?php echo esc_attr($label); ?>">
                                                     <?php endif; ?>
                                                 </div>
