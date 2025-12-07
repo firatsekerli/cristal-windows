@@ -17,9 +17,16 @@ $product_types = function_exists('get_field') ? get_field('product_types', 'opti
 $materials = function_exists('get_field') ? get_field('materials', 'option') : array();
 $styles = function_exists('get_field') ? get_field('styles', 'option') : array();
 $cill_options = function_exists('get_field') ? get_field('cill_options', 'option') : array();
-$glazing_types = function_exists('get_field') ? get_field('glazing_types', 'option') : array();
+$patterns_library = function_exists('get_field') ? get_field('patterns', 'option') : array();
+$glazing_types_raw = function_exists('get_field') ? get_field('glazing_types', 'option') : array();
 $glazing_features = function_exists('get_field') ? get_field('glazing_features', 'option') : array();
 $hardware_colours = function_exists('get_field') ? get_field('hardware_colours', 'option') : array();
+
+// Process glazing types to map pattern values to full pattern data
+$plugin_instance = Quotation_Form_Plugin::get_instance();
+$glazing_types = method_exists($plugin_instance, 'process_glazing_types_with_patterns')
+    ? $plugin_instance->process_glazing_types_with_patterns($glazing_types_raw, $patterns_library)
+    : $glazing_types_raw;
 
 // Group product types by category
 $window_types = array();
@@ -366,13 +373,12 @@ if (!$use_acf) {
                                         $label = isset($type['label']) ? $type['label'] : '';
                                         $value = isset($type['value']) ? $type['value'] : '';
                                         $icon = isset($type['icon']['url']) ? $type['icon']['url'] : '';
-                                        $icon_color = isset($type['icon_color']) ? $type['icon_color'] : '#7CB342';
                                         $patterns = isset($type['patterns']) ? $type['patterns'] : array();
 
                                         if ($label && $value) {
                                             ?>
                                             <div class="glazing-type-card" data-glazing-type="<?php echo esc_attr($value); ?>" data-patterns='<?php echo esc_attr(json_encode($patterns)); ?>'>
-                                                <div class="glazing-type-icon" style="background-color: <?php echo esc_attr($icon_color); ?>;">
+                                                <div class="glazing-type-icon">
                                                     <?php if ($icon): ?>
                                                         <img src="<?php echo esc_url($icon); ?>" alt="<?php echo esc_attr($label); ?>">
                                                     <?php endif; ?>

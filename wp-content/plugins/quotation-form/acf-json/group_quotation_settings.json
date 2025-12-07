@@ -328,47 +328,60 @@
                     "required": 0
                 },
                 {
-                    "key": "field_glazing_type_color",
-                    "label": "Icon Background Color",
-                    "name": "icon_color",
-                    "type": "text",
-                    "instructions": "Hex color code for icon background (e.g., #7CB342 for green)",
-                    "placeholder": "#7CB342",
-                    "required": 0
-                },
-                {
                     "key": "field_glazing_type_patterns",
                     "label": "Available Patterns",
                     "name": "patterns",
-                    "type": "repeater",
-                    "layout": "table",
-                    "button_label": "Add Pattern",
-                    "sub_fields": [
-                        {
-                            "key": "field_pattern_name",
-                            "label": "Pattern Name",
-                            "name": "name",
-                            "type": "text",
-                            "required": 1
-                        },
-                        {
-                            "key": "field_pattern_value",
-                            "label": "Pattern Value",
-                            "name": "value",
-                            "type": "text",
-                            "required": 1
-                        },
-                        {
-                            "key": "field_pattern_image",
-                            "label": "Pattern Image",
-                            "name": "image",
-                            "type": "image",
-                            "instructions": "Upload a pattern image/texture",
-                            "return_format": "array",
-                            "preview_size": "thumbnail",
-                            "required": 0
-                        }
-                    ]
+                    "type": "checkbox",
+                    "instructions": "Select which patterns are available for this glazing type",
+                    "choices": {},
+                    "default_value": [],
+                    "allow_custom": 0,
+                    "layout": "vertical",
+                    "toggle": 0,
+                    "return_format": "value"
+                }
+            ]
+        },
+        {
+            "key": "field_tab_patterns",
+            "label": "Patterns",
+            "name": "",
+            "type": "tab",
+            "placement": "left"
+        },
+        {
+            "key": "field_patterns",
+            "label": "Patterns",
+            "name": "patterns",
+            "type": "repeater",
+            "instructions": "Manage all patterns that can be assigned to glazing types",
+            "layout": "table",
+            "button_label": "Add Pattern",
+            "sub_fields": [
+                {
+                    "key": "field_pattern_name",
+                    "label": "Pattern Name",
+                    "name": "name",
+                    "type": "text",
+                    "required": 1
+                },
+                {
+                    "key": "field_pattern_value",
+                    "label": "Pattern Value",
+                    "name": "value",
+                    "type": "text",
+                    "instructions": "Unique identifier for this pattern (e.g., obscured, frosted)",
+                    "required": 1
+                },
+                {
+                    "key": "field_pattern_image",
+                    "label": "Pattern Image",
+                    "name": "image",
+                    "type": "image",
+                    "instructions": "Upload a pattern image/texture",
+                    "return_format": "array",
+                    "preview_size": "thumbnail",
+                    "required": 0
                 }
             ]
         },
@@ -512,5 +525,5 @@
     "style": "default",
     "label_placement": "top",
     "instruction_placement": "label",
-    "modified": 1733594400
+    "modified": 1733594450
 }

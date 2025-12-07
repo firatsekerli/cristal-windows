@@ -82,6 +82,7 @@ class Quotation_Form_Plugin {
         add_filter('acf/load_field/key=field_type_category', array($this, 'populate_category_choices'));
         add_filter('acf/load_field/key=field_material_available_types', array($this, 'populate_type_choices'));
         add_filter('acf/load_field/key=field_style_types', array($this, 'populate_type_choices'));
+        add_filter('acf/load_field/key=field_glazing_type_patterns', array($this, 'populate_pattern_choices'));
 
         // Add admin scripts for auto-slug generation
         add_action('acf/input/admin_enqueue_scripts', array($this, 'enqueue_admin_scripts'));
@@ -182,6 +183,30 @@ class Quotation_Form_Plugin {
                             $display_name .= ' (' . $category_label . ')';
                         }
                         $field['choices'][$slug] = $display_name;
+                    }
+                }
+            }
+        }
+
+        return $field;
+    }
+
+    /**
+     * Populate pattern choices for glazing types
+     */
+    public function populate_pattern_choices($field) {
+        $field['choices'] = array();
+
+        // Get all patterns
+        if (function_exists('get_field')) {
+            $patterns = get_field('patterns', 'option');
+            if (!empty($patterns) && is_array($patterns)) {
+                foreach ($patterns as $pattern) {
+                    $value = isset($pattern['value']) ? $pattern['value'] : '';
+                    $name = isset($pattern['name']) ? $pattern['name'] : '';
+
+                    if ($value && $name) {
+                        $field['choices'][$value] = $name;
                     }
                 }
             }
@@ -577,6 +602,49 @@ class Quotation_Form_Plugin {
             }
 
             $processed[] = $processed_feature;
+        }
+
+        return $processed;
+    }
+
+    /**
+     * Process glazing types and map pattern values to full pattern data
+     */
+    public function process_glazing_types_with_patterns($glazing_types, $patterns_library) {
+        if (empty($glazing_types) || !is_array($glazing_types)) {
+            return array();
+        }
+
+        // Create a lookup array for patterns by value
+        $patterns_lookup = array();
+        if (!empty($patterns_library) && is_array($patterns_library)) {
+            foreach ($patterns_library as $pattern) {
+                $value = isset($pattern['value']) ? $pattern['value'] : '';
+                if ($value) {
+                    $patterns_lookup[$value] = $pattern;
+                }
+            }
+        }
+
+        $processed = array();
+        foreach ($glazing_types as $type) {
+            $processed_type = array(
+                'label' => isset($type['label']) ? $type['label'] : '',
+                'value' => isset($type['value']) ? $type['value'] : '',
+                'icon' => isset($type['icon']) ? $type['icon'] : array(),
+                'patterns' => array()
+            );
+
+            // Map pattern values to full pattern objects
+            if (!empty($type['patterns']) && is_array($type['patterns'])) {
+                foreach ($type['patterns'] as $pattern_value) {
+                    if (isset($patterns_lookup[$pattern_value])) {
+                        $processed_type['patterns'][] = $patterns_lookup[$pattern_value];
+                    }
+                }
+            }
+
+            $processed[] = $processed_type;
         }
 
         return $processed;

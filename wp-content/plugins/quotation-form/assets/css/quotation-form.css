@@ -503,6 +503,7 @@
     align-items: center;
     justify-content: center;
     overflow: hidden;
+    background-color: var(--primary-color);
 }
 
 .glazing-type-icon img {
