@@ -65,6 +65,7 @@ jQuery(document).ready(function($) {
             this.debugColours(); // Debug colour data
             this.bindEvents();
             this.initializeColourPickers();
+            this.initializeGlazingTypePicker();
             this.initializeGlazingFeaturesPicker();
             this.initializeHardwareColourPicker();
             this.updateNavigationButtons();
@@ -547,6 +548,80 @@ jQuery(document).ready(function($) {
             }).addClass('selected');
         },
 
+        initializeGlazingTypePicker: function() {
+            const self = this;
+
+            // Bind click events to glazing type cards
+            $('.glazing-type-card').on('click', function() {
+                const glazingType = $(this).data('glazing-type');
+                const glazingTypeName = $(this).find('.glazing-type-label').text();
+                const patterns = $(this).data('patterns');
+
+                self.selectGlazingType(glazingType, glazingTypeName, patterns);
+            });
+        },
+
+        selectGlazingType: function(glazingType, glazingTypeName, patterns) {
+            // Update hidden field
+            $('#glazing-type').val(glazingType);
+
+            // Update display
+            $('#glazing-type-name').text(glazingTypeName);
+
+            // Update visual selection
+            $('.glazing-type-card').removeClass('selected');
+            $('.glazing-type-card[data-glazing-type="' + glazingType + '"]').addClass('selected');
+
+            // Show/hide patterns based on availability
+            if (patterns && patterns.length > 0) {
+                this.renderGlazingPatterns(patterns);
+                $('#glazing-pattern-group').show();
+            } else {
+                $('#glazing-pattern-group').hide();
+                $('#glazing-pattern').val('');
+            }
+        },
+
+        renderGlazingPatterns: function(patterns) {
+            const self = this;
+            const $grid = $('#glazing-pattern-grid');
+
+            $grid.empty();
+
+            patterns.forEach(pattern => {
+                const patternName = pattern.name || '';
+                const patternValue = pattern.value || '';
+                const patternImage = pattern.image && pattern.image.url ? pattern.image.url : '';
+
+                const $patternCard = $('<div class="glazing-pattern-card" data-pattern="' + patternValue + '"></div>');
+
+                if (patternImage) {
+                    const $patternImage = $('<div class="glazing-pattern-image"></div>');
+                    $patternImage.css('background-image', 'url(' + patternImage + ')');
+                    $patternCard.append($patternImage);
+                }
+
+                const $patternLabel = $('<div class="glazing-pattern-label">' + patternName + '</div>');
+                $patternCard.append($patternLabel);
+
+                $patternCard.on('click', function() {
+                    const value = $(this).data('pattern');
+                    self.selectGlazingPattern(value, patternName);
+                });
+
+                $grid.append($patternCard);
+            });
+        },
+
+        selectGlazingPattern: function(patternValue, patternName) {
+            // Update hidden field
+            $('#glazing-pattern').val(patternValue);
+
+            // Update visual selection
+            $('.glazing-pattern-card').removeClass('selected');
+            $('.glazing-pattern-card[data-pattern="' + patternValue + '"]').addClass('selected');
+        },
+
         initializeGlazingFeaturesPicker: function() {
             this.renderGlazingFeaturesGrid('glazing-features-grid');
         },
@@ -719,6 +794,8 @@ jQuery(document).ready(function($) {
                 insideColour: $('#inside-colour').val(),
                 outsideColour: $('#outside-colour').val(),
                 glazingType: $('#glazing-type').val(),
+                glazingTypeName: $('#glazing-type-name').text(),
+                glazingPattern: $('#glazing-pattern').val(),
                 glazingFeatures: $('#glazing-features').val(),
                 hardwareColour: $('#hardware-colour').val(),
                 location: '' // Can be set later
@@ -750,11 +827,17 @@ jQuery(document).ready(function($) {
             $('#inside-colour-name').text('None');
             $('#outside-colour-name').text('None');
             $('#glazing-type').val('');
+            $('#glazing-type-name').text('None');
+            $('#glazing-pattern').val('');
+            $('#glazing-pattern-group').hide();
             $('#glazing-features').val('not-required');
             $('#glazing-features-name').text('Not Required');
             $('#hardware-colour').val('');
+            $('#hardware-colour-name').text('None');
             $('#frame-image').val('');
             $('.colour-item').removeClass('selected');
+            $('.glazing-type-card').removeClass('selected');
+            $('.glazing-pattern-card').removeClass('selected');
             $('.glazing-feature-item').removeClass('selected');
         },
 
@@ -808,11 +891,16 @@ jQuery(document).ready(function($) {
 
             const $table = $('<table class="item-summary"></table>');
 
+            const glazingDisplay = item.glazingTypeName || item.glazingType;
+            const glazingValue = item.glazingPattern
+                ? glazingDisplay + ' - ' + item.glazingPattern
+                : glazingDisplay;
+
             const fields = [
                 { label: 'Product Template', value: item.typeName + ' ' + (item.materialName || ''), field: 'product' },
                 { label: 'Size', value: item.width + 'w x ' + item.height + 'h mm', field: 'size' },
                 { label: 'Section Colour', value: item.insideColour + ' / ' + item.outsideColour, field: 'colour' },
-                { label: 'Glazing', value: item.glazingType, field: 'glazing' },
+                { label: 'Glazing', value: glazingValue, field: 'glazing' },
                 { label: 'Glazing Features', value: item.glazingFeatures, field: 'glazingFeatures' },
                 { label: 'Hardware Colour', value: item.hardwareColour, field: 'hardware' }
             ];
@@ -905,7 +993,27 @@ jQuery(document).ready(function($) {
                     self.filterColours('modal-outside-colour-grid', $(this).val().toLowerCase());
                 });
             } else if (field === 'glazing') {
-                $content.append('<div class="edit-field-group"><label>Glazing Type:</label><select id="edit-glazing-type"><option value="clear"' + (item.glazingType === 'clear' ? ' selected' : '') + '>Clear</option><option value="obscured"' + (item.glazingType === 'obscured' ? ' selected' : '') + '>Obscured</option><option value="tinted"' + (item.glazingType === 'tinted' ? ' selected' : '') + '>Tinted</option><option value="self-cleaning"' + (item.glazingType === 'self-cleaning' ? ' selected' : '') + '>Self Cleaning</option></select></div>');
+                // Store modal selected glazing type and pattern
+                this.modalSelectedGlazingType = item.glazingType;
+                this.modalSelectedGlazingPattern = item.glazingPattern || '';
+
+                // Create glazing type picker
+                $content.append('<div class="edit-field-group modal-glazing-type-picker">' +
+                    '<label>Glazing Type:</label>' +
+                    '<div class="glazing-type-selection-display">Selected: <strong id="modal-glazing-type-name">' + (item.glazingTypeName || item.glazingType) + '</strong></div>' +
+                    '<div id="modal-glazing-type-grid" class="glazing-type-grid modal-glazing-type-grid"></div>' +
+                    '</div>');
+
+                // Add pattern section (initially hidden if no patterns)
+                $content.append('<div class="edit-field-group modal-glazing-pattern-picker" id="modal-glazing-pattern-group" style="display: none;">' +
+                    '<label>Pattern:</label>' +
+                    '<div id="modal-glazing-pattern-grid" class="glazing-pattern-grid modal-glazing-pattern-grid"></div>' +
+                    '</div>');
+
+                // Render glazing type grid after a brief delay to ensure DOM is ready
+                setTimeout(function() {
+                    self.renderModalGlazingTypeGrid('modal-glazing-type-grid', item.glazingType, item.glazingPattern);
+                }, 10);
             } else if (field === 'glazingFeatures') {
                 // Store modal selected glazing feature
                 this.modalSelectedGlazingFeature = item.glazingFeatures || 'not-required';
@@ -972,7 +1080,9 @@ jQuery(document).ready(function($) {
                     item.insideColour = self.modalSelectedColors.inside;
                     item.outsideColour = self.modalSelectedColors.outside;
                 } else if (field === 'glazing') {
-                    item.glazingType = $('#edit-glazing-type').val();
+                    item.glazingType = self.modalSelectedGlazingType;
+                    item.glazingTypeName = $('#modal-glazing-type-name').text();
+                    item.glazingPattern = self.modalSelectedGlazingPattern;
                 } else if (field === 'glazingFeatures') {
                     item.glazingFeatures = self.modalSelectedGlazingFeature;
                 } else if (field === 'hardware') {
@@ -1211,6 +1321,115 @@ jQuery(document).ready(function($) {
             $('#modal-hardware-colour-grid .colour-item').filter(function() {
                 return $(this).find('.colour-swatch').data('colour') === colourValue;
             }).addClass('selected');
+        },
+
+        renderModalGlazingTypeGrid: function(gridId, selectedType, selectedPattern) {
+            const self = this;
+            const $grid = $('#' + gridId);
+
+            $grid.empty();
+
+            // Get all glazing type cards from the main form
+            const $mainCards = $('.glazing-type-card').clone();
+
+            $mainCards.each(function() {
+                const $card = $(this);
+                const glazingType = $card.data('glazing-type');
+                const patterns = $card.data('patterns');
+
+                // Mark selected type
+                if (glazingType === selectedType) {
+                    $card.addClass('selected');
+                }
+
+                // Add click handler
+                $card.on('click', function() {
+                    const type = $(this).data('glazing-type');
+                    const typeName = $(this).find('.glazing-type-label').text();
+                    const patternsData = $(this).data('patterns');
+                    self.selectModalGlazingType(type, typeName, patternsData, selectedPattern);
+                });
+
+                $grid.append($card);
+            });
+
+            // If there's a selected type with patterns, show the pattern grid
+            if (selectedType) {
+                const $selectedCard = $('.glazing-type-card[data-glazing-type="' + selectedType + '"]');
+                if ($selectedCard.length > 0) {
+                    const patterns = $selectedCard.data('patterns');
+                    if (patterns && patterns.length > 0) {
+                        self.renderModalGlazingPatternGrid(patterns, selectedPattern);
+                        $('#modal-glazing-pattern-group').show();
+                    }
+                }
+            }
+        },
+
+        selectModalGlazingType: function(glazingType, glazingTypeName, patterns, selectedPattern) {
+            // Update the modal selected values
+            this.modalSelectedGlazingType = glazingType;
+
+            // Update display
+            $('#modal-glazing-type-name').text(glazingTypeName);
+
+            // Update visual selection
+            $('#modal-glazing-type-grid .glazing-type-card').removeClass('selected');
+            $('#modal-glazing-type-grid .glazing-type-card[data-glazing-type="' + glazingType + '"]').addClass('selected');
+
+            // Show/hide patterns based on availability
+            if (patterns && patterns.length > 0) {
+                this.renderModalGlazingPatternGrid(patterns, selectedPattern);
+                $('#modal-glazing-pattern-group').show();
+            } else {
+                $('#modal-glazing-pattern-group').hide();
+                this.modalSelectedGlazingPattern = '';
+            }
+        },
+
+        renderModalGlazingPatternGrid: function(patterns, selectedPattern) {
+            const self = this;
+            const $grid = $('#modal-glazing-pattern-grid');
+
+            $grid.empty();
+
+            patterns.forEach(pattern => {
+                const patternName = pattern.name || '';
+                const patternValue = pattern.value || '';
+                const patternImage = pattern.image && pattern.image.url ? pattern.image.url : '';
+
+                const $patternCard = $('<div class="glazing-pattern-card" data-pattern="' + patternValue + '"></div>');
+
+                if (patternImage) {
+                    const $patternImage = $('<div class="glazing-pattern-image"></div>');
+                    $patternImage.css('background-image', 'url(' + patternImage + ')');
+                    $patternCard.append($patternImage);
+                }
+
+                const $patternLabel = $('<div class="glazing-pattern-label">' + patternName + '</div>');
+                $patternCard.append($patternLabel);
+
+                // Mark selected pattern
+                if (patternValue === selectedPattern) {
+                    $patternCard.addClass('selected');
+                }
+
+                $patternCard.on('click', function() {
+                    const value = $(this).data('pattern');
+                    self.selectModalGlazingPattern(value);
+                });
+
+                $grid.append($patternCard);
+            });
+        },
+
+        selectModalGlazingPattern: function(patternValue) {
+            // Update the modal selected pattern
+            this.modalSelectedGlazingPattern = patternValue;
+
+            // Update visual selection
+            $('#modal-glazing-pattern-grid .glazing-pattern-card').removeClass('selected');
+            $('#modal-glazing-pattern-grid .glazing-pattern-card[data-pattern="' + patternValue + '"]').addClass('selected');
         },
 
         copyBasketItem: function(itemId) {

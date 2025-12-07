@@ -316,6 +316,59 @@
                     "name": "value",
                     "type": "text",
                     "required": 1
+                },
+                {
+                    "key": "field_glazing_type_icon",
+                    "label": "Icon",
+                    "name": "icon",
+                    "type": "image",
+                    "instructions": "Upload an icon for this glazing type",
+                    "return_format": "array",
+                    "preview_size": "thumbnail",
+                    "required": 0
+                },
+                {
+                    "key": "field_glazing_type_color",
+                    "label": "Icon Background Color",
+                    "name": "icon_color",
+                    "type": "text",
+                    "instructions": "Hex color code for icon background (e.g., #7CB342 for green)",
+                    "placeholder": "#7CB342",
+                    "required": 0
+                },
+                {
+                    "key": "field_glazing_type_patterns",
+                    "label": "Available Patterns",
+                    "name": "patterns",
+                    "type": "repeater",
+                    "layout": "table",
+                    "button_label": "Add Pattern",
+                    "sub_fields": [
+                        {
+                            "key": "field_pattern_name",
+                            "label": "Pattern Name",
+                            "name": "name",
+                            "type": "text",
+                            "required": 1
+                        },
+                        {
+                            "key": "field_pattern_value",
+                            "label": "Pattern Value",
+                            "name": "value",
+                            "type": "text",
+                            "required": 1
+                        },
+                        {
+                            "key": "field_pattern_image",
+                            "label": "Pattern Image",
+                            "name": "image",
+                            "type": "image",
+                            "instructions": "Upload a pattern image/texture",
+                            "return_format": "array",
+                            "preview_size": "thumbnail",
+                            "required": 0
+                        }
+                    ]
                 }
             ]
         },
@@ -459,5 +512,5 @@
     "style": "default",
     "label_placement": "top",
     "instruction_placement": "label",
-    "modified": 1733593200
+    "modified": 1733594400
 }

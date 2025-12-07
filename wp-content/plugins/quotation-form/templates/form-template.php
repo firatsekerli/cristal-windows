@@ -357,27 +357,64 @@ if (!$use_acf) {
                     </div>
 
                     <div class="form-group">
-                        <label for="glazing-type">Glazing Type</label>
-                        <select id="glazing-type" name="glazing_type">
-                            <option value="">Select Glazing Type</option>
-                            <?php
-                            if (!empty($glazing_types) && is_array($glazing_types)) {
-                                foreach ($glazing_types as $option) {
-                                    $label = isset($option['label']) ? $option['label'] : '';
-                                    $value = isset($option['value']) ? $option['value'] : '';
-                                    if ($label && $value) {
-                                        echo '<option value="' . esc_attr($value) . '">' . esc_html($label) . '</option>';
+                        <label>Glazing Type</label>
+                        <div class="glazing-type-selection">
+                            <div class="glazing-type-grid" id="glazing-type-grid">
+                                <?php
+                                if (!empty($glazing_types) && is_array($glazing_types)) {
+                                    foreach ($glazing_types as $type) {
+                                        $label = isset($type['label']) ? $type['label'] : '';
+                                        $value = isset($type['value']) ? $type['value'] : '';
+                                        $icon = isset($type['icon']['url']) ? $type['icon']['url'] : '';
+                                        $icon_color = isset($type['icon_color']) ? $type['icon_color'] : '#7CB342';
+                                        $patterns = isset($type['patterns']) ? $type['patterns'] : array();
+
+                                        if ($label && $value) {
+                                            ?>
+                                            <div class="glazing-type-card" data-glazing-type="<?php echo esc_attr($value); ?>" data-patterns='<?php echo esc_attr(json_encode($patterns)); ?>'>
+                                                <div class="glazing-type-icon" style="background-color: <?php echo esc_attr($icon_color); ?>;">
+                                                    <?php if ($icon): ?>
+                                                        <img src="<?php echo esc_url($icon); ?>" alt="<?php echo esc_attr($label); ?>">
+                                                    <?php endif; ?>
+                                                </div>
+                                                <div class="glazing-type-label"><?php echo esc_html($label); ?></div>
+                                            </div>
+                                            <?php
+                                        }
+                                    }
+                                } else {
+                                    // Fallback hardcoded options
+                                    $fallback_types = array(
+                                        array('label' => 'Low E (Double)', 'value' => 'low-e-double', 'color' => '#7CB342'),
+                                        array('label' => 'Low E (Triple)', 'value' => 'low-e-triple', 'color' => '#7CB342'),
+                                        array('label' => 'High Security', 'value' => 'high-security', 'color' => '#2196F3'),
+                                        array('label' => 'Acoustic Glazing', 'value' => 'acoustic', 'color' => '#E53935'),
+                                        array('label' => 'Self Cleaning', 'value' => 'self-cleaning', 'color' => '#00BCD4'),
+                                    );
+                                    foreach ($fallback_types as $type) {
+                                        ?>
+                                        <div class="glazing-type-card" data-glazing-type="<?php echo esc_attr($type['value']); ?>" data-patterns="[]">
+                                            <div class="glazing-type-icon" style="background-color: <?php echo esc_attr($type['color']); ?>;"></div>
+                                            <div class="glazing-type-label"><?php echo esc_html($type['label']); ?></div>
+                                        </div>
+                                        <?php
                                     }
                                 }
-                            } else {
-                                // Fallback hardcoded options
-                                echo '<option value="clear">Clear</option>';
-                                echo '<option value="obscured">Obscured</option>';
-                                echo '<option value="tinted">Tinted</option>';
-                                echo '<option value="self-cleaning">Self Cleaning</option>';
-                            }
-                            ?>
-                        </select>
+                                ?>
+                            </div>
+                            <input type="hidden" id="glazing-type" name="glazing_type">
+                            <p class="glazing-type-selection-display">You have chosen: <strong id="glazing-type-name">None</strong></p>
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="glazing-pattern-group" style="display: none;">
+                        <label>Select a Pattern</label>
+                        <div class="glazing-pattern-selection">
+                            <div class="glazing-pattern-grid" id="glazing-pattern-grid">
+                                <!-- Patterns will be populated by JavaScript based on selected type -->
+                            </div>
+                            <input type="hidden" id="glazing-pattern" name="glazing_pattern">
+                        </div>
                     </div>
 
                     <div class="form-group">
