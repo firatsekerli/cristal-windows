@@ -4,6 +4,7 @@
     "type": "wordpress-plugin",
     "require": {
         "php": ">=7.2",
-        "tecnickcom/tcpdf": "^6.6"
+        "tecnickcom/tcpdf": "^6.6",
+        "mpdf/mpdf": "^8.2"
     }
 }
