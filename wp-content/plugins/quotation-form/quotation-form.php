@@ -23,13 +23,20 @@ define('QUOTATION_FORM_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('QUOTATION_FORM_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('QUOTATION_FORM_PLUGIN_BASENAME', plugin_basename(__FILE__));
 
-// Load Composer autoloader for TCPDF
+// Load PDF libraries
+// Try to load mPDF first (preferred), fallback to TCPDF if not available
+$mpdf_autoload = QUOTATION_FORM_PLUGIN_DIR . 'vendor/mpdf/mpdf/vendor/autoload.php';
+if (file_exists($mpdf_autoload)) {
+    require_once $mpdf_autoload;
+}
+
+// Load Composer autoloader for TCPDF (fallback)
 if (file_exists(QUOTATION_FORM_PLUGIN_DIR . 'vendor/autoload.php')) {
     require_once QUOTATION_FORM_PLUGIN_DIR . 'vendor/autoload.php';
 }
 
 // Fallback: Load TCPDF directly if class is not available
-if (!class_exists('TCPDF')) {
+if (!class_exists('TCPDF') && !class_exists('Mpdf\Mpdf')) {
     $tcpdf_path = QUOTATION_FORM_PLUGIN_DIR . 'vendor/tecnickcom/tcpdf/tcpdf.php';
     if (file_exists($tcpdf_path)) {
         require_once $tcpdf_path;
@@ -1137,148 +1144,127 @@ class Quotation_Form_Plugin {
 
     /**
      * Save PDF file to uploads directory
+     * Uses mPDF (preferred) or TCPDF (fallback)
      */
     private function save_pdf_file($post_id, $data, $debug_log = array()) {
-        // Check if TCPDF is available
-        if (!class_exists('TCPDF')) {
-            $debug_log[] = "❌ ERROR: TCPDF class not found";
-            $debug_log[] = "This usually means the TCPDF library is not properly installed";
+        // Determine which PDF library to use
+        $use_mpdf = class_exists('Mpdf\Mpdf');
+        $use_tcpdf = class_exists('TCPDF');
 
-            // Try to load TCPDF directly as a last resort
-            $tcpdf_path = QUOTATION_FORM_PLUGIN_DIR . 'vendor/tecnickcom/tcpdf/tcpdf.php';
-            if (file_exists($tcpdf_path)) {
-                $debug_log[] = "Attempting to load TCPDF directly from: $tcpdf_path";
-                require_once $tcpdf_path;
-
-                if (class_exists('TCPDF')) {
-                    $debug_log[] = "✓ TCPDF loaded successfully via direct require";
-                } else {
-                    $debug_log[] = "❌ Failed to load TCPDF even after direct require";
-                    error_log("PDF Generation: TCPDF class not found for post $post_id");
-                    return array('url' => false, 'debug_log' => $debug_log);
-                }
-            } else {
-                $debug_log[] = "❌ TCPDF file not found at: $tcpdf_path";
-                error_log("PDF Generation: TCPDF class not found for post $post_id");
-                return array('url' => false, 'debug_log' => $debug_log);
-            }
-        } else {
-            $debug_log[] = "✓ TCPDF class found and ready";
+        if (!$use_mpdf && !$use_tcpdf) {
+            $debug_log[] = "❌ ERROR: No PDF library found (neither mPDF nor TCPDF)";
+            error_log("PDF Generation: No PDF library available for post $post_id");
+            return array('url' => false, 'debug_log' => $debug_log);
         }
 
-        error_log("PDF Generation: TCPDF class found, creating PDF for post $post_id");
+        $library = $use_mpdf ? 'mPDF' : 'TCPDF';
+        $debug_log[] = "✓ Using $library for PDF generation";
+        error_log("PDF Generation: Using $library for post $post_id");
 
         try {
-            $debug_log[] = "Creating PDF document...";
-            // Create new PDF document
-            $pdf = new TCPDF('P', 'mm', 'A4', true, 'UTF-8', false);
+            $debug_log[] = "Creating PDF document with $library...";
 
-        // Set document information
-        $pdf->SetCreator('Cristal Windows');
-        $pdf->SetAuthor('Cristal Windows, Doors & Conservatories Ltd');
-        $pdf->SetTitle('Quotation - ' . $data['customer_name']);
-        $pdf->SetSubject('Quotation');
-
-        // Remove default header/footer
-        $pdf->setPrintHeader(false);
-        $pdf->setPrintFooter(false);
-
-        // Set margins
-        $pdf->SetMargins(15, 15, 15);
-        $pdf->SetAutoPageBreak(TRUE, 15);
-
-        // Set font - use dejavusans for better Unicode/Turkish character support
-        $pdf->SetFont('dejavusans', '', 10);
-
-        // Configure cell padding and margins to respect CSS line-height
-        $pdf->setCellPaddings(0, 0, 0, 0);
-        $pdf->setCellMargins(0, 0, 0, 0);
-        $pdf->setCellHeightRatio(1.25);
-
-        // CRITICAL: Since CSS margins don't work properly in TCPDF, we need to use setHtmlVSpace()
-        // to control vertical spacing of HTML block tags
-        $tagvs = array(
-            'h1' => array('h' => 0, 'n' => 0),
-            'h2' => array('h' => 0, 'n' => 0),
-            'p' => array('h' => 0, 'n' => 0),
-            'div' => array('h' => 0, 'n' => 0),
-        );
-        $pdf->setHtmlVSpace($tagvs);
-
-        // Remove additional vertical space inside cells
-        $pdf->SetCellPadding(0);
-
-        // Add a page
-        $pdf->AddPage();
-
-            $debug_log[] = "✓ PDF document configured";
-            $debug_log[] = "Generating HTML content...";
-
-        // Get HTML content
-        $html = $this->generate_pdf_content($post_id, $data);
-
+            // Get HTML content first
+            $html = $this->generate_pdf_content($post_id, $data);
             $debug_log[] = "✓ HTML content generated";
-            $debug_log[] = "Writing HTML to PDF...";
 
-        // Output the HTML content
-        $pdf->writeHTML($html, true, false, true, false, '');
-
-            $debug_log[] = "✓ HTML written to PDF";
-
-            // Create uploads directory for quotes if it doesn't exist
+            // Create uploads directory structure
             $upload_dir = wp_upload_dir();
             $quotes_dir = $upload_dir['basedir'] . '/quotes';
             $quotes_url = $upload_dir['baseurl'] . '/quotes';
 
-            $debug_log[] = "Upload directory: " . $upload_dir['basedir'];
-            $debug_log[] = "Quotes directory: $quotes_dir";
-
-            error_log("PDF Generation: Upload dir basedir: " . $upload_dir['basedir']);
-            error_log("PDF Generation: Quotes directory: $quotes_dir");
-
             if (!file_exists($quotes_dir)) {
                 wp_mkdir_p($quotes_dir);
-                $debug_log[] = "✓ Created quotes directory";
-                error_log("PDF Generation: Created quotes directory: $quotes_dir");
-            } else {
-                $debug_log[] = "✓ Quotes directory exists";
+                $debug_log[] = "✓ Created quotes directory: $quotes_dir";
             }
 
             // Generate filename
             $filename = 'quote-' . $post_id . '-' . sanitize_title($data['customer_name']) . '.pdf';
             $file_path = $quotes_dir . '/' . $filename;
+            $debug_log[] = "Output path: $file_path";
 
-            $debug_log[] = "Filename: $filename";
-            $debug_log[] = "Full path: $file_path";
-            $debug_log[] = "Saving PDF to file...";
+            if ($use_mpdf) {
+                // === mPDF Implementation (CLEAN & SIMPLE!) ===
+                $config = [
+                    'mode' => 'utf-8',
+                    'format' => 'A4',
+                    'margin_left' => 15,
+                    'margin_right' => 15,
+                    'margin_top' => 15,
+                    'margin_bottom' => 15,
+                    'margin_header' => 0,
+                    'margin_footer' => 0,
+                    'tempDir' => $quotes_dir . '/tmp'
+                ];
 
-            error_log("PDF Generation: Saving PDF to: $file_path");
+                $mpdf = new \Mpdf\Mpdf($config);
 
-            // Save PDF to file
-            $pdf->Output($file_path, 'F');
+                // Set document metadata
+                $mpdf->SetCreator('Cristal Windows');
+                $mpdf->SetAuthor('Cristal Windows, Doors & Conservatories Ltd');
+                $mpdf->SetTitle('Quotation - ' . $data['customer_name']);
+                $mpdf->SetSubject('Quotation');
 
-            if (file_exists($file_path)) {
-                $file_size = filesize($file_path);
-                $debug_log[] = "✓ PDF file created successfully";
-                $debug_log[] = "File size: " . round($file_size / 1024, 2) . " KB";
-                error_log("PDF Generation: PDF file successfully created at: $file_path");
+                // Write HTML and output
+                $mpdf->WriteHTML($html);
+                $mpdf->Output($file_path, \Mpdf\Output\Destination::FILE);
+
+                $debug_log[] = "✓ mPDF: Document created successfully";
+
             } else {
-                $debug_log[] = "❌ ERROR: PDF file not found after save operation";
-                $debug_log[] = "Expected path: $file_path";
-                error_log("PDF Generation: ERROR - PDF file not found after Output() call: $file_path");
+                // === TCPDF Fallback ===
+                $pdf = new TCPDF('P', 'mm', 'A4', true, 'UTF-8', false);
+
+                $pdf->SetCreator('Cristal Windows');
+                $pdf->SetAuthor('Cristal Windows, Doors & Conservatories Ltd');
+                $pdf->SetTitle('Quotation - ' . $data['customer_name']);
+                $pdf->SetSubject('Quotation');
+
+                $pdf->setPrintHeader(false);
+                $pdf->setPrintFooter(false);
+                $pdf->SetMargins(15, 15, 15);
+                $pdf->SetAutoPageBreak(TRUE, 15);
+                $pdf->SetFont('dejavusans', '', 10);
+
+                // TCPDF-specific workarounds
+                $pdf->setCellPaddings(0, 0, 0, 0);
+                $pdf->setCellMargins(0, 0, 0, 0);
+                $pdf->setCellHeightRatio(1.25);
+                $tagvs = array(
+                    'h1' => array('h' => 0, 'n' => 0),
+                    'h2' => array('h' => 0, 'n' => 0),
+                    'p' => array('h' => 0, 'n' => 0),
+                    'div' => array('h' => 0, 'n' => 0),
+                );
+                $pdf->setHtmlVSpace($tagvs);
+                $pdf->SetCellPadding(0);
+
+                $pdf->AddPage();
+                $pdf->writeHTML($html, true, false, true, false, '');
+                $pdf->Output($file_path, 'F');
+
+                $debug_log[] = "✓ TCPDF: Document created successfully";
             }
 
-            // Return the URL to the PDF file
+            // Verify file was created
+            if (file_exists($file_path)) {
+                $file_size = filesize($file_path);
+                $debug_log[] = "✓ PDF file saved: " . round($file_size / 1024, 2) . " KB";
+                error_log("PDF Generation: Success - $library created PDF at $file_path");
+            } else {
+                $debug_log[] = "❌ ERROR: PDF file not created";
+                error_log("PDF Generation: ERROR - File not found after generation");
+                return array('url' => false, 'debug_log' => $debug_log);
+            }
+
             $pdf_url = $quotes_url . '/' . $filename;
             return array('url' => $pdf_url, 'debug_log' => $debug_log);
+
         } catch (Exception $e) {
-            $debug_log[] = "❌ EXCEPTION OCCURRED:";
-            $debug_log[] = "Message: " . $e->getMessage();
-            $debug_log[] = "File: " . $e->getFile() . " (Line " . $e->getLine() . ")";
-            $debug_log[] = "Stack trace:";
-            $debug_log[] = $e->getTraceAsString();
-            error_log("PDF Generation: Exception occurred for post $post_id - " . $e->getMessage());
-            error_log("PDF Generation: Stack trace: " . $e->getTraceAsString());
+            $debug_log[] = "❌ EXCEPTION: " . $e->getMessage();
+            $debug_log[] = "Location: " . $e->getFile() . ':' . $e->getLine();
+            error_log("PDF Generation: Exception - " . $e->getMessage());
+            error_log("Stack trace: " . $e->getTraceAsString());
             return array('url' => false, 'debug_log' => $debug_log);
         }
     }
