@@ -23,24 +23,10 @@ define('QUOTATION_FORM_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('QUOTATION_FORM_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('QUOTATION_FORM_PLUGIN_BASENAME', plugin_basename(__FILE__));
 
-// Load PDF libraries
-// Try to load mPDF first (preferred), fallback to TCPDF if not available
+// Load mPDF library
 $mpdf_autoload = QUOTATION_FORM_PLUGIN_DIR . 'vendor/mpdf/mpdf/vendor/autoload.php';
 if (file_exists($mpdf_autoload)) {
     require_once $mpdf_autoload;
-}
-
-// Load Composer autoloader for TCPDF (fallback)
-if (file_exists(QUOTATION_FORM_PLUGIN_DIR . 'vendor/autoload.php')) {
-    require_once QUOTATION_FORM_PLUGIN_DIR . 'vendor/autoload.php';
-}
-
-// Fallback: Load TCPDF directly if class is not available
-if (!class_exists('TCPDF') && !class_exists('Mpdf\Mpdf')) {
-    $tcpdf_path = QUOTATION_FORM_PLUGIN_DIR . 'vendor/tecnickcom/tcpdf/tcpdf.php';
-    if (file_exists($tcpdf_path)) {
-        require_once $tcpdf_path;
-    }
 }
 
 /**
@@ -1143,26 +1129,21 @@ class Quotation_Form_Plugin {
     }
 
     /**
-     * Save PDF file to uploads directory
-     * Uses mPDF (preferred) or TCPDF (fallback)
+     * Save PDF file to uploads directory using mPDF
      */
     private function save_pdf_file($post_id, $data, $debug_log = array()) {
-        // Determine which PDF library to use
-        $use_mpdf = class_exists('Mpdf\Mpdf');
-        $use_tcpdf = class_exists('TCPDF');
-
-        if (!$use_mpdf && !$use_tcpdf) {
-            $debug_log[] = "❌ ERROR: No PDF library found (neither mPDF nor TCPDF)";
-            error_log("PDF Generation: No PDF library available for post $post_id");
+        // Check if mPDF is available
+        if (!class_exists('Mpdf\Mpdf')) {
+            $debug_log[] = "❌ ERROR: mPDF library not found";
+            error_log("PDF Generation: mPDF not available for post $post_id");
             return array('url' => false, 'debug_log' => $debug_log);
         }
 
-        $library = $use_mpdf ? 'mPDF' : 'TCPDF';
-        $debug_log[] = "✓ Using $library for PDF generation";
-        error_log("PDF Generation: Using $library for post $post_id");
+        $debug_log[] = "✓ Using mPDF for PDF generation";
+        error_log("PDF Generation: Using mPDF for post $post_id");
 
         try {
-            $debug_log[] = "Creating PDF document with $library...";
+            $debug_log[] = "Creating PDF document with mPDF...";
 
             // Get HTML content first
             $html = $this->generate_pdf_content($post_id, $data);
@@ -1183,74 +1164,38 @@ class Quotation_Form_Plugin {
             $file_path = $quotes_dir . '/' . $filename;
             $debug_log[] = "Output path: $file_path";
 
-            if ($use_mpdf) {
-                // === mPDF Implementation (CLEAN & SIMPLE!) ===
-                $config = [
-                    'mode' => 'utf-8',
-                    'format' => 'A4',
-                    'margin_left' => 15,
-                    'margin_right' => 15,
-                    'margin_top' => 15,
-                    'margin_bottom' => 15,
-                    'margin_header' => 0,
-                    'margin_footer' => 0,
-                    'tempDir' => $quotes_dir . '/tmp'
-                ];
+            // Configure mPDF
+            $config = [
+                'mode' => 'utf-8',
+                'format' => 'A4',
+                'margin_left' => 15,
+                'margin_right' => 15,
+                'margin_top' => 15,
+                'margin_bottom' => 15,
+                'margin_header' => 0,
+                'margin_footer' => 0,
+                'tempDir' => $quotes_dir . '/tmp'
+            ];
 
-                $mpdf = new \Mpdf\Mpdf($config);
+            $mpdf = new \Mpdf\Mpdf($config);
 
-                // Set document metadata
-                $mpdf->SetCreator('Cristal Windows');
-                $mpdf->SetAuthor('Cristal Windows, Doors & Conservatories Ltd');
-                $mpdf->SetTitle('Quotation - ' . $data['customer_name']);
-                $mpdf->SetSubject('Quotation');
+            // Set document metadata
+            $mpdf->SetCreator('Cristal Windows');
+            $mpdf->SetAuthor('Cristal Windows, Doors & Conservatories Ltd');
+            $mpdf->SetTitle('Quotation - ' . $data['customer_name']);
+            $mpdf->SetSubject('Quotation');
 
-                // Write HTML and output
-                $mpdf->WriteHTML($html);
-                $mpdf->Output($file_path, \Mpdf\Output\Destination::FILE);
+            // Write HTML and output
+            $mpdf->WriteHTML($html);
+            $mpdf->Output($file_path, \Mpdf\Output\Destination::FILE);
 
-                $debug_log[] = "✓ mPDF: Document created successfully";
-
-            } else {
-                // === TCPDF Fallback ===
-                $pdf = new TCPDF('P', 'mm', 'A4', true, 'UTF-8', false);
-
-                $pdf->SetCreator('Cristal Windows');
-                $pdf->SetAuthor('Cristal Windows, Doors & Conservatories Ltd');
-                $pdf->SetTitle('Quotation - ' . $data['customer_name']);
-                $pdf->SetSubject('Quotation');
-
-                $pdf->setPrintHeader(false);
-                $pdf->setPrintFooter(false);
-                $pdf->SetMargins(15, 15, 15);
-                $pdf->SetAutoPageBreak(TRUE, 15);
-                $pdf->SetFont('dejavusans', '', 10);
-
-                // TCPDF-specific workarounds
-                $pdf->setCellPaddings(0, 0, 0, 0);
-                $pdf->setCellMargins(0, 0, 0, 0);
-                $pdf->setCellHeightRatio(1.25);
-                $tagvs = array(
-                    'h1' => array('h' => 0, 'n' => 0),
-                    'h2' => array('h' => 0, 'n' => 0),
-                    'p' => array('h' => 0, 'n' => 0),
-                    'div' => array('h' => 0, 'n' => 0),
-                );
-                $pdf->setHtmlVSpace($tagvs);
-                $pdf->SetCellPadding(0);
-
-                $pdf->AddPage();
-                $pdf->writeHTML($html, true, false, true, false, '');
-                $pdf->Output($file_path, 'F');
-
-                $debug_log[] = "✓ TCPDF: Document created successfully";
-            }
+            $debug_log[] = "✓ mPDF: Document created successfully";
 
             // Verify file was created
             if (file_exists($file_path)) {
                 $file_size = filesize($file_path);
                 $debug_log[] = "✓ PDF file saved: " . round($file_size / 1024, 2) . " KB";
-                error_log("PDF Generation: Success - $library created PDF at $file_path");
+                error_log("PDF Generation: Success - mPDF created PDF at $file_path");
             } else {
                 $debug_log[] = "❌ ERROR: PDF file not created";
                 error_log("PDF Generation: ERROR - File not found after generation");
@@ -1305,80 +1250,50 @@ class Quotation_Form_Plugin {
             'quote_price' => $quote_price
         );
 
-        // Check if TCPDF is available
-        if (class_exists('TCPDF')) {
-            $this->generate_pdf_with_tcpdf($post_id, $data);
-        } else {
-            // Fallback: Output HTML that can be printed as PDF
-            $this->output_printable_quote($post_id, $data);
+        // Generate PDF using mPDF
+        if (!class_exists('Mpdf\Mpdf')) {
+            wp_die('mPDF library not available');
         }
-    }
 
-    /**
-     * Generate PDF using TCPDF library
-     */
-    private function generate_pdf_with_tcpdf($post_id, $data) {
-        // Create new PDF document
-        $pdf = new TCPDF('P', 'mm', 'A4', true, 'UTF-8', false);
+        try {
+            // Get HTML content
+            $html = $this->generate_pdf_content($post_id, $data);
 
-        // Set document information
-        $pdf->SetCreator('Cristal Windows');
-        $pdf->SetAuthor('Cristal Windows, Doors & Conservatories Ltd');
-        $pdf->SetTitle('Quotation - ' . $data['customer_name']);
-        $pdf->SetSubject('Quotation');
+            // Configure mPDF
+            $upload_dir = wp_upload_dir();
+            $quotes_dir = $upload_dir['basedir'] . '/quotes';
 
-        // Remove default header/footer
-        $pdf->setPrintHeader(false);
-        $pdf->setPrintFooter(false);
+            $config = [
+                'mode' => 'utf-8',
+                'format' => 'A4',
+                'margin_left' => 15,
+                'margin_right' => 15,
+                'margin_top' => 15,
+                'margin_bottom' => 15,
+                'margin_header' => 0,
+                'margin_footer' => 0,
+                'tempDir' => $quotes_dir . '/tmp'
+            ];
 
-        // Set margins
-        $pdf->SetMargins(15, 15, 15);
-        $pdf->SetAutoPageBreak(TRUE, 15);
+            $mpdf = new \Mpdf\Mpdf($config);
 
-        // Set font - use dejavusans for better Unicode/Turkish character support
-        $pdf->SetFont('dejavusans', '', 10);
+            // Set document metadata
+            $mpdf->SetCreator('Cristal Windows');
+            $mpdf->SetAuthor('Cristal Windows, Doors & Conservatories Ltd');
+            $mpdf->SetTitle('Quotation - ' . $data['customer_name']);
+            $mpdf->SetSubject('Quotation');
 
-        // Configure cell padding and margins to respect CSS line-height
-        $pdf->setCellPaddings(0, 0, 0, 0);
-        $pdf->setCellMargins(0, 0, 0, 0);
-        $pdf->setCellHeightRatio(1.25);
+            // Write HTML
+            $mpdf->WriteHTML($html);
 
-        // CRITICAL: Since CSS margins don't work properly in TCPDF, we need to use setHtmlVSpace()
-        // to control vertical spacing of HTML block tags
-        $tagvs = array(
-            'h1' => array('h' => 0, 'n' => 0),
-            'h2' => array('h' => 0, 'n' => 0),
-            'p' => array('h' => 0, 'n' => 0),
-            'div' => array('h' => 0, 'n' => 0),
-        );
-        $pdf->setHtmlVSpace($tagvs);
-
-        // Remove additional vertical space inside cells
-        $pdf->SetCellPadding(0);
-
-        // Add a page
-        $pdf->AddPage();
-
-        // Get HTML content
-        $html = $this->generate_pdf_content($post_id, $data);
-
-        // Output the HTML content
-        $pdf->writeHTML($html, true, false, true, false, '');
-
-        // Close and output PDF document
-        $filename = 'quote-' . $post_id . '-' . sanitize_title($data['customer_name']) . '.pdf';
-        $pdf->Output($filename, 'D');
-        exit;
-    }
-
-    /**
-     * Output printable HTML quote (fallback when no PDF library available)
-     */
-    private function output_printable_quote($post_id, $data) {
-        header('Content-Type: text/html; charset=utf-8');
-        echo $this->generate_pdf_content($post_id, $data);
-        echo '<script>window.print();</script>';
-        exit;
+            // Output PDF for download
+            $filename = 'quote-' . $post_id . '-' . sanitize_title($data['customer_name']) . '.pdf';
+            $mpdf->Output($filename, \Mpdf\Output\Destination::DOWNLOAD);
+            exit;
+        } catch (Exception $e) {
+            error_log('PDF Generation Error: ' . $e->getMessage());
+            wp_die('Error generating PDF: ' . $e->getMessage());
+        }
     }
 
     /**
