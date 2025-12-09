@@ -23,10 +23,10 @@ define('QUOTATION_FORM_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('QUOTATION_FORM_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('QUOTATION_FORM_PLUGIN_BASENAME', plugin_basename(__FILE__));
 
-// Load mPDF library
-$mpdf_autoload = QUOTATION_FORM_PLUGIN_DIR . 'vendor/mpdf/mpdf/vendor/autoload.php';
-if (file_exists($mpdf_autoload)) {
-    require_once $mpdf_autoload;
+// Load Composer autoloader (includes mPDF)
+$composer_autoload = QUOTATION_FORM_PLUGIN_DIR . 'vendor/autoload.php';
+if (file_exists($composer_autoload)) {
+    require_once $composer_autoload;
 }
 
 /**
