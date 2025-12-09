@@ -20,7 +20,7 @@
         .company-info {
             text-align: right;
         }
-        .company-info h1 {
+        .company-info h3 {
             color: #0066cc;
             margin: 0 0 4px 0;
             font-size: 11pt;
@@ -193,7 +193,7 @@
                 </td>
                 <td style="width: 65%; vertical-align: top;">
                     <div class="company-info">
-                        <h1>Cristal Windows, Doors &amp; Conservatories Ltd</h1>
+                        <h3>Cristal Windows, Doors &amp; Conservatories Ltd</h3>
                         <p>23 Cedar Drive, Fleet, Hampshire GU51 3HD</p>
                         <p>www.cristalwindows.co.uk</p>
                         <p>tel: 01252 810777</p>
