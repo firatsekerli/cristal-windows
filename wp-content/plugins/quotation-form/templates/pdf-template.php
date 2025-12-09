@@ -23,7 +23,7 @@
         .company-info h1 {
             color: #0066cc;
             margin: 0 0 4px 0;
-            font-size: 18pt;
+            font-size: 11pt;
             font-weight: bold;
         }
         .company-info p {
@@ -119,6 +119,7 @@
             border-top: 1px solid #cccccc;
             font-size: 8pt;
             color: #666666;
+            page-break-before: always;
         }
         .terms h3 {
             font-size: 10pt;
