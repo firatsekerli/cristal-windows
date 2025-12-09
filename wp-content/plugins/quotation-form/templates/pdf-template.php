@@ -1,356 +1,357 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <style>
-        body {
-            font-family: dejavusans, sans-serif;
-            font-size: 10pt;
-            line-height: 1.2;
-            color: #000000;
-        }
-        .header {
-            width: 100%;
-            margin-bottom: 4px;
-            margin-top: 0;
-            padding-top: 0;
-            border-bottom: 3px solid #0066cc;
-            padding-bottom: 6px;
-        }
-        .company-info {
-            text-align: right;
-        }
-        .company-info h3 {
-            color: #0066cc;
-            margin: 0 0 4px 0;
-            font-size: 11pt;
-            font-weight: bold;
-        }
-        .company-info p {
-            margin: 0;
-            font-size: 8.5pt;
-            line-height: 1.0;
-        }
-        .customer-section {
-            margin-bottom: 15px;
-        }
-        .customer-section h2 {
-            font-size: 11pt;
-            margin-bottom: 6px;
-            color: #333333;
-            font-weight: bold;
-        }
-        .customer-details {
-            line-height: 1.3;
-        }
-        .customer-details p {
-            margin: 2px 0;
-        }
-        .items-section {
-            margin-bottom: 15px;
-            page-break-before: always;
-        }
-        .items-section h2 {
-            font-size: 12pt;
-            margin-top: 15px;
-            margin-bottom: 8px;
-            color: #0066cc;
-            border-bottom: 3px solid #0066cc;
-            padding-bottom: 6px;
-            font-weight: bold;
-        }
-        .item {
-            background-color: #f9f9f9;
-            padding: 12px;
-            margin-top: 12px;
-            margin-bottom: 10px;
-            page-break-inside: avoid;
-        }
-        .item:first-of-type {
-            margin-top: 25px;
-        }
-        .item-header {
-            font-weight: bold;
-            font-size: 11pt;
-            margin-bottom: 6px;
-            color: #0066cc;
-        }
-        .item-details {
-            margin-top: 6px;
-        }
-        .item-detail {
-            padding: 3px 0;
-            border-bottom: 1px solid #eeeeee;
-            line-height: 1.2;
-        }
-        .item-detail:last-child {
-            border-bottom: none;
-        }
-        .item-detail strong {
-            color: #555555;
-            font-weight: bold;
-        }
-        .item-price {
-            font-size: 11pt;
-            font-weight: bold;
-            color: #0066cc;
-            margin-top: 6px;
-            text-align: right;
-        }
-        .total-section {
-            margin-top: 12px;
-            text-align: right;
-            font-size: 13pt;
-            font-weight: bold;
-            padding: 10px;
-            background-color: #f0f7ff;
-            border: 2px solid #0066cc;
-        }
-        .total-section .total-label {
-            color: #333333;
-        }
-        .total-section .total-amount {
-            color: #0066cc;
-            font-size: 16pt;
-        }
-        .terms {
-            margin-top: 15px;
-            padding-top: 12px;
-            border-top: 1px solid #cccccc;
-            font-size: 8pt;
-            color: #666666;
-            page-break-before: always;
-        }
-        .terms h3 {
-            font-size: 10pt;
-            margin-bottom: 6px;
-            color: #333333;
-            font-weight: bold;
-        }
-        .terms p {
-            margin: 4px 0;
-            line-height: 1.2;
-        }
-        .footer {
-            margin-top: 15px;
-            text-align: center;
-            font-size: 8pt;
-            color: #666666;
-            border-top: 1px solid #cccccc;
-            padding-top: 10px;
-        }
-        .footer p {
-            margin: 2px 0;
-        }
-        .cover-letter {
-            margin-bottom: 20px;
-            margin-top: 15px;
-            padding: 0;
-            background-color: #ffffff;
-        }
-        .cover-letter p {
-            margin: 8px 0;
-            line-height: 1.4;
-        }
-        .cover-letter p:first-child {
-            margin-top: 0;
-        }
-        .customer-info-inline {
-            margin: 12px 0 15px 0;
-            padding: 10px 12px;
-            background-color: #f9f9f9;
-        }
-        .customer-info-inline p {
-            margin: 3px 0;
-            font-size: 9pt;
-            line-height: 1.3;
-        }
-    </style>
+<meta charset="UTF-8">
+<style>
+body {
+    font-family: dejavusans, sans-serif;
+    font-size: 10pt;
+    line-height: 1.3;
+    color: #000000;
+}
+.header {
+    width: 100%;
+    margin: 0 0 10px 0;  /* more space under the header */
+    padding: 0 0 6px 0;
+    border-bottom: 3px solid #0066cc;
+}
+.company-info {
+    text-align: right;
+    font-size: 8pt;
+    line-height: 1.2;
+}
+.company-info h3 {
+    color: #0066cc;
+    margin: 0 0 4px 0;
+    font-size: 9pt;
+    font-weight: bold;
+}
+.company-info p {
+    margin: 0;
+    font-size: 8pt;
+    line-height: 1.2;
+}
+.customer-section {
+    margin-bottom: 15px;
+}
+.customer-section h2 {
+    font-size: 11pt;
+    margin-bottom: 6px;
+    color: #333333;
+    font-weight: bold;
+}
+.customer-details {
+    line-height: 1.3;
+}
+.customer-details p {
+    margin: 2px 0;
+}
+.items-section {
+    margin-bottom: 15px;
+    page-break-before: always;
+}
+.items-section h2 {
+    font-size: 12pt;
+    margin-top: 15px;
+    margin-bottom: 8px;
+    color: #0066cc;
+    border-bottom: 3px solid #0066cc;
+    padding-bottom: 6px;
+    font-weight: bold;
+}
+.item {
+    background-color: #f9f9f9;
+    padding: 12px;
+    margin-top: 12px;
+    margin-bottom: 10px;
+    page-break-inside: avoid;
+}
+.item:first-of-type {
+    margin-top: 25px;
+}
+.item-header {
+    font-weight: bold;
+    font-size: 11pt;
+    margin-bottom: 6px;
+    color: #0066cc;
+}
+.item-details {
+    margin-top: 6px;
+}
+.item-detail {
+    padding: 3px 0;
+    border-bottom: 1px solid #eeeeee;
+    line-height: 1.2;
+}
+.item-detail:last-child {
+    border-bottom: none;
+}
+.item-detail strong {
+    color: #555555;
+    font-weight: bold;
+}
+.item-price {
+    font-size: 11pt;
+    font-weight: bold;
+    color: #0066cc;
+    margin-top: 6px;
+    text-align: right;
+}
+.total-section {
+    margin-top: 12px;
+    text-align: right;
+    font-size: 13pt;
+    font-weight: bold;
+    padding: 10px;
+    background-color: #f0f7ff;
+    border: 2px solid #0066cc;
+}
+.total-section .total-label {
+    color: #333333;
+}
+.total-section .total-amount {
+    color: #0066cc;
+    font-size: 16pt;
+}
+.terms {
+    margin-top: 15px;
+    padding-top: 12px;
+    border-top: 1px solid #cccccc;
+    font-size: 8pt;
+    color: #666666;
+    page-break-before: always;
+}
+.terms h3 {
+    font-size: 10pt;
+    margin-bottom: 6px;
+    color: #333333;
+    font-weight: bold;
+}
+.terms p {
+    margin: 4px 0;
+    line-height: 1.2;
+}
+.footer {
+    margin-top: 15px;
+    text-align: center;
+    font-size: 8pt;
+    color: #666666;
+    border-top: 1px solid #cccccc;
+    padding-top: 10px;
+}
+.footer p {
+    margin: 2px 0;
+}
+.cover-letter {
+    margin-bottom: 20px;
+    margin-top: 30px;
+    padding: 0;
+    background-color: #ffffff;
+}
+.cover-letter p {
+    margin: 8px 0;
+    line-height: 1.4;
+}
+.cover-letter p:first-child {
+    margin-top: 0;
+}
+.customer-info-inline {
+    margin: 12px 0 15px 0;
+    padding: 10px 12px;
+    background-color: #f9f9f9;
+}
+.customer-info-inline p {
+    margin: 3px 0;
+    font-size: 9pt;
+    line-height: 1.3;
+}
+</style>
 </head>
 <body>
-    <!-- Header -->
-    <div class="header">
-        <table style="width: 100%; border: none; padding: 0; margin: 0;" cellpadding="0" cellspacing="0">
-            <tr>
-                <td style="width: 35%; vertical-align: top;">
-                    <?php
-                    $logo_url = '';
-                    if (function_exists('get_field')):
-                        $logo = get_field('company_logo', 'option');
-                        if ($logo && isset($logo['url'])) {
-                            $logo_url = $logo['url'];
-                        }
-                    endif;
+<!-- Header -->
+<div class="header">
+<table style="width: 100%; border: none; padding: 0; margin: 0;" cellpadding="0" cellspacing="0">
+    <tr>
+        <td style="width: 35%; vertical-align: top;">
+            <?php
+            $logo_url = '';
+            if (function_exists('get_field')):
+                $logo = get_field('company_logo', 'option');
+                if ($logo && isset($logo['url'])) {
+                    $logo_url = $logo['url'];
+                }
+            endif;
 
-                    // Fallback to default logo if not set in ACF
-                    if (empty($logo_url)) {
-                        $logo_url = 'https://cristalwindows.co.uk/wp-content/uploads/2025/02/Cristal-Windows-LOGO-01.png';
-                    }
+            // Fallback to default logo if not set in ACF
+            if (empty($logo_url)) {
+                $logo_url = 'https://cristalwindows.co.uk/wp-content/uploads/2025/02/Cristal-Windows-LOGO-01.png';
+            }
 
-                    if ($logo_url): ?>
-                        <img src="<?php echo esc_url($logo_url); ?>" alt="Company Logo" style="max-width: 120px;">
-                    <?php endif; ?>
-                </td>
-                <td style="width: 65%; vertical-align: top;">
-                    <div class="company-info">
-                        <h3>Cristal Windows, Doors &amp; Conservatories Ltd</h3>
-                        <p>23 Cedar Drive, Fleet, Hampshire GU51 3HD</p>
-                        <p>www.cristalwindows.co.uk</p>
-                        <p>tel: 01252 810777</p>
-                        <p>enquiries@cristalwindows.co.uk</p>
-                    </div>
-                </td>
-            </tr>
-        </table>
+            if ($logo_url): ?>
+                <img src="<?php echo esc_url($logo_url); ?>" alt="Company Logo" style="max-width: 120px;">
+            <?php endif; ?>
+        </td>
+        <td style="width: 65%; vertical-align: top; text-align: right;">
+            <div class="company-info">
+                <h3>Cristal Windows, Doors &amp; Conservatories Ltd</h3>
+                <p>23 Cedar Drive, Fleet, Hampshire GU51 3HD</p>
+                <p>www.cristalwindows.co.uk</p>
+                <p>01252 810777</p>
+                <p>enquiries@cristalwindows.co.uk</p>
+            </div>
+        </td>
+    </tr>
+</table>
+</div>
+
+<!-- Cover Letter -->
+<div class="cover-letter">
+<p><strong>Date:</strong> <?php echo date('d F Y'); ?></p>
+
+<div class="customer-info-inline">
+    <p><strong>Dear <?php echo esc_html($data['customer_name']); ?>,</strong></p>
+    <?php if (!empty($data['customer_address'])): ?>
+        <p><?php echo nl2br(esc_html($data['customer_address'])); ?></p>
+    <?php endif; ?>
+    <?php if (!empty($data['customer_postcode'])): ?>
+        <p><?php echo esc_html($data['customer_postcode']); ?></p>
+    <?php endif; ?>
+    <p><?php echo esc_html($data['customer_phone']); ?></p>
+    <p><a href="mailto:<?php echo esc_attr($data['customer_email']); ?>"><?php echo esc_html($data['customer_email']); ?></a></p>
+</div>
+
+<p>Thank you for your recent enquiry regarding windows, doors and conservatories. We are pleased to provide you with the following quotation based on your requirements.</p>
+
+<p>This quotation is based on a supply and installation service. All prices are given in good faith and are subject to a signed company contract and final survey. Prices are inclusive of VAT at 20%.</p>
+
+<?php if (!empty($data['quote_price'])): ?>
+<p><strong>TOTAL QUOTE PRICE: £<?php echo number_format((float)$data['quote_price'], 2); ?></strong></p>
+<?php endif; ?>
+
+<p>We look forward to working with you on this project. Should you have any questions or require any clarification, please do not hesitate to contact us.</p>
+
+<p>Best regards,<br><strong>Cristal Windows, Doors &amp; Conservatories Ltd</strong></p>
+</div>
+
+<!-- Items -->
+<div class="items-section">
+<h2>QUOTATION DETAILS</h2>
+
+<?php
+$item_number = 1;
+foreach ($data['basket_items'] as $item):
+    $item_letter = chr(64 + $item_number); // A, B, C, etc.
+?>
+<div class="item">
+    <div class="item-header">
+        <?php echo $item_letter; ?>) <?php echo esc_html($item['type_name']); ?>
+        <?php if (!empty($item['material_name']) && $item['material_name'] !== 'N/A'): ?>
+            - <?php echo esc_html($item['material_name']); ?>
+        <?php endif; ?>
     </div>
 
-    <!-- Cover Letter -->
-    <div class="cover-letter">
-        <p><strong>Date:</strong> <?php echo date('d F Y'); ?></p>
-
-        <div class="customer-info-inline">
-            <p><strong>Dear <?php echo esc_html($data['customer_name']); ?>,</strong></p>
-            <?php if (!empty($data['customer_address'])): ?>
-                <p><?php echo nl2br(esc_html($data['customer_address'])); ?></p>
-            <?php endif; ?>
-            <?php if (!empty($data['customer_postcode'])): ?>
-                <p><?php echo esc_html($data['customer_postcode']); ?></p>
-            <?php endif; ?>
-            <p><?php echo esc_html($data['customer_phone']); ?></p>
-            <p><a href="mailto:<?php echo esc_attr($data['customer_email']); ?>"><?php echo esc_html($data['customer_email']); ?></a></p>
+    <div class="item-details">
+        <?php if (!empty($item['category'])): ?>
+        <div class="item-detail">
+            <strong>Category:</strong> <?php echo esc_html(ucfirst($item['category'])); ?>
         </div>
-
-        <p>Thank you for your recent enquiry regarding windows, doors and conservatories. We are pleased to provide you with the following quotation based on your requirements.</p>
-
-        <p>This quotation is based on a supply and installation service. All prices are given in good faith and are subject to a signed company contract and final survey. Prices are inclusive of VAT at 20%.</p>
-
-        <?php if (!empty($data['quote_price'])): ?>
-        <p><strong>TOTAL QUOTE PRICE: £<?php echo number_format((float)$data['quote_price'], 2); ?></strong></p>
         <?php endif; ?>
 
-        <p>We look forward to working with you on this project. Should you have any questions or require any clarification, please do not hesitate to contact us.</p>
-
-        <p>Best regards,<br><strong>Cristal Windows, Doors &amp; Conservatories Ltd</strong></p>
-    </div>
-
-    <!-- Items -->
-    <div class="items-section">
-        <h2>QUOTATION DETAILS</h2>
-
-        <?php
-        $item_number = 1;
-        foreach ($data['basket_items'] as $item):
-            $item_letter = chr(64 + $item_number); // A, B, C, etc.
-        ?>
-        <div class="item">
-            <div class="item-header">
-                <?php echo $item_letter; ?>) <?php echo esc_html($item['type_name']); ?>
-                <?php if (!empty($item['material_name']) && $item['material_name'] !== 'N/A'): ?>
-                    - <?php echo esc_html($item['material_name']); ?>
-                <?php endif; ?>
-            </div>
-
-            <div class="item-details">
-                <?php if (!empty($item['category'])): ?>
-                <div class="item-detail">
-                    <strong>Category:</strong> <?php echo esc_html(ucfirst($item['category'])); ?>
-                </div>
-                <?php endif; ?>
-
-                <?php if (!empty($item['type_name'])): ?>
-                <div class="item-detail">
-                    <strong>Type:</strong> <?php echo esc_html($item['type_name']); ?>
-                </div>
-                <?php endif; ?>
-
-                <?php if (!empty($item['material_name']) && $item['material_name'] !== 'N/A'): ?>
-                <div class="item-detail">
-                    <strong>Material:</strong> <?php echo esc_html($item['material_name']); ?>
-                </div>
-                <?php endif; ?>
-
-                <?php if (!empty($item['style_name'])): ?>
-                <div class="item-detail">
-                    <strong>Style:</strong> <?php echo esc_html($item['style_name']); ?>
-                </div>
-                <?php endif; ?>
-
-                <?php if (!empty($item['width']) && !empty($item['height'])): ?>
-                <div class="item-detail">
-                    <strong>Dimensions:</strong> <?php echo esc_html($item['width']); ?>mm (W) x <?php echo esc_html($item['height']); ?>mm (H)
-                </div>
-                <?php endif; ?>
-
-                <?php if (!empty($item['cill'])): ?>
-                <div class="item-detail">
-                    <strong>Cill:</strong> <?php echo esc_html($item['cill']); ?>
-                </div>
-                <?php endif; ?>
-
-                <?php if (!empty($item['inside_colour'])): ?>
-                <div class="item-detail">
-                    <strong>Inside Colour:</strong> <?php echo esc_html($item['inside_colour']); ?>
-                </div>
-                <?php endif; ?>
-
-                <?php if (!empty($item['outside_colour'])): ?>
-                <div class="item-detail">
-                    <strong>Outside Colour:</strong> <?php echo esc_html($item['outside_colour']); ?>
-                </div>
-                <?php endif; ?>
-
-                <?php if (!empty($item['glazing_type'])): ?>
-                <div class="item-detail">
-                    <strong>Glazing Type:</strong> <?php echo esc_html(ucfirst($item['glazing_type'])); ?>
-                </div>
-                <?php endif; ?>
-
-                <?php if (!empty($item['glazing_features'])): ?>
-                <div class="item-detail">
-                    <strong>Glazing Features:</strong> <?php echo esc_html(ucfirst($item['glazing_features'])); ?>
-                </div>
-                <?php endif; ?>
-
-                <?php if (!empty($item['hardware_colour'])): ?>
-                <div class="item-detail">
-                    <strong>Hardware Colour:</strong> <?php echo esc_html(ucfirst($item['hardware_colour'])); ?>
-                </div>
-                <?php endif; ?>
-
-                <?php if (!empty($item['location'])): ?>
-                <div class="item-detail">
-                    <strong>Location:</strong> <?php echo esc_html($item['location']); ?>
-                </div>
-                <?php endif; ?>
-            </div>
-
-            <?php if (isset($item['item_price']) && !empty($item['item_price'])): ?>
-            <div class="item-price">
-                Item Price: £<?php echo number_format((float)$item['item_price'], 2); ?>
-            </div>
-            <?php endif; ?>
+        <?php if (!empty($item['type_name'])): ?>
+        <div class="item-detail">
+            <strong>Type:</strong> <?php echo esc_html($item['type_name']); ?>
         </div>
-        <?php
-            $item_number++;
-        endforeach;
-        ?>
+        <?php endif; ?>
+
+        <?php if (!empty($item['material_name']) && $item['material_name'] !== 'N/A'): ?>
+        <div class="item-detail">
+            <strong>Material:</strong> <?php echo esc_html($item['material_name']); ?>
+        </div>
+        <?php endif; ?>
+
+        <?php if (!empty($item['style_name'])): ?>
+        <div class="item-detail">
+            <strong>Style:</strong> <?php echo esc_html($item['style_name']); ?>
+        </div>
+        <?php endif; ?>
+
+        <?php if (!empty($item['width']) && !empty($item['height'])): ?>
+        <div class="item-detail">
+            <strong>Dimensions:</strong> <?php echo esc_html($item['width']); ?>mm (W) x <?php echo esc_html($item['height']); ?>mm (H)
+        </div>
+        <?php endif; ?>
+
+        <?php if (!empty($item['cill'])): ?>
+        <div class="item-detail">
+            <strong>Cill:</strong> <?php echo esc_html($item['cill']); ?>
+        </div>
+        <?php endif; ?>
+
+        <?php if (!empty($item['inside_colour'])): ?>
+        <div class="item-detail">
+            <strong>Inside Colour:</strong> <?php echo esc_html($item['inside_colour']); ?>
+        </div>
+        <?php endif; ?>
+
+        <?php if (!empty($item['outside_colour'])): ?>
+        <div class="item-detail">
+            <strong>Outside Colour:</strong> <?php echo esc_html($item['outside_colour']); ?>
+        </div>
+        <?php endif; ?>
+
+        <?php if (!empty($item['glazing_type'])): ?>
+        <div class="item-detail">
+            <strong>Glazing Type:</strong> <?php echo esc_html(ucfirst($item['glazing_type'])); ?>
+        </div>
+        <?php endif; ?>
+
+        <?php if (!empty($item['glazing_features'])): ?>
+        <div class="item-detail">
+            <strong>Glazing Features:</strong> <?php echo esc_html(ucfirst($item['glazing_features'])); ?>
+        </div>
+        <?php endif; ?>
+
+        <?php if (!empty($item['hardware_colour'])): ?>
+        <div class="item-detail">
+            <strong>Hardware Colour:</strong> <?php echo esc_html(ucfirst($item['hardware_colour'])); ?>
+        </div>
+        <?php endif; ?>
+
+        <?php if (!empty($item['location'])): ?>
+        <div class="item-detail">
+            <strong>Location:</strong> <?php echo esc_html($item['location']); ?>
+        </div>
+        <?php endif; ?>
     </div>
 
-    <!-- Terms and Conditions -->
-    <div class="terms">
-        <h3>TERMS AND CONDITIONS</h3>
-        <p><strong>All prices are given in good faith. Subject to signed company contract and final survey.</strong></p>
-        <p>Based on Supply &amp; Install, make good to immediate fitting area. Generated debris removal from site.</p>
-        <p><strong>Prices are inclusive of VAT@20%</strong></p>
-        <p><strong>PRICES ARE HELD FOR A PERIOD OF 14 DAYS.</strong></p>
-
-        <p style="margin-top: 15px;">This quotation is valid for 14 days from the date shown above. Payment terms and schedule will be confirmed upon contract signing. Installation timescales will be confirmed following the final survey.</p>
+    <?php if (isset($item['item_price']) && !empty($item['item_price'])): ?>
+    <div class="item-price">
+        Item Price: £<?php echo number_format((float)$item['item_price'], 2); ?>
     </div>
+    <?php endif; ?>
+</div>
+<?php
+    $item_number++;
+endforeach;
+?>
+</div>
 
-    <!-- Footer -->
-    <div class="footer">
-        <p><strong>Cristal Windows, Doors &amp; Conservatories Ltd</strong></p>
-        <p>Registered in England No. 5829993 | Registered address as above | VAT Registration No. 890 4307 21</p>
-    </div>
+<!-- Terms and Conditions -->
+<div class="terms">
+<h3>TERMS AND CONDITIONS</h3>
+
+<p><strong>All prices are given in good faith. Subject to signed company contract and final survey.</strong></p>
+<p>Based on Supply &amp; Install, make good to immediate fitting area. Generated debris removal from site.</p>
+<p><strong>Prices are inclusive of VAT@20%</strong></p>
+<p><strong>PRICES ARE HELD FOR A PERIOD OF 14 DAYS.</strong></p>
+
+<p style="margin-top: 15px;">This quotation is valid for 14 days from the date shown above. Payment terms and schedule will be confirmed upon contract signing. Installation timescales will be confirmed following the final survey.</p>
+</div>
+
+<!-- Footer -->
+<div class="footer">
+<p><strong>Cristal Windows, Doors &amp; Conservatories Ltd</strong></p>
+<p>Registered in England No. 5829993 | Registered address as above | VAT Registration No. 890 4307 21</p>
+</div>
 </body>
 </html>
