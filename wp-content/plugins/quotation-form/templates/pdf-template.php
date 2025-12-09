@@ -22,8 +22,8 @@
         }
         .company-info h1 {
             color: #0066cc;
-            margin: 0 0 2px 0;
-            font-size: 9pt;
+            margin: 0 0 4px 0;
+            font-size: 18pt;
             font-weight: bold;
         }
         .company-info p {
@@ -65,13 +65,9 @@
             margin-top: 12px;
             margin-bottom: 10px;
             page-break-inside: avoid;
-            page-break-after: always;
         }
         .item:first-of-type {
             margin-top: 25px;
-        }
-        .item:last-child {
-            page-break-after: auto;
         }
         .item-header {
             font-weight: bold;
@@ -146,27 +142,27 @@
             margin: 2px 0;
         }
         .cover-letter {
-            margin-bottom: 12px;
-            margin-top: 0;
+            margin-bottom: 20px;
+            margin-top: 15px;
             padding: 0;
             background-color: #ffffff;
         }
         .cover-letter p {
-            margin: 3px 0;
-            line-height: 1.1;
+            margin: 8px 0;
+            line-height: 1.4;
         }
         .cover-letter p:first-child {
             margin-top: 0;
         }
         .customer-info-inline {
-            margin: 6px 0;
-            padding: 6px 12px;
+            margin: 12px 0 15px 0;
+            padding: 10px 12px;
             background-color: #f9f9f9;
         }
         .customer-info-inline p {
-            margin: 1px 0;
+            margin: 3px 0;
             font-size: 9pt;
-            line-height: 1.1;
+            line-height: 1.3;
         }
     </style>
 </head>
@@ -191,7 +187,7 @@
                     }
 
                     if ($logo_url): ?>
-                        <img src="<?php echo esc_url($logo_url); ?>" alt="Company Logo" style="max-width: 50px;">
+                        <img src="<?php echo esc_url($logo_url); ?>" alt="Company Logo" style="max-width: 120px;">
                     <?php endif; ?>
                 </td>
                 <td style="width: 65%; vertical-align: top;">
