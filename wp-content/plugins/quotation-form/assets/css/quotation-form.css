@@ -417,6 +417,40 @@
     color: var(--text-muted);
 }
 
+.file-preview {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.file-preview-item {
+    position: relative;
+    display: inline-block;
+    padding: 8px 12px;
+    background: var(--background-light);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 13px;
+}
+
+.file-preview-item .remove-file {
+    margin-left: 8px;
+    color: var(--danger-color);
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.file-preview-item .remove-file:hover {
+    color: #a02929;
+}
+
+.file-preview-error {
+    color: var(--danger-color);
+    font-size: 12px;
+    margin-top: 5px;
+}
+
 /* Colour Selection */
 .colour-selection {
     margin-bottom: 20px;
@@ -852,6 +886,29 @@
 
 .editable-field:hover {
     background: rgba(0, 102, 204, 0.1);
+}
+
+.item-attached-files {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid var(--border-color);
+}
+
+.item-attached-files p {
+    margin: 0 0 8px 0;
+    font-size: 14px;
+}
+
+.attached-files-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.attached-files-list li {
+    padding: 5px 0;
+    font-size: 13px;
+    color: var(--text-muted);
 }
 
 .item-actions {

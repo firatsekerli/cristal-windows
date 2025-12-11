@@ -8,6 +8,7 @@ jQuery(document).ready(function($) {
         basket: [],
         currentItem: {},
         editingItemId: null,
+        uploadedFiles: [], // Store uploaded files as base64
 
         // Available colours - Use dynamic colours from config if available, otherwise fallback to hardcoded
         colours: (typeof quotationFormAjax !== 'undefined' && quotationFormAjax.config && quotationFormAjax.config.colours)
@@ -176,6 +177,99 @@ jQuery(document).ready(function($) {
             });
         },
 
+        setupFileUpload: function() {
+            const self = this;
+            const $fileInput = $('#frame-images');
+            const $filePreview = $('#file-preview');
+
+            $fileInput.on('change', function(e) {
+                const files = Array.from(e.target.files);
+
+                // Validate file count
+                if (files.length > 5) {
+                    alert('You can only upload up to 5 images');
+                    this.value = '';
+                    return;
+                }
+
+                // Validate file sizes
+                const maxFileSize = 1 * 1024 * 1024; // 1MB in bytes
+                const maxTotalSize = 5 * 1024 * 1024; // 5MB in bytes
+                let totalSize = 0;
+                let invalidFiles = [];
+
+                files.forEach(file => {
+                    if (file.size > maxFileSize) {
+                        invalidFiles.push(file.name + ' (exceeds 1MB)');
+                    }
+                    totalSize += file.size;
+                });
+
+                if (invalidFiles.length > 0) {
+                    alert('The following files are too large:\n' + invalidFiles.join('\n'));
+                    this.value = '';
+                    return;
+                }
+
+                if (totalSize > maxTotalSize) {
+                    alert('Total file size exceeds 5MB. Please select smaller files.');
+                    this.value = '';
+                    return;
+                }
+
+                // Convert files to base64
+                self.uploadedFiles = [];
+                let filesProcessed = 0;
+
+                files.forEach(file => {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        self.uploadedFiles.push({
+                            name: file.name,
+                            type: file.type,
+                            size: file.size,
+                            data: e.target.result
+                        });
+
+                        filesProcessed++;
+                        if (filesProcessed === files.length) {
+                            self.renderFilePreview();
+                        }
+                    };
+                    reader.readAsDataURL(file);
+                });
+            });
+        },
+
+        renderFilePreview: function() {
+            const $preview = $('#file-preview');
+            $preview.empty();
+
+            this.uploadedFiles.forEach((file, index) => {
+                const $fileItem = $('<div class="file-preview-item"></div>');
+                $fileItem.append('<span>' + file.name + '</span>');
+                $fileItem.append('<span class="remove-file" data-index="' + index + '">×</span>');
+                $preview.append($fileItem);
+            });
+
+            // Bind remove file events
+            const self = this;
+            $('.remove-file').on('click', function() {
+                const index = $(this).data('index');
+                self.removeFile(index);
+            });
+        },
+
+        removeFile: function(index) {
+            this.uploadedFiles.splice(index, 1);
+            this.renderFilePreview();
+
+            // Clear the file input if no files remain
+            if (this.uploadedFiles.length === 0) {
+                $('#frame-images').val('');
+            }
+        },
+
         init: function() {
             this.debugColours(); // Debug colour data
             this.loadState(); // Restore saved state if available
@@ -185,6 +279,7 @@ jQuery(document).ready(function($) {
             this.initializeGlazingFeaturesPicker();
             this.initializeHardwareColourPicker();
             this.setupPostcodeValidation(); // Setup postcode validation
+            this.setupFileUpload(); // Setup file upload handling
 
             // Render basket first (updates count before showing)
             if (this.basket.length > 0) {
@@ -982,7 +1077,8 @@ jQuery(document).ready(function($) {
                 glazingFeaturesName: $('#glazing-features-name').text(),
                 hardwareColour: $('#hardware-colour').val(),
                 hardwareColourName: $('#hardware-colour-name').text(),
-                location: '' // Can be set later
+                location: '', // Can be set later
+                attachedFiles: this.uploadedFiles.length > 0 ? [...this.uploadedFiles] : [] // Copy uploaded files
             };
 
             if (this.editingItemId) {
@@ -1019,7 +1115,9 @@ jQuery(document).ready(function($) {
             $('#glazing-features-name').text('Not Required');
             $('#hardware-colour').val('');
             $('#hardware-colour-name').text('None');
-            $('#frame-image').val('');
+            $('#frame-images').val('');
+            this.uploadedFiles = [];
+            $('#file-preview').empty();
             $('.colour-item').removeClass('selected');
             $('.glazing-type-card').removeClass('selected');
             $('.glazing-pattern-card').removeClass('selected');
@@ -1114,6 +1212,18 @@ jQuery(document).ready(function($) {
             });
 
             $details.append($table);
+
+            // Display attached files if any
+            if (item.attachedFiles && item.attachedFiles.length > 0) {
+                const $filesSection = $('<div class="item-attached-files"></div>');
+                $filesSection.append('<p><strong>Attached Images (' + item.attachedFiles.length + '):</strong></p>');
+                const $filesList = $('<ul class="attached-files-list"></ul>');
+                item.attachedFiles.forEach(file => {
+                    $filesList.append('<li>' + file.name + ' (' + Math.round(file.size / 1024) + 'KB)</li>');
+                });
+                $filesSection.append($filesList);
+                $details.append($filesSection);
+            }
 
             const $actions = $('<div class="item-actions"></div>');
 

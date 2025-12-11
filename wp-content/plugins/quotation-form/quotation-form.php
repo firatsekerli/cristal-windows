@@ -793,7 +793,7 @@ class Quotation_Form_Plugin {
         $normalized = array();
 
         foreach ($basket_items as $item) {
-            $normalized[] = array(
+            $normalized_item = array(
                 'category' => isset($item['category']) ? $item['category'] : '',
                 'type_name' => isset($item['typeName']) ? $item['typeName'] : '',
                 'material_name' => isset($item['materialName']) ? $item['materialName'] : '',
@@ -808,6 +808,24 @@ class Quotation_Form_Plugin {
                 'hardware_colour' => isset($item['hardwareColour']) ? $item['hardwareColour'] : '',
                 'location' => isset($item['location']) ? $item['location'] : '',
             );
+
+            // Handle attached files
+            if (isset($item['attachedFiles']) && is_array($item['attachedFiles']) && !empty($item['attachedFiles'])) {
+                $files_data = array();
+                foreach ($item['attachedFiles'] as $file) {
+                    $files_data[] = array(
+                        'name' => isset($file['name']) ? sanitize_text_field($file['name']) : '',
+                        'type' => isset($file['type']) ? sanitize_text_field($file['type']) : '',
+                        'size' => isset($file['size']) ? intval($file['size']) : 0,
+                        'data' => isset($file['data']) ? $file['data'] : '', // Base64 encoded
+                    );
+                }
+                $normalized_item['attached_files'] = $files_data;
+            } else {
+                $normalized_item['attached_files'] = array();
+            }
+
+            $normalized[] = $normalized_item;
         }
 
         return $normalized;
