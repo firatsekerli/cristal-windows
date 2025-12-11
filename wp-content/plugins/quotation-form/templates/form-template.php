@@ -509,23 +509,23 @@ if (!$use_acf) {
                     </div>
 
                     <div class="form-group">
-                        <label for="customer-street">Street</label>
-                        <input type="text" id="customer-street" name="customer_street">
+                        <label for="customer-street">Street *</label>
+                        <input type="text" id="customer-street" name="customer_street" required>
                     </div>
 
                     <div class="form-group">
-                        <label for="customer-town">Town</label>
-                        <input type="text" id="customer-town" name="customer_town">
+                        <label for="customer-town">Town *</label>
+                        <input type="text" id="customer-town" name="customer_town" required>
                     </div>
 
                     <div class="form-group">
-                        <label for="customer-county">County</label>
-                        <input type="text" id="customer-county" name="customer_county">
+                        <label for="customer-county">County *</label>
+                        <input type="text" id="customer-county" name="customer_county" required>
                     </div>
 
                     <div class="form-group">
-                        <label for="customer-postcode">Postcode</label>
-                        <input type="text" id="customer-postcode" name="customer_postcode">
+                        <label for="customer-postcode">Postcode *</label>
+                        <input type="text" id="customer-postcode" name="customer_postcode" required>
                     </div>
 
                     <div class="form-group">
