@@ -176,40 +176,13 @@
                     "type": "text"
                 },
                 {
-                    "key": "field_item_attached_files",
+                    "key": "field_item_attached_image",
                     "label": "Attached Image",
-                    "name": "attached_files",
-                    "type": "repeater",
-                    "layout": "table",
-                    "button_label": "View File",
-                    "max": 1,
-                    "sub_fields": [
-                        {
-                            "key": "field_file_name",
-                            "label": "File Name",
-                            "name": "name",
-                            "type": "text"
-                        },
-                        {
-                            "key": "field_file_type",
-                            "label": "File Type",
-                            "name": "type",
-                            "type": "text"
-                        },
-                        {
-                            "key": "field_file_size",
-                            "label": "File Size (bytes)",
-                            "name": "size",
-                            "type": "number"
-                        },
-                        {
-                            "key": "field_file_data",
-                            "label": "File Data (Base64)",
-                            "name": "data",
-                            "type": "textarea",
-                            "rows": 2
-                        }
-                    ]
+                    "name": "attached_image",
+                    "type": "image",
+                    "return_format": "array",
+                    "preview_size": "medium",
+                    "library": "all"
                 },
                 {
                     "key": "field_item_price",

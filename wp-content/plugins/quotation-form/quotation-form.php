@@ -756,7 +756,7 @@ class Quotation_Form_Plugin {
         }
 
         // Normalize basket items - convert from JS camelCase to ACF snake_case
-        $normalized_basket_items = $this->normalize_basket_items($basket_items);
+        $normalized_basket_items = $this->normalize_basket_items($basket_items, $post_id);
 
         // Save customer data to ACF fields (if ACF is available)
         if (function_exists('update_field')) {
@@ -789,7 +789,90 @@ class Quotation_Form_Plugin {
     /**
      * Normalize basket items from JS camelCase to ACF snake_case
      */
-    private function normalize_basket_items($basket_items) {
+    /**
+     * Upload base64 image to WordPress media library
+     */
+    private function upload_base64_image($base64_data, $filename, $post_id = 0) {
+        // Check if base64 string is valid
+        if (empty($base64_data) || strpos($base64_data, 'data:image') !== 0) {
+            return false;
+        }
+
+        // Extract the base64 encoded binary data
+        $base64_parts = explode(',', $base64_data);
+        if (count($base64_parts) < 2) {
+            return false;
+        }
+
+        $encoded_data = $base64_parts[1];
+        $decoded_data = base64_decode($encoded_data);
+
+        if ($decoded_data === false) {
+            return false;
+        }
+
+        // Get file extension from mime type
+        preg_match('/data:image\/([a-zA-Z0-9]+);/', $base64_data, $matches);
+        $file_ext = isset($matches[1]) ? $matches[1] : 'png';
+
+        // Sanitize filename
+        $filename = sanitize_file_name($filename);
+        if (empty($filename)) {
+            $filename = 'quote-image-' . time() . '.' . $file_ext;
+        } else {
+            // Ensure correct extension
+            $filename = preg_replace('/\.[^.]+$/', '', $filename) . '.' . $file_ext;
+        }
+
+        // Create uploads/quotes directory if it doesn't exist
+        $upload_dir = wp_upload_dir();
+        $quotes_dir = $upload_dir['basedir'] . '/quotes';
+
+        if (!file_exists($quotes_dir)) {
+            wp_mkdir_p($quotes_dir);
+        }
+
+        // Save file to uploads/quotes
+        $file_path = $quotes_dir . '/' . $filename;
+        $file_url = $upload_dir['baseurl'] . '/quotes/' . $filename;
+
+        // Make filename unique if it exists
+        $counter = 1;
+        $original_filename = $filename;
+        while (file_exists($file_path)) {
+            $filename = preg_replace('/\.[^.]+$/', '', $original_filename) . '-' . $counter . '.' . $file_ext;
+            $file_path = $quotes_dir . '/' . $filename;
+            $file_url = $upload_dir['baseurl'] . '/quotes/' . $filename;
+            $counter++;
+        }
+
+        // Write file
+        if (file_put_contents($file_path, $decoded_data) === false) {
+            return false;
+        }
+
+        // Create WordPress attachment
+        $attachment = array(
+            'guid'           => $file_url,
+            'post_mime_type' => 'image/' . $file_ext,
+            'post_title'     => preg_replace('/\.[^.]+$/', '', basename($filename)),
+            'post_content'   => '',
+            'post_status'    => 'inherit'
+        );
+
+        $attach_id = wp_insert_attachment($attachment, $file_path, $post_id);
+
+        if (!is_wp_error($attach_id)) {
+            require_once(ABSPATH . 'wp-admin/includes/image.php');
+            $attach_data = wp_generate_attachment_metadata($attach_id, $file_path);
+            wp_update_attachment_metadata($attach_id, $attach_data);
+            return $attach_id;
+        }
+
+        return false;
+    }
+
+    private function normalize_basket_items($basket_items, $post_id = 0) {
         $normalized = array();
 
         foreach ($basket_items as $item) {
@@ -809,20 +892,20 @@ class Quotation_Form_Plugin {
                 'location' => isset($item['location']) ? $item['location'] : '',
             );
 
-            // Handle attached files
+            // Handle attached image - upload base64 image to media library
+            $normalized_item['attached_image'] = '';
             if (isset($item['attachedFiles']) && is_array($item['attachedFiles']) && !empty($item['attachedFiles'])) {
-                $files_data = array();
-                foreach ($item['attachedFiles'] as $file) {
-                    $files_data[] = array(
-                        'name' => isset($file['name']) ? sanitize_text_field($file['name']) : '',
-                        'type' => isset($file['type']) ? sanitize_text_field($file['type']) : '',
-                        'size' => isset($file['size']) ? intval($file['size']) : 0,
-                        'data' => isset($file['data']) ? $file['data'] : '', // Base64 encoded
-                    );
+                // Take only the first file (we only allow 1 image now)
+                $file = $item['attachedFiles'][0];
+                $file_name = isset($file['name']) ? sanitize_text_field($file['name']) : '';
+                $file_data = isset($file['data']) ? $file['data'] : '';
+
+                // Upload base64 image and get attachment ID
+                $attachment_id = $this->upload_base64_image($file_data, $file_name, $post_id);
+
+                if ($attachment_id) {
+                    $normalized_item['attached_image'] = $attachment_id;
                 }
-                $normalized_item['attached_files'] = $files_data;
-            } else {
-                $normalized_item['attached_files'] = array();
             }
 
             $normalized[] = $normalized_item;
