@@ -109,17 +109,8 @@ jQuery(document).ready(function($) {
             this.initializeGlazingFeaturesPicker();
             this.initializeHardwareColourPicker();
 
-            // Restore the current step
-            if (this.currentStep !== 1 || this.currentSubStep !== '1a') {
-                if (this.currentStep === 'basket') {
-                    this.showBasketReview();
-                } else {
-                    this.navigateToStep(this.currentStep);
-                    if (this.currentStep === 1 && this.currentSubStep !== '1a') {
-                        this.navigateToSubStep(this.currentSubStep);
-                    }
-                }
-            }
+            // Always show basket on page load/refresh
+            this.showBasketReview();
 
             // Render basket if it has items
             if (this.basket.length > 0) {
