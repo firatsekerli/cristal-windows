@@ -434,8 +434,10 @@ jQuery(document).ready(function($) {
             this.updateNavigationButtons();
             this.saveState(); // Save state after navigation
 
-            // Scroll to top
-            $('html, body').animate({ scrollTop: 0 }, 300);
+            // Scroll to top with slight delay to allow DOM updates
+            setTimeout(function() {
+                $('html, body').animate({ scrollTop: 0 }, 300);
+            }, 50);
         },
 
         navigateToStep: function(step) {
@@ -460,8 +462,10 @@ jQuery(document).ready(function($) {
             this.updateNavigationButtons();
             this.saveState(); // Save state after navigation
 
-            // Scroll to top
-            $('html, body').animate({ scrollTop: 0 }, 300);
+            // Scroll to top with slight delay to allow DOM updates
+            setTimeout(function() {
+                $('html, body').animate({ scrollTop: 0 }, 300);
+            }, 50);
         },
 
         navigatePrevious: function() {
