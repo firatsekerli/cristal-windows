@@ -183,6 +183,7 @@
 
 .form-step.active {
     display: block;
+    min-height: 350px;
 }
 
 @keyframes fadeIn {
@@ -758,6 +759,7 @@
 
 #basket-items-container {
     margin-bottom: 30px;
+    min-height: 150px;
 }
 
 .basket-item {
