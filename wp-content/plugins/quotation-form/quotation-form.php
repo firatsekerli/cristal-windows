@@ -382,6 +382,50 @@ class Quotation_Form_Plugin {
                 }
             });
 
+            // Add "View Image" button to attached_image fields
+            function addViewImageButtons() {
+                $('.acf-field[data-name="attached_image"]').each(function() {
+                    var $field = $(this);
+                    var $imageWrap = $field.find('.acf-image-uploader');
+
+                    // Only add button if there's an image
+                    if ($imageWrap.hasClass('has-value') && !$field.find('.view-image-button').length) {
+                        var imageUrl = $imageWrap.find('img').attr('src');
+
+                        if (imageUrl) {
+                            // Get the full size URL (remove any size suffixes)
+                            var fullImageUrl = imageUrl.replace(/-\d+x\d+(\.\w+)$/, '$1');
+
+                            var $button = $('<a href="' + fullImageUrl + '" target="_blank" class="button view-image-button" style="margin-top: 10px;">🖼️ View Full Image</a>');
+                            $imageWrap.after($button);
+                        }
+                    }
+
+                    // Remove button if image is removed
+                    if (!$imageWrap.hasClass('has-value')) {
+                        $field.find('.view-image-button').remove();
+                    }
+                });
+            }
+
+            // Run on page load and after ACF updates
+            acf.addAction('ready', function() {
+                addViewImageButtons();
+            });
+
+            acf.addAction('load', function() {
+                addViewImageButtons();
+            });
+
+            // Watch for image changes
+            $(document).on('click', '.acf-field[data-name="attached_image"] .acf-image-uploader .acf-icon.-cancel', function() {
+                setTimeout(addViewImageButtons, 100);
+            });
+
+            $(document).on('change', '.acf-field[data-name="attached_image"] input[type="hidden"]', function() {
+                setTimeout(addViewImageButtons, 100);
+            });
+
         })(jQuery);
         </script>
         <?php
