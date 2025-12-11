@@ -210,8 +210,14 @@ body {
 
 <div class="customer-info-inline">
     <p><strong>Dear <?php echo esc_html($data['customer_name']); ?>,</strong></p>
-    <?php if (!empty($data['customer_address'])): ?>
-        <p><?php echo nl2br(esc_html($data['customer_address'])); ?></p>
+    <?php if (!empty($data['customer_street'])): ?>
+        <p><?php echo esc_html($data['customer_street']); ?></p>
+    <?php endif; ?>
+    <?php if (!empty($data['customer_town'])): ?>
+        <p><?php echo esc_html($data['customer_town']); ?></p>
+    <?php endif; ?>
+    <?php if (!empty($data['customer_county'])): ?>
+        <p><?php echo esc_html($data['customer_county']); ?></p>
     <?php endif; ?>
     <?php if (!empty($data['customer_postcode'])): ?>
         <p><?php echo esc_html($data['customer_postcode']); ?></p>

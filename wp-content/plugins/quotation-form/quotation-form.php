@@ -732,8 +732,12 @@ class Quotation_Form_Plugin {
                                (isset($customer_data['customer_email']) ? $customer_data['customer_email'] : ''),
             'customer_phone' => isset($customer_data['phone']) ? $customer_data['phone'] :
                                (isset($customer_data['customer_phone']) ? $customer_data['customer_phone'] : ''),
-            'customer_address' => isset($customer_data['address']) ? $customer_data['address'] :
-                                 (isset($customer_data['customer_address']) ? $customer_data['customer_address'] : ''),
+            'customer_street' => isset($customer_data['street']) ? $customer_data['street'] :
+                                (isset($customer_data['customer_street']) ? $customer_data['customer_street'] : ''),
+            'customer_town' => isset($customer_data['town']) ? $customer_data['town'] :
+                              (isset($customer_data['customer_town']) ? $customer_data['customer_town'] : ''),
+            'customer_county' => isset($customer_data['county']) ? $customer_data['county'] :
+                                (isset($customer_data['customer_county']) ? $customer_data['customer_county'] : ''),
             'customer_postcode' => isset($customer_data['postcode']) ? $customer_data['postcode'] :
                                   (isset($customer_data['customer_postcode']) ? $customer_data['customer_postcode'] : ''),
             'preferred_contact' => isset($customer_data['preferred_contact']) ? $customer_data['preferred_contact'] : 'email',
@@ -759,7 +763,9 @@ class Quotation_Form_Plugin {
             update_field('customer_name', $normalized_data['customer_name'], $post_id);
             update_field('customer_email', $normalized_data['customer_email'], $post_id);
             update_field('customer_phone', $normalized_data['customer_phone'], $post_id);
-            update_field('customer_address', $normalized_data['customer_address'], $post_id);
+            update_field('customer_street', $normalized_data['customer_street'], $post_id);
+            update_field('customer_town', $normalized_data['customer_town'], $post_id);
+            update_field('customer_county', $normalized_data['customer_county'], $post_id);
             update_field('customer_postcode', $normalized_data['customer_postcode'], $post_id);
             update_field('preferred_contact', $normalized_data['preferred_contact'], $post_id);
             update_field('additional_notes', $normalized_data['additional_notes'], $post_id);
@@ -1074,7 +1080,9 @@ class Quotation_Form_Plugin {
         $customer_name = get_field('customer_name', $post_id);
         $customer_email = get_field('customer_email', $post_id);
         $customer_phone = get_field('customer_phone', $post_id);
-        $customer_address = get_field('customer_address', $post_id);
+        $customer_street = get_field('customer_street', $post_id);
+        $customer_town = get_field('customer_town', $post_id);
+        $customer_county = get_field('customer_county', $post_id);
         $customer_postcode = get_field('customer_postcode', $post_id);
         $quote_price = get_field('quote_price', $post_id);
 
@@ -1086,7 +1094,9 @@ class Quotation_Form_Plugin {
             'customer_name' => $customer_name,
             'customer_email' => $customer_email,
             'customer_phone' => $customer_phone,
-            'customer_address' => $customer_address,
+            'customer_street' => $customer_street,
+            'customer_town' => $customer_town,
+            'customer_county' => $customer_county,
             'customer_postcode' => $customer_postcode,
             'basket_items' => $basket_items,
             'quote_price' => $quote_price
@@ -1235,7 +1245,9 @@ class Quotation_Form_Plugin {
         $customer_name = get_field('customer_name', $post_id);
         $customer_email = get_field('customer_email', $post_id);
         $customer_phone = get_field('customer_phone', $post_id);
-        $customer_address = get_field('customer_address', $post_id);
+        $customer_street = get_field('customer_street', $post_id);
+        $customer_town = get_field('customer_town', $post_id);
+        $customer_county = get_field('customer_county', $post_id);
         $customer_postcode = get_field('customer_postcode', $post_id);
         $basket_items = get_field('basket_items', $post_id);
         $quote_price = get_field('quote_price', $post_id);
@@ -1244,7 +1256,9 @@ class Quotation_Form_Plugin {
             'customer_name' => $customer_name,
             'customer_email' => $customer_email,
             'customer_phone' => $customer_phone,
-            'customer_address' => $customer_address,
+            'customer_street' => $customer_street,
+            'customer_town' => $customer_town,
+            'customer_county' => $customer_county,
             'customer_postcode' => $customer_postcode,
             'basket_items' => $basket_items,
             'quote_price' => $quote_price

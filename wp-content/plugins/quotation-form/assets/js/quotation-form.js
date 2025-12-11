@@ -1619,7 +1619,9 @@ jQuery(document).ready(function($) {
                 name: customerName,
                 email: customerEmail,
                 phone: customerPhone,
-                address: $('#customer-address').val(),
+                street: $('#customer-street').val(),
+                town: $('#customer-town').val(),
+                county: $('#customer-county').val(),
                 postcode: $('#customer-postcode').val(),
                 preferred_contact: $('#preferred-contact').val(),
                 additional_notes: $('#additional-notes').val()
@@ -1668,7 +1670,9 @@ jQuery(document).ready(function($) {
             $('#customer-name').val('');
             $('#customer-email').val('');
             $('#customer-phone').val('');
-            $('#customer-address').val('');
+            $('#customer-street').val('');
+            $('#customer-town').val('');
+            $('#customer-county').val('');
             $('#customer-postcode').val('');
             $('#additional-notes').val('');
             this.navigateToStep(1);

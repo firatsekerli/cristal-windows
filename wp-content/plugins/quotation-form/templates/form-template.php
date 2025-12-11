@@ -509,8 +509,18 @@ if (!$use_acf) {
                     </div>
 
                     <div class="form-group">
-                        <label for="customer-address">Address</label>
-                        <textarea id="customer-address" name="customer_address" rows="3"></textarea>
+                        <label for="customer-street">Street</label>
+                        <input type="text" id="customer-street" name="customer_street">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="customer-town">Town</label>
+                        <input type="text" id="customer-town" name="customer_town">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="customer-county">County</label>
+                        <input type="text" id="customer-county" name="customer_county">
                     </div>
 
                     <div class="form-group">
