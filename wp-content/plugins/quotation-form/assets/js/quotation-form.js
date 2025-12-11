@@ -109,13 +109,13 @@ jQuery(document).ready(function($) {
             this.initializeGlazingFeaturesPicker();
             this.initializeHardwareColourPicker();
 
-            // Always show basket on page load/refresh
-            this.showBasketReview();
-
-            // Render basket if it has items
+            // Render basket first (updates count before showing)
             if (this.basket.length > 0) {
                 this.renderBasket();
             }
+
+            // Then show basket (already has correct count)
+            this.showBasketReview();
 
             this.updateNavigationButtons();
             this.updateProgressIndicator();
