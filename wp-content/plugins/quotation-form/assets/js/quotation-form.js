@@ -433,6 +433,9 @@ jQuery(document).ready(function($) {
 
             this.updateNavigationButtons();
             this.saveState(); // Save state after navigation
+
+            // Scroll to top
+            $('html, body').animate({ scrollTop: 0 }, 300);
         },
 
         navigateToStep: function(step) {
