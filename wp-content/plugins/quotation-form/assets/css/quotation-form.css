@@ -25,19 +25,15 @@
     margin: 0 auto;
     padding: 20px;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-}
-
-/* Hide form steps on initial load to prevent flash */
-.quotation-form-container.loading .form-step {
-    opacity: 0;
-    visibility: hidden;
-}
-
-/* Show form steps after initialization */
-.quotation-form-container .form-step {
     opacity: 1;
     visibility: visible;
     transition: opacity 0.2s ease-in;
+}
+
+/* Hide entire form on initial load to prevent flash of step 1 */
+.quotation-form-container.loading {
+    opacity: 0;
+    visibility: hidden;
 }
 
 /* ====================================
