@@ -115,6 +115,7 @@ if (!$use_acf) {
         </div>
         <div class="progress-step clickable active" data-step="basket">
             <span class="step-number">
+                <span class="basket-counter">0</span>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="9" cy="21" r="1"></circle>
                     <circle cx="20" cy="21" r="1"></circle>
