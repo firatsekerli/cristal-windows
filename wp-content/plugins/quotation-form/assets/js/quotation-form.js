@@ -185,59 +185,34 @@ jQuery(document).ready(function($) {
             $fileInput.on('change', function(e) {
                 const files = Array.from(e.target.files);
 
-                // Validate file count
-                if (files.length > 5) {
-                    alert('You can only upload up to 5 images');
-                    this.value = '';
+                // Only allow 1 file
+                if (files.length === 0) {
                     return;
                 }
 
-                // Validate file sizes
+                // Validate file size (max 1MB)
                 const maxFileSize = 1 * 1024 * 1024; // 1MB in bytes
-                const maxTotalSize = 5 * 1024 * 1024; // 5MB in bytes
-                let totalSize = 0;
-                let invalidFiles = [];
+                const file = files[0]; // Only take the first file
 
-                files.forEach(file => {
-                    if (file.size > maxFileSize) {
-                        invalidFiles.push(file.name + ' (exceeds 1MB)');
-                    }
-                    totalSize += file.size;
-                });
-
-                if (invalidFiles.length > 0) {
-                    alert('The following files are too large:\n' + invalidFiles.join('\n'));
+                if (file.size > maxFileSize) {
+                    alert('File is too large. Maximum file size is 1MB.');
                     this.value = '';
                     return;
                 }
 
-                if (totalSize > maxTotalSize) {
-                    alert('Total file size exceeds 5MB. Please select smaller files.');
-                    this.value = '';
-                    return;
-                }
-
-                // Convert files to base64
+                // Convert file to base64
                 self.uploadedFiles = [];
-                let filesProcessed = 0;
-
-                files.forEach(file => {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        self.uploadedFiles.push({
-                            name: file.name,
-                            type: file.type,
-                            size: file.size,
-                            data: e.target.result
-                        });
-
-                        filesProcessed++;
-                        if (filesProcessed === files.length) {
-                            self.renderFilePreview();
-                        }
-                    };
-                    reader.readAsDataURL(file);
-                });
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    self.uploadedFiles.push({
+                        name: file.name,
+                        type: file.type,
+                        size: file.size,
+                        data: e.target.result
+                    });
+                    self.renderFilePreview();
+                };
+                reader.readAsDataURL(file);
             });
         },
 
@@ -1213,10 +1188,10 @@ jQuery(document).ready(function($) {
 
             $details.append($table);
 
-            // Display attached files if any
+            // Display attached file if any
             if (item.attachedFiles && item.attachedFiles.length > 0) {
                 const $filesSection = $('<div class="item-attached-files"></div>');
-                $filesSection.append('<p><strong>Attached Images (' + item.attachedFiles.length + '):</strong></p>');
+                $filesSection.append('<p><strong>Attached Image:</strong></p>');
                 const $filesList = $('<ul class="attached-files-list"></ul>');
                 item.attachedFiles.forEach(file => {
                     $filesList.append('<li>' + file.name + ' (' + Math.round(file.size / 1024) + 'KB)</li>');
@@ -1838,9 +1813,10 @@ jQuery(document).ready(function($) {
                 success: function(response) {
                     if (response.success) {
                         alert('Thank you! Your quotation request has been submitted successfully. We will contact you soon.');
-                        // Reset form
-                        self.resetForm();
+                        // Reset form and basket
                         self.basket = [];
+                        self.renderBasket(); // Update basket display and counter
+                        self.resetForm();
                         self.navigateToStep(1);
                         self.navigateToSubStep('1a');
                         self.clearState(); // Clear saved state after successful submission

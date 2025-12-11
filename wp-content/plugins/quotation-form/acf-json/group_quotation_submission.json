@@ -177,11 +177,12 @@
                 },
                 {
                     "key": "field_item_attached_files",
-                    "label": "Attached Images",
+                    "label": "Attached Image",
                     "name": "attached_files",
                     "type": "repeater",
                     "layout": "table",
-                    "button_label": "Add File",
+                    "button_label": "View File",
+                    "max": 1,
                     "sub_fields": [
                         {
                             "key": "field_file_name",

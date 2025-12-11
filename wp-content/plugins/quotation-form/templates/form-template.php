@@ -460,9 +460,9 @@ if (!$use_acf) {
                     </div>
 
                     <div class="form-group">
-                        <label for="frame-images">Attach Images (Optional)</label>
-                        <input type="file" id="frame-images" name="frame_images[]" accept="image/*" multiple>
-                        <span class="field-hint">Upload up to 5 images (max 1MB each, 5MB total)</span>
+                        <label for="frame-images">Attach Image (Optional)</label>
+                        <input type="file" id="frame-images" name="frame_images" accept="image/*">
+                        <span class="field-hint">Upload 1 image (max 1MB)</span>
                         <div id="file-preview" class="file-preview"></div>
                     </div>
 
