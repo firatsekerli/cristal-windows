@@ -100,6 +100,82 @@ jQuery(document).ready(function($) {
             }
         },
 
+        // Postcode validation for service area
+        postcodeValidation: {
+            // Service area outward codes
+            allowedPostcodes: new Set([
+                // Berkshire
+                'SL4','SL5','RG40','RG41','RG45',
+                // Hampshire
+                'RG21','RG22','RG23','RG24','RG25','RG27','RG29',
+                'GU11','GU12','GU14','GU35','GU46','GU47','GU51','GU52',
+                'GU30','GU31','GU32','GU33',
+                // Surrey
+                'GU6','GU7','GU8','GU9','GU10',
+                'GU15','GU16','GU18','GU19','GU20',
+                'GU21','GU22','GU23','GU24','GU25',
+                'GU26','GU27','GU1','GU2','GU3','GU4','GU5',
+                'KT11','KT12','KT13','KT14','KT15','KT16'
+            ]),
+
+            // UK postcode regex
+            ukPostcodeRegex: /^(GIR\s?0AA|[A-Z]{1,2}\d[A-Z\d]?\s?\d[A-Z]{2})$/i,
+
+            normalize: function(value) {
+                return (value || '').toUpperCase().replace(/\s+/g, '').trim();
+            },
+
+            getOutwardCode: function(value) {
+                const cleaned = this.normalize(value);
+                return cleaned.length >= 4 ? cleaned.slice(0, cleaned.length - 3) : '';
+            },
+
+            validate: function(value) {
+                const trimmed = (value || '').trim();
+                if (!trimmed) {
+                    return 'Please enter your postcode.';
+                }
+                if (!this.ukPostcodeRegex.test(trimmed)) {
+                    return 'Please enter a valid UK postcode (e.g. GU21 4AA).';
+                }
+                const outward = this.getOutwardCode(trimmed);
+                const isAllowed = Array.from(this.allowedPostcodes).some(code => outward.startsWith(code));
+                if (!isAllowed) {
+                    return 'Sorry—this postcode is outside our service area.';
+                }
+                return ''; // valid
+            }
+        },
+
+        setupPostcodeValidation: function() {
+            const self = this;
+            const input = $('#customer-postcode')[0];
+            if (!input || input.dataset.pcBound) return;
+
+            input.dataset.pcBound = '1';
+
+            const validatePostcode = function() {
+                const errorMsg = self.postcodeValidation.validate(input.value);
+                input.setCustomValidity(errorMsg);
+                input.reportValidity();
+            };
+
+            // Real-time validation
+            $(input).on('input blur', validatePostcode);
+
+            // Prevent form submission if invalid
+            $('#quotation-form').on('submit', function(e) {
+                const errorMsg = self.postcodeValidation.validate(input.value);
+                if (errorMsg) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    input.setCustomValidity(errorMsg);
+                    input.reportValidity();
+                    return false;
+                }
+            });
+        },
+
         init: function() {
             this.debugColours(); // Debug colour data
             this.loadState(); // Restore saved state if available
@@ -108,6 +184,7 @@ jQuery(document).ready(function($) {
             this.initializeGlazingTypePicker();
             this.initializeGlazingFeaturesPicker();
             this.initializeHardwareColourPicker();
+            this.setupPostcodeValidation(); // Setup postcode validation
 
             // Render basket first (updates count before showing)
             if (this.basket.length > 0) {
