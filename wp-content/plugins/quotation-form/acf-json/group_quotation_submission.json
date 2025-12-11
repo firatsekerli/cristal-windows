@@ -176,6 +176,41 @@
                     "type": "text"
                 },
                 {
+                    "key": "field_item_attached_files",
+                    "label": "Attached Images",
+                    "name": "attached_files",
+                    "type": "repeater",
+                    "layout": "table",
+                    "button_label": "Add File",
+                    "sub_fields": [
+                        {
+                            "key": "field_file_name",
+                            "label": "File Name",
+                            "name": "name",
+                            "type": "text"
+                        },
+                        {
+                            "key": "field_file_type",
+                            "label": "File Type",
+                            "name": "type",
+                            "type": "text"
+                        },
+                        {
+                            "key": "field_file_size",
+                            "label": "File Size (bytes)",
+                            "name": "size",
+                            "type": "number"
+                        },
+                        {
+                            "key": "field_file_data",
+                            "label": "File Data (Base64)",
+                            "name": "data",
+                            "type": "textarea",
+                            "rows": 2
+                        }
+                    ]
+                },
+                {
                     "key": "field_item_price",
                     "label": "Item Price (£)",
                     "name": "item_price",
