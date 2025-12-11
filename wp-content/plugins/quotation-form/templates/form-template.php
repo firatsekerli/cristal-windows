@@ -133,7 +133,7 @@ if (!$use_acf) {
     <form id="quotation-form" class="multi-step-form">
 
         <!-- STEP 1: PRODUCT -->
-        <div class="form-step active" data-step="1">
+        <div class="form-step" data-step="1">
 
             <!-- Sub-Step 1A: Product Category -->
             <div class="sub-step active" data-substep="1a">
