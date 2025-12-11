@@ -119,9 +119,6 @@ jQuery(document).ready(function($) {
 
             this.updateNavigationButtons();
             this.updateProgressIndicator();
-
-            // Remove loading class to show the form (prevents flash of step 1)
-            $('.quotation-form-container').removeClass('loading');
         },
 
         bindEvents: function() {

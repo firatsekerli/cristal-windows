@@ -27,11 +27,6 @@
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
-/* Hide entire form on initial load to prevent flash of step 1 */
-.quotation-form-container.loading {
-    display: none !important;
-}
-
 /* ====================================
    Progress Indicator
    ==================================== */

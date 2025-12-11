@@ -97,11 +97,11 @@ if (!$use_acf) {
 }
 ?>
 
-<div class="quotation-form-container loading">
+<div class="quotation-form-container">
 
     <!-- Progress Indicator -->
     <div class="progress-indicator">
-        <div class="progress-step active" data-step="1">
+        <div class="progress-step" data-step="1">
             <span class="step-number">1</span>
             <span class="step-title">Product</span>
         </div>
@@ -113,7 +113,7 @@ if (!$use_acf) {
             <span class="step-number">3</span>
             <span class="step-title">Configuration</span>
         </div>
-        <div class="progress-step clickable" data-step="basket">
+        <div class="progress-step clickable active" data-step="basket">
             <span class="step-number">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="9" cy="21" r="1"></circle>
@@ -473,7 +473,7 @@ if (!$use_acf) {
         </div>
 
         <!-- BASKET REVIEW -->
-        <div class="form-step basket-review" data-step="basket">
+        <div class="form-step basket-review active" data-step="basket">
             <h2 class="quotation-heading">Your Basket</h2>
             <p class="basket-count">Your basket contains <strong id="basket-item-count">0</strong> item(s)</p>
 
