@@ -31,11 +31,22 @@
             "required": 1
         },
         {
-            "key": "field_customer_address",
-            "label": "Customer Address",
-            "name": "customer_address",
-            "type": "textarea",
-            "rows": 3
+            "key": "field_customer_street",
+            "label": "Customer Street",
+            "name": "customer_street",
+            "type": "text"
+        },
+        {
+            "key": "field_customer_town",
+            "label": "Customer Town",
+            "name": "customer_town",
+            "type": "text"
+        },
+        {
+            "key": "field_customer_county",
+            "label": "Customer County",
+            "name": "customer_county",
+            "type": "text"
         },
         {
             "key": "field_customer_postcode",
@@ -266,5 +277,5 @@
     "style": "default",
     "label_placement": "top",
     "instruction_placement": "label",
-    "modified": 1733503600
+    "modified": 1733958000
 }
