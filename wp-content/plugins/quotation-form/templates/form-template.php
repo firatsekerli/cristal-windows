@@ -97,7 +97,7 @@ if (!$use_acf) {
 }
 ?>
 
-<div class="quotation-form-container">
+<div class="quotation-form-container loading">
 
     <!-- Progress Indicator -->
     <div class="progress-indicator">
