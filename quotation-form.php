@@ -1,15 +1,18 @@
 <?php
 /**
  * Plugin Name: Multi-Step Quotation Form
- * Plugin URI: https://cristalwindows.com
+ * Plugin URI: https://asparagents.com/plugins/quotation-form/
  * Description: A comprehensive multi-step quotation form for Windows, Doors, and Bay Windows with basket functionality
  * Version: 1.0.0
- * Author: Cristal Windows
- * Author URI: https://cristalwindows.com
+ * Requires at least: 5.6
+ * Tested up to: 6.9
+ * Requires PHP: 7.4
+ * Author: asparagents
+ * Author URI: https://asparagents.com/
+ * License: GPL v2 or later
+ * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain: quotation-form
  * Domain Path: /languages
- * Requires at least: 5.0
- * Requires PHP: 7.2
  */
 
 // Exit if accessed directly
