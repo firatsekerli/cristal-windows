@@ -387,69 +387,85 @@ class Quotation_Form_Plugin {
 
             // Add "View Image" button to attached_image fields
             function addViewImageButtons() {
+                console.log('Adding view image buttons...');
+
                 // Target all attached_image fields (including those in repeaters)
-                $('.acf-field[data-name="attached_image"]').each(function() {
+                var $fields = $('.acf-field[data-name="attached_image"]');
+                console.log('Found ' + $fields.length + ' attached_image fields');
+
+                $fields.each(function() {
                     var $field = $(this);
 
-                    // Check if button already exists
+                    // Skip if button already exists
                     if ($field.find('.view-image-button').length) {
+                        console.log('Button already exists, skipping');
                         return;
                     }
 
-                    var $imageWrap = $field.find('.acf-image-uploader');
+                    // Try to find the image - check multiple possible structures
+                    var $img = $field.find('img').first();
 
-                    // Only add button if there's an image
-                    if ($imageWrap.hasClass('has-value')) {
-                        var imageUrl = $imageWrap.find('img').attr('src');
+                    if ($img.length && $img.attr('src')) {
+                        var imageUrl = $img.attr('src');
+                        console.log('Found image:', imageUrl);
 
-                        if (imageUrl) {
-                            // Get the full size URL (remove any size suffixes)
-                            var fullImageUrl = imageUrl.replace(/-\d+x\d+(\.\w+)$/, '$1');
+                        // Get the full size URL (remove any size suffixes)
+                        var fullImageUrl = imageUrl.replace(/-\d+x\d+(\.\w+)$/, '$1');
 
-                            var $button = $('<a href="' + fullImageUrl + '" target="_blank" class="button view-image-button" style="margin-top: 10px; display: block;">🖼️ View Full Image</a>');
-                            $field.find('.acf-input').append($button);
+                        // Create button
+                        var $button = $('<a href="' + fullImageUrl + '" target="_blank" class="button view-image-button" style="margin-top: 10px; display: inline-block;">🖼️ View Full Image</a>');
+
+                        // Try multiple insertion points
+                        var $input = $field.find('.acf-input');
+                        if ($input.length) {
+                            $input.append($button);
+                            console.log('Button added to .acf-input');
+                        } else {
+                            $field.append($button);
+                            console.log('Button added to field');
                         }
                     } else {
-                        // Remove button if no image
+                        console.log('No image found in field');
+                        // Remove button if it exists but no image
                         $field.find('.view-image-button').remove();
                     }
                 });
             }
 
-            // Run on page load
+            // Run on multiple events to ensure button is added
             $(document).ready(function() {
+                console.log('Document ready, scheduling button addition');
                 setTimeout(addViewImageButtons, 500);
+                setTimeout(addViewImageButtons, 1000);
+                setTimeout(addViewImageButtons, 2000);
             });
 
             // Run when ACF is ready
             if (typeof acf !== 'undefined') {
+                console.log('ACF detected, adding action handlers');
+
                 acf.addAction('ready', function() {
+                    console.log('ACF ready event');
                     addViewImageButtons();
                 });
 
                 acf.addAction('load', function() {
+                    console.log('ACF load event');
                     addViewImageButtons();
                 });
 
                 // Handle repeater row additions
                 acf.addAction('append', function($el) {
-                    setTimeout(addViewImageButtons, 100);
-                });
-
-                // Handle image field changes
-                acf.addAction('change_field_type=image', function($field) {
+                    console.log('ACF append event');
                     setTimeout(addViewImageButtons, 100);
                 });
             }
 
-            // Watch for image uploads and removals
-            $(document).on('click', '.acf-field[data-name="attached_image"] .acf-image-uploader .acf-icon.-cancel', function() {
-                setTimeout(addViewImageButtons, 200);
+            // Watch for any changes in attached_image fields
+            $(document).on('DOMNodeInserted', '.acf-field[data-name="attached_image"]', function() {
+                setTimeout(addViewImageButtons, 100);
             });
 
-            $(document).on('click', '.acf-field[data-name="attached_image"] .acf-image-uploader', function() {
-                setTimeout(addViewImageButtons, 500);
-            });
 
 
         })(jQuery);
