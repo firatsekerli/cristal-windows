@@ -1124,7 +1124,7 @@ class Quotation_Form_Plugin {
             $message .= "Inside Colour: " . $item['insideColour'] . "\n";
             $message .= "Outside Colour: " . $item['outsideColour'] . "\n";
             $message .= "Glazing Type: " . ucfirst($item['glazingType']) . "\n";
-            $message .= "Glazing Features: " . ucfirst($item['glazingFeatures']) . "\n";
+            $message .= "Glazing Feature: " . ucfirst($item['glazingFeatures']) . "\n";
             $message .= "Hardware Colour: " . ucfirst($item['hardwareColour']) . "\n";
 
             if (!empty($item['location'])) {
@@ -1174,7 +1174,7 @@ class Quotation_Form_Plugin {
                 $customer_message .= "Inside Colour: " . $item['insideColour'] . "\n";
                 $customer_message .= "Outside Colour: " . $item['outsideColour'] . "\n";
                 $customer_message .= "Glazing Type: " . ucfirst($item['glazingType']) . "\n";
-                $customer_message .= "Glazing Features: " . ucfirst($item['glazingFeatures']) . "\n";
+                $customer_message .= "Glazing Feature: " . ucfirst($item['glazingFeatures']) . "\n";
                 $customer_message .= "Hardware Colour: " . ucfirst($item['hardwareColour']) . "\n";
 
                 if (!empty($item['location'])) {
