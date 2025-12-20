@@ -1195,8 +1195,8 @@ jQuery(document).ready(function($) {
             const fields = [
                 { label: 'Product Template', value: item.typeName + ' ' + (item.materialName || ''), field: 'product' },
                 { label: 'Size', value: item.width + 'w x ' + item.height + 'h mm', field: 'size' },
-                { label: 'Section Colour', value: item.insideColour + ' / ' + item.outsideColour, field: 'colour' },
-                { label: 'Glazing', value: glazingValue, field: 'glazing' },
+                { label: 'Colours', value: item.insideColour + ' / ' + item.outsideColour, field: 'colour' },
+                { label: 'Glazing Type', value: glazingValue, field: 'glazing' },
                 { label: 'Glazing Features', value: glazingFeaturesDisplay, field: 'glazingFeatures' },
                 { label: 'Hardware Colour', value: hardwareColourDisplay, field: 'hardware' }
             ];
@@ -1313,19 +1313,16 @@ jQuery(document).ready(function($) {
                 this.modalSelectedGlazingType = item.glazingType;
                 this.modalSelectedGlazingPattern = item.glazingPattern || '';
 
-                // Use glazingTypeName which includes the pattern for display
-                const displayName = item.glazingTypeName || item.glazingType;
-
-                // Create glazing type picker
+                // Create glazing type picker (display text will be set by renderModalGlazingTypeGrid)
                 $content.append('<div class="edit-field-group modal-glazing-type-picker">' +
                     '<label>Glazing Type:</label>' +
-                    '<div class="glazing-type-selection-display">Selected: <strong id="modal-glazing-type-name">' + displayName + '</strong></div>' +
+                    '<div class="glazing-type-selection-display">Selected: <strong id="modal-glazing-type-name"></strong></div>' +
                     '<div id="modal-glazing-type-grid" class="glazing-type-grid modal-glazing-type-grid"></div>' +
                     '</div>');
 
                 // Add pattern section (initially hidden if no patterns)
                 $content.append('<div class="edit-field-group modal-glazing-pattern-picker" id="modal-glazing-pattern-group" style="display: none;">' +
-                    '<label>Pattern:</label>' +
+                    '<label>Glazing Pattern:</label>' +
                     '<div id="modal-glazing-pattern-grid" class="glazing-pattern-grid modal-glazing-pattern-grid"></div>' +
                     '</div>');
 
