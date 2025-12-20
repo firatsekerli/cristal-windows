@@ -332,10 +332,10 @@ class Quotation_Form_Plugin {
                     calculateQuotePrice();
                 });
 
-                // Recalculate when additional price fields change
-                $(document).on('change keyup', '.acf-field[data-name="installation_price"] input', calculateQuotePrice);
-                $(document).on('change keyup', '.acf-field[data-name="rubbish_removal_cost"] input', calculateQuotePrice);
-                $(document).on('change keyup', '.acf-field[data-name="trims_accessories_price"] input', calculateQuotePrice);
+                // Recalculate when additional price fields change (use input event for real-time updates)
+                $(document).on('input change', '.acf-field[data-name="installation_price"] input', calculateQuotePrice);
+                $(document).on('input change', '.acf-field[data-name="rubbish_removal_cost"] input', calculateQuotePrice);
+                $(document).on('input change', '.acf-field[data-name="trims_accessories_price"] input', calculateQuotePrice);
 
                 // Recalculate when rows are added or removed
                 acf.addAction('append', function($el) {
