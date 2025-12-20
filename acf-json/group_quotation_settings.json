@@ -14,7 +14,7 @@
             "label": "Categories",
             "name": "product_categories",
             "type": "repeater",
-            "instructions": "Drag rows to reorder",
+            "instructions": "All categories. Drag rows to reorder.",
             "layout": "table",
             "button_label": "Add Category",
             "sub_fields": [
@@ -54,9 +54,9 @@
             "label": "Types",
             "name": "product_types",
             "type": "repeater",
-            "instructions": "All product types. Drag rows to reorder.",
+            "instructions": "All types. Drag rows to reorder.",
             "layout": "table",
-            "button_label": "Add Product Type",
+            "button_label": "Add Type",
             "sub_fields": [
                 {
                     "key": "field_type_name",
@@ -161,7 +161,7 @@
             "label": "Styles",
             "name": "styles",
             "type": "repeater",
-            "instructions": "Drag rows to reorder",
+            "instructions": "All styles. Drag rows to reorder.",
             "layout": "table",
             "button_label": "Add Style",
             "sub_fields": [
@@ -215,7 +215,7 @@
             "label": "Colours",
             "name": "colours",
             "type": "repeater",
-            "instructions": "Drag rows to reorder colours",
+            "instructions": "All colours. Drag rows to reorder.",
             "layout": "table",
             "button_label": "Add Colour",
             "sub_fields": [
@@ -269,6 +269,7 @@
             "label": "Cill Options",
             "name": "cill_options",
             "type": "repeater",
+            "instructions": "All cill options. Drag rows to reorder.",
             "layout": "table",
             "button_label": "Add Cill Option",
             "sub_fields": [
@@ -300,6 +301,7 @@
             "label": "Glazing Types",
             "name": "glazing_types",
             "type": "repeater",
+            "instructions": "All glazing types. Drag rows to reorder.",
             "layout": "table",
             "button_label": "Add Glazing Type",
             "sub_fields": [
@@ -341,9 +343,9 @@
             "label": "Glazing Patterns",
             "name": "patterns",
             "type": "repeater",
-            "instructions": "Manage all patterns that can be assigned to glazing types",
+            "instructions": "All glazing patterns. Drag rows to reorder.",
             "layout": "table",
-            "button_label": "Add Pattern",
+            "button_label": "Add Glazing Pattern",
             "sub_fields": [
                 {
                     "key": "field_pattern_name",
@@ -398,8 +400,9 @@
             "label": "Glazing Features",
             "name": "glazing_features",
             "type": "repeater",
+            "instructions": "All glazing features. Drag rows to reorder.",
             "layout": "table",
-            "button_label": "Add Feature",
+            "button_label": "Add Glazing Feature",
             "sub_fields": [
                 {
                     "key": "field_feature_name",
@@ -452,6 +455,7 @@
             "label": "Hardware Colours",
             "name": "hardware_colours",
             "type": "repeater",
+            "instructions": "All hardware colours. Drag rows to reorder.",
             "layout": "table",
             "button_label": "Add Hardware Colour",
             "sub_fields": [
