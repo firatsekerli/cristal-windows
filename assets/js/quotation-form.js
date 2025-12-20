@@ -1313,16 +1313,13 @@ jQuery(document).ready(function($) {
                 this.modalSelectedGlazingType = item.glazingType;
                 this.modalSelectedGlazingPattern = item.glazingPattern || '';
 
-                // Get the pure glazing type name (without pattern) for display
-                const $selectedTypeCard = $('.glazing-type-card[data-glazing-type="' + item.glazingType + '"]');
-                const pureTypeName = $selectedTypeCard.length > 0
-                    ? $selectedTypeCard.find('.glazing-type-label').text()
-                    : item.glazingType;
+                // Use glazingTypeName which includes the pattern for display
+                const displayName = item.glazingTypeName || item.glazingType;
 
                 // Create glazing type picker
                 $content.append('<div class="edit-field-group modal-glazing-type-picker">' +
                     '<label>Glazing Type:</label>' +
-                    '<div class="glazing-type-selection-display">Selected: <strong id="modal-glazing-type-name">' + pureTypeName + '</strong></div>' +
+                    '<div class="glazing-type-selection-display">Selected: <strong id="modal-glazing-type-name">' + displayName + '</strong></div>' +
                     '<div id="modal-glazing-type-grid" class="glazing-type-grid modal-glazing-type-grid"></div>' +
                     '</div>');
 
