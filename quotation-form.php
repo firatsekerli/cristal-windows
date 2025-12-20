@@ -1045,8 +1045,8 @@ class Quotation_Form_Plugin {
                 $file_name = isset($file['name']) ? sanitize_text_field($file['name']) : '';
                 $file_data = isset($file['data']) ? $file['data'] : '';
 
-                // Upload base64 image and get attachment ID
-                $attachment_id = $this->upload_base64_image($file_data, $file_name, $post_id);
+                // Upload base64 image and get attachment ID (unattached for public access)
+                $attachment_id = $this->upload_base64_image($file_data, $file_name, 0);
 
                 if ($attachment_id) {
                     $normalized_item['attached_image'] = $attachment_id;
