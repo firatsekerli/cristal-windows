@@ -47,6 +47,15 @@ jQuery(document).ready(function($) {
                 { label: 'Black', value: 'black', hex: '#000000' }
             ],
 
+        // Available cill options - Use dynamic options from config if available
+        cillOptions: (typeof quotationFormAjax !== 'undefined' && quotationFormAjax.config && quotationFormAjax.config.cillOptions)
+            ? quotationFormAjax.config.cillOptions
+            : [
+                { label: '150mm Sill', value: '150mm' },
+                { label: '200mm Sill', value: '200mm' },
+                { label: 'No Sill', value: 'none' }
+            ],
+
         debugColours: function() {
             console.log('=== COLOUR DEBUG INFO ===');
             console.log('Total colours:', this.colours.length);
@@ -1251,7 +1260,15 @@ jQuery(document).ready(function($) {
             if (field === 'size') {
                 $content.append('<div class="edit-field-group"><label>Width (mm):</label><input type="number" id="edit-width" value="' + item.width + '" min="200" max="4000"></div>');
                 $content.append('<div class="edit-field-group"><label>Height (mm):</label><input type="number" id="edit-height" value="' + item.height + '" min="200" max="3200"></div>');
-                $content.append('<div class="edit-field-group"><label>Cill:</label><select id="edit-cill"><option value="150mm"' + (item.cill === '150mm' ? ' selected' : '') + '>150mm Sill</option><option value="200mm"' + (item.cill === '200mm' ? ' selected' : '') + '>200mm Sill</option><option value="none"' + (item.cill === 'none' ? ' selected' : '') + '>No Sill</option></select></div>');
+
+                // Build cill options dynamically from settings
+                let cillOptionsHtml = '<div class="edit-field-group"><label>Cill:</label><select id="edit-cill">';
+                this.cillOptions.forEach(function(option) {
+                    const selected = item.cill === option.value ? ' selected' : '';
+                    cillOptionsHtml += '<option value="' + option.value + '"' + selected + '>' + option.label + '</option>';
+                });
+                cillOptionsHtml += '</select></div>';
+                $content.append(cillOptionsHtml);
             } else if (field === 'colour') {
                 // Store modal selected colors
                 this.modalSelectedColors = {

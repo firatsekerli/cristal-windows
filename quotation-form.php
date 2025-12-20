@@ -574,6 +574,9 @@ class Quotation_Form_Plugin {
         // Get hardware colours
         $hardware_colours = $this->get_acf_field_or_default('hardware_colours', 'option');
 
+        // Get cill options
+        $cill_options = $this->get_acf_field_or_default('cill_options', 'option');
+
         $config = array(
             'categories' => $this->get_acf_field_or_default('product_categories', 'option'),
             'productTypes' => $product_types,
@@ -585,6 +588,7 @@ class Quotation_Form_Plugin {
             'colours' => $colours,
             'glazingFeatures' => $glazing_features,
             'hardwareColours' => $hardware_colours,
+            'cillOptions' => $cill_options,
             'useAcfData' => function_exists('get_field') && get_field('product_categories', 'option') ? true : false
         );
 
