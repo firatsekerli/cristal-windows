@@ -252,11 +252,22 @@ class Quotation_Form_Plugin {
         }
         </style>
         <script type="text/javascript">
-        (function($) {
-            if (typeof acf === 'undefined') return;
+        // Wait for jQuery to be ready
+        (function() {
+            // Check if jQuery is loaded
+            if (typeof jQuery === 'undefined') {
+                console.error('jQuery is not loaded yet, waiting...');
+                // Try again in 100ms
+                setTimeout(arguments.callee, 100);
+                return;
+            }
 
-            // Helper function to generate slug
-            function generateSlug(text) {
+            // jQuery is loaded, proceed
+            (function($) {
+                console.log('jQuery loaded, initializing view image buttons script');
+
+                // Helper function to generate slug
+                function generateSlug(text) {
                 return text
                     .toLowerCase()
                     .trim()
@@ -466,9 +477,9 @@ class Quotation_Form_Plugin {
                 setTimeout(addViewImageButtons, 100);
             });
 
+            })(jQuery); // End of jQuery wrapper
 
-
-        })(jQuery);
+        })(); // End of jQuery check wrapper
         </script>
         <?php
     }
