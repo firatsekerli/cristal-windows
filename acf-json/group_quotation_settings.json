@@ -51,7 +51,7 @@
         },
         {
             "key": "field_product_types",
-            "label": "Product Types",
+            "label": "Types",
             "name": "product_types",
             "type": "repeater",
             "instructions": "All product types. Drag rows to reorder.",
@@ -212,7 +212,7 @@
         },
         {
             "key": "field_colours",
-            "label": "Colour Options",
+            "label": "Colours",
             "name": "colours",
             "type": "repeater",
             "instructions": "Drag rows to reorder colours",
@@ -338,7 +338,7 @@
         },
         {
             "key": "field_patterns",
-            "label": "Patterns",
+            "label": "Glazing Patterns",
             "name": "patterns",
             "type": "repeater",
             "instructions": "Manage all patterns that can be assigned to glazing types",
@@ -526,5 +526,5 @@
     "style": "default",
     "label_placement": "top",
     "instruction_placement": "label",
-    "modified": 1766239454
+    "modified": 1766239770
 }
