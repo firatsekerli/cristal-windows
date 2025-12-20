@@ -512,7 +512,7 @@ class Quotation_Form_Plugin {
      * Set ACF JSON load point
      */
     public function acf_json_load_point($paths) {
-        unset($paths[0]);
+        // Add this plugin's JSON directory to load paths
         $paths[] = QUOTATION_FORM_PLUGIN_DIR . 'acf-json';
         return $paths;
     }
