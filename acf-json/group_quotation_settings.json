@@ -4,14 +4,14 @@
     "fields": [
         {
             "key": "field_tab_categories",
-            "label": "Product Categories",
+            "label": "Categories",
             "name": "",
             "type": "tab",
             "placement": "left"
         },
         {
             "key": "field_product_categories",
-            "label": "Product Categories",
+            "label": "Categories",
             "name": "product_categories",
             "type": "repeater",
             "instructions": "Drag rows to reorder",
@@ -526,5 +526,5 @@
     "style": "default",
     "label_placement": "top",
     "instruction_placement": "label",
-    "modified": 1765126398
+    "modified": 1766239454
 }
