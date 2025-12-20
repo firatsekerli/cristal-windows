@@ -219,11 +219,41 @@
             "default_value": "pending"
         },
         {
+            "key": "field_installation_price",
+            "label": "Installation Price (£)",
+            "name": "installation_price",
+            "type": "number",
+            "instructions": "Enter the installation cost",
+            "prepend": "£",
+            "step": 0.01,
+            "min": 0
+        },
+        {
+            "key": "field_rubbish_removal_cost",
+            "label": "Rubbish Removal Cost (£)",
+            "name": "rubbish_removal_cost",
+            "type": "number",
+            "instructions": "Enter the rubbish removal cost",
+            "prepend": "£",
+            "step": 0.01,
+            "min": 0
+        },
+        {
+            "key": "field_trims_accessories_price",
+            "label": "Trims & Accessories Price (£)",
+            "name": "trims_accessories_price",
+            "type": "number",
+            "instructions": "Enter the trims and accessories cost",
+            "prepend": "£",
+            "step": 0.01,
+            "min": 0
+        },
+        {
             "key": "field_quote_price",
             "label": "Quote Price (£)",
             "name": "quote_price",
             "type": "number",
-            "instructions": "Auto-calculated from item prices. Add prices to individual items in the Basket Items tab.",
+            "instructions": "Auto-calculated from item prices + installation + rubbish removal + trims & accessories.",
             "prepend": "£",
             "readonly": 1,
             "disabled": 1

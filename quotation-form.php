@@ -294,6 +294,18 @@ class Quotation_Form_Plugin {
                     });
                 }
 
+                // Add installation price
+                var installationPrice = parseFloat($('.acf-field[data-name="installation_price"] input').val()) || 0;
+                total += installationPrice;
+
+                // Add rubbish removal cost
+                var rubbishCost = parseFloat($('.acf-field[data-name="rubbish_removal_cost"] input').val()) || 0;
+                total += rubbishCost;
+
+                // Add trims & accessories price
+                var trimsPrice = parseFloat($('.acf-field[data-name="trims_accessories_price"] input').val()) || 0;
+                total += trimsPrice;
+
                 // Update the quote price field
                 var $quotePriceField = $('.acf-field[data-name="quote_price"] input[type="number"]');
                 if ($quotePriceField.length) {
@@ -311,6 +323,11 @@ class Quotation_Form_Plugin {
                 $(document).on('change keyup', '.acf-field[data-name="item_price"] input', function() {
                     calculateQuotePrice();
                 });
+
+                // Recalculate when additional price fields change
+                $(document).on('change keyup', '.acf-field[data-name="installation_price"] input', calculateQuotePrice);
+                $(document).on('change keyup', '.acf-field[data-name="rubbish_removal_cost"] input', calculateQuotePrice);
+                $(document).on('change keyup', '.acf-field[data-name="trims_accessories_price"] input', calculateQuotePrice);
 
                 // Recalculate when rows are added or removed
                 acf.addAction('append', function($el) {
@@ -1166,6 +1183,24 @@ class Quotation_Form_Plugin {
             if (isset($item['item_price']) && is_numeric($item['item_price'])) {
                 $total += floatval($item['item_price']);
             }
+        }
+
+        // Add installation price
+        $installation_price = get_field('installation_price', $post_id);
+        if ($installation_price && is_numeric($installation_price)) {
+            $total += floatval($installation_price);
+        }
+
+        // Add rubbish removal cost
+        $rubbish_removal_cost = get_field('rubbish_removal_cost', $post_id);
+        if ($rubbish_removal_cost && is_numeric($rubbish_removal_cost)) {
+            $total += floatval($rubbish_removal_cost);
+        }
+
+        // Add trims & accessories price
+        $trims_accessories_price = get_field('trims_accessories_price', $post_id);
+        if ($trims_accessories_price && is_numeric($trims_accessories_price)) {
+            $total += floatval($trims_accessories_price);
         }
 
         // Update quote price field
