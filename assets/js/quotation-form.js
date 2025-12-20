@@ -1181,10 +1181,12 @@ jQuery(document).ready(function($) {
 
             const $table = $('<table class="item-summary"></table>');
 
-            const glazingDisplay = item.glazingTypeName || item.glazingType;
-            const glazingValue = item.glazingPattern
-                ? glazingDisplay + ' - ' + item.glazingPattern
-                : glazingDisplay;
+            // For glazing display: if we have glazingTypeName, use it (already includes pattern)
+            // Otherwise combine glazingType with pattern
+            const glazingValue = item.glazingTypeName ||
+                (item.glazingPattern
+                    ? item.glazingType + ' - ' + item.glazingPattern
+                    : item.glazingType);
 
             // Use display names for Glazing Features and Hardware Colour
             const glazingFeaturesDisplay = item.glazingFeaturesName || item.glazingFeatures;
@@ -1311,10 +1313,16 @@ jQuery(document).ready(function($) {
                 this.modalSelectedGlazingType = item.glazingType;
                 this.modalSelectedGlazingPattern = item.glazingPattern || '';
 
+                // Get the pure glazing type name (without pattern) for display
+                const $selectedTypeCard = $('.glazing-type-card[data-glazing-type="' + item.glazingType + '"]');
+                const pureTypeName = $selectedTypeCard.length > 0
+                    ? $selectedTypeCard.find('.glazing-type-label').text()
+                    : item.glazingType;
+
                 // Create glazing type picker
                 $content.append('<div class="edit-field-group modal-glazing-type-picker">' +
                     '<label>Glazing Type:</label>' +
-                    '<div class="glazing-type-selection-display">Selected: <strong id="modal-glazing-type-name">' + (item.glazingTypeName || item.glazingType) + '</strong></div>' +
+                    '<div class="glazing-type-selection-display">Selected: <strong id="modal-glazing-type-name">' + pureTypeName + '</strong></div>' +
                     '<div id="modal-glazing-type-grid" class="glazing-type-grid modal-glazing-type-grid"></div>' +
                     '</div>');
 
