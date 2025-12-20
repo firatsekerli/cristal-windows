@@ -159,13 +159,13 @@
                 },
                 {
                     "key": "field_item_glazing_patterns",
-                    "label": "Glazing Patterns",
+                    "label": "Glazing Pattern",
                     "name": "glazing_patterns",
                     "type": "text"
                 },
                 {
                     "key": "field_item_glazing_features",
-                    "label": "Glazing Features",
+                    "label": "Glazing Feature",
                     "name": "glazing_features",
                     "type": "text"
                 },
