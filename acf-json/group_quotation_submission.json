@@ -158,15 +158,15 @@
                     "type": "text"
                 },
                 {
-                    "key": "field_item_glazing_features",
-                    "label": "Glazing Features",
-                    "name": "glazing_features",
-                    "type": "text"
-                },
-                {
                     "key": "field_item_glazing_patterns",
                     "label": "Glazing Patterns",
                     "name": "glazing_patterns",
+                    "type": "text"
+                },
+                {
+                    "key": "field_item_glazing_features",
+                    "label": "Glazing Features",
+                    "name": "glazing_features",
                     "type": "text"
                 },
                 {
@@ -322,5 +322,5 @@
     "style": "default",
     "label_placement": "top",
     "instruction_placement": "label",
-    "modified": 1766239237
+    "modified": 1766241918
 }
