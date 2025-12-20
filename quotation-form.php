@@ -904,6 +904,28 @@ class Quotation_Form_Plugin {
      * Normalize basket items from JS camelCase to ACF snake_case
      */
     /**
+     * Capitalize text values for display (converts "low-e-double" to "Low-E Double")
+     */
+    private function capitalize_value($text) {
+        if (empty($text)) {
+            return $text;
+        }
+
+        // Replace hyphens and underscores with spaces
+        $text = str_replace(['-', '_'], ' ', $text);
+
+        // Capitalize each word
+        $text = ucwords(strtolower($text));
+
+        // Fix specific uppercase patterns (like "E" in "Low-E")
+        $text = preg_replace_callback('/\bE\b/', function($matches) {
+            return 'E';
+        }, $text);
+
+        return $text;
+    }
+
+    /**
      * Upload base64 image to WordPress media library
      */
     private function upload_base64_image($base64_data, $filename, $post_id = 0) {
@@ -991,19 +1013,19 @@ class Quotation_Form_Plugin {
 
         foreach ($basket_items as $item) {
             $normalized_item = array(
-                'category' => isset($item['category']) ? $item['category'] : '',
-                'type_name' => isset($item['typeName']) ? $item['typeName'] : '',
-                'material_name' => isset($item['materialName']) ? $item['materialName'] : '',
-                'style_name' => isset($item['styleName']) ? $item['styleName'] : '',
+                'category' => isset($item['category']) ? $this->capitalize_value($item['category']) : '',
+                'type_name' => isset($item['typeName']) ? $this->capitalize_value($item['typeName']) : '',
+                'material_name' => isset($item['materialName']) ? $this->capitalize_value($item['materialName']) : '',
+                'style_name' => isset($item['styleName']) ? $this->capitalize_value($item['styleName']) : '',
                 'width' => isset($item['width']) ? $item['width'] : '',
                 'height' => isset($item['height']) ? $item['height'] : '',
-                'cill' => isset($item['cill']) ? $item['cill'] : '',
-                'inside_colour' => isset($item['insideColour']) ? $item['insideColour'] : '',
-                'outside_colour' => isset($item['outsideColour']) ? $item['outsideColour'] : '',
-                'glazing_type' => isset($item['glazingType']) ? $item['glazingType'] : '',
-                'glazing_features' => isset($item['glazingFeatures']) ? $item['glazingFeatures'] : '',
-                'hardware_colour' => isset($item['hardwareColour']) ? $item['hardwareColour'] : '',
-                'location' => isset($item['location']) ? $item['location'] : '',
+                'cill' => isset($item['cill']) ? $this->capitalize_value($item['cill']) : '',
+                'inside_colour' => isset($item['insideColour']) ? $this->capitalize_value($item['insideColour']) : '',
+                'outside_colour' => isset($item['outsideColour']) ? $this->capitalize_value($item['outsideColour']) : '',
+                'glazing_type' => isset($item['glazingType']) ? $this->capitalize_value($item['glazingType']) : '',
+                'glazing_features' => isset($item['glazingFeatures']) ? $this->capitalize_value($item['glazingFeatures']) : '',
+                'hardware_colour' => isset($item['hardwareColour']) ? $this->capitalize_value($item['hardwareColour']) : '',
+                'location' => isset($item['location']) ? $this->capitalize_value($item['location']) : '',
             );
 
             // Handle attached image - upload base64 image to media library
