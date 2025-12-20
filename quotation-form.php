@@ -250,6 +250,14 @@ class Quotation_Form_Plugin {
         .pdf-download-button:before {
             content: "📄 ";
         }
+        /* Style all images in Quotation Form Settings repeaters to 75x75px */
+        .acf-options-page .acf-repeater img,
+        body[class*="quotation-form-settings"] .acf-repeater img {
+            width: 75px !important;
+            height: 75px !important;
+            object-fit: cover !important;
+            display: block;
+        }
         </style>
         <script type="text/javascript">
         // Wait for jQuery to be ready
