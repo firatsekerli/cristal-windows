@@ -82,6 +82,8 @@ class Quotation_Form_Plugin {
         add_filter('acf/load_field/key=field_brand_available_types', array($this, 'populate_type_choices'));
         add_filter('acf/load_field/key=field_item_brand', array($this, 'populate_brand_choices'));
         add_filter('acf/load_field/key=field_centralized_brand', array($this, 'populate_brand_choices'));
+        add_filter('acf/load_field/key=field_item_services', array($this, 'populate_service_choices'));
+        add_filter('acf/load_field/key=field_centralized_services', array($this, 'populate_service_choices'));
 
         // Add admin scripts for auto-slug generation
         add_action('acf/input/admin_enqueue_scripts', array($this, 'enqueue_admin_scripts'));
@@ -227,6 +229,30 @@ class Quotation_Form_Plugin {
                 foreach ($brands as $brand) {
                     $slug = isset($brand['slug']) ? $brand['slug'] : '';
                     $name = isset($brand['name']) ? $brand['name'] : '';
+
+                    if ($slug && $name) {
+                        $field['choices'][$slug] = $name;
+                    }
+                }
+            }
+        }
+
+        return $field;
+    }
+
+    /**
+     * Populate service choices for quotation items and centralized services
+     */
+    public function populate_service_choices($field) {
+        $field['choices'] = array();
+
+        // Get all services from settings
+        if (function_exists('get_field')) {
+            $services = get_field('services', 'option');
+            if (!empty($services) && is_array($services)) {
+                foreach ($services as $service) {
+                    $slug = isset($service['slug']) ? $service['slug'] : '';
+                    $name = isset($service['name']) ? $service['name'] : '';
 
                     if ($slug && $name) {
                         $field['choices'][$slug] = $name;
@@ -1395,6 +1421,20 @@ class Quotation_Form_Plugin {
             }
         }
 
+        // Get service information
+        $centralized_services = get_field('centralized_services', $post_id);
+        $services = get_field('services', 'option'); // Get all services from settings
+
+        // Create a service lookup array (slug => name)
+        $service_lookup = array();
+        if (!empty($services)) {
+            foreach ($services as $service) {
+                if (isset($service['slug']) && isset($service['name'])) {
+                    $service_lookup[$service['slug']] = $service['name'];
+                }
+            }
+        }
+
         $debug_log[] = "Customer: " . $customer_name;
         $debug_log[] = "Total quote price: £" . $quote_price;
 
@@ -1410,7 +1450,9 @@ class Quotation_Form_Plugin {
             'basket_items' => $basket_items,
             'quote_price' => $quote_price,
             'centralized_brand' => $centralized_brand,
-            'brand_lookup' => $brand_lookup
+            'brand_lookup' => $brand_lookup,
+            'centralized_services' => $centralized_services,
+            'service_lookup' => $service_lookup
         );
 
         // Generate PDF file and save it
@@ -1577,6 +1619,20 @@ class Quotation_Form_Plugin {
             }
         }
 
+        // Get service information
+        $centralized_services = get_field('centralized_services', $post_id);
+        $services = get_field('services', 'option'); // Get all services from settings
+
+        // Create a service lookup array (slug => name)
+        $service_lookup = array();
+        if (!empty($services)) {
+            foreach ($services as $service) {
+                if (isset($service['slug']) && isset($service['name'])) {
+                    $service_lookup[$service['slug']] = $service['name'];
+                }
+            }
+        }
+
         $data = array(
             'customer_name' => $customer_name,
             'customer_email' => $customer_email,
@@ -1588,7 +1644,9 @@ class Quotation_Form_Plugin {
             'basket_items' => $basket_items,
             'quote_price' => $quote_price,
             'centralized_brand' => $centralized_brand,
-            'brand_lookup' => $brand_lookup
+            'brand_lookup' => $brand_lookup,
+            'centralized_services' => $centralized_services,
+            'service_lookup' => $service_lookup
         );
 
         // Generate PDF using mPDF

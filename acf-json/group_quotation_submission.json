@@ -213,6 +213,20 @@
                     "ui": 1,
                     "ajax": 0,
                     "placeholder": "Select brand..."
+                },
+                {
+                    "key": "field_item_services",
+                    "label": "Services",
+                    "name": "services",
+                    "type": "select",
+                    "instructions": "Optional: Select services for this item (overrides centralized services)",
+                    "choices": {},
+                    "default_value": [],
+                    "allow_null": 1,
+                    "multiple": 1,
+                    "ui": 1,
+                    "ajax": 0,
+                    "placeholder": "Select services..."
                 }
             ]
         },
@@ -251,6 +265,20 @@
             "ui": 1,
             "ajax": 0,
             "placeholder": "Select brand..."
+        },
+        {
+            "key": "field_centralized_services",
+            "label": "Default Services (All Items)",
+            "name": "centralized_services",
+            "type": "select",
+            "instructions": "Optional: Select default services for all items (can be overridden per item)",
+            "choices": {},
+            "default_value": [],
+            "allow_null": 1,
+            "multiple": 1,
+            "ui": 1,
+            "ajax": 0,
+            "placeholder": "Select services..."
         },
         {
             "key": "field_installation_price",
@@ -350,5 +378,5 @@
     "style": "default",
     "label_placement": "top",
     "instruction_placement": "label",
-    "modified": 1766349615
+    "modified": 1766352993
 }

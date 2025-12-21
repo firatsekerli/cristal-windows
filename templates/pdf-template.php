@@ -261,6 +261,24 @@ foreach ($data['basket_items'] as $item):
     if (!empty($brand_slug) && !empty($data['brand_lookup'][$brand_slug])) {
         $brand_name = $data['brand_lookup'][$brand_slug];
     }
+
+    // Determine which services to use (per-item services override centralized services)
+    $service_slugs = array();
+    if (!empty($item['services']) && is_array($item['services'])) {
+        $service_slugs = $item['services'];
+    } elseif (!empty($data['centralized_services']) && is_array($data['centralized_services'])) {
+        $service_slugs = $data['centralized_services'];
+    }
+
+    // Look up service names from slugs
+    $service_names = array();
+    if (!empty($service_slugs) && !empty($data['service_lookup'])) {
+        foreach ($service_slugs as $service_slug) {
+            if (!empty($data['service_lookup'][$service_slug])) {
+                $service_names[] = $data['service_lookup'][$service_slug];
+            }
+        }
+    }
 ?>
 <div class="item">
     <div class="item-header">
@@ -344,6 +362,23 @@ foreach ($data['basket_items'] as $item):
         <?php if (!empty($item['location'])): ?>
         <div class="item-detail">
             <strong>Location:</strong> <?php echo esc_html($item['location']); ?>
+        </div>
+        <?php endif; ?>
+
+        <?php if (!empty($service_names) || !empty($item['location'])): ?>
+        <div class="item-detail">
+            <strong>Technical detail:</strong>
+            <?php
+            $tech_details = array();
+            $tech_details[] = $item_number; // Item number
+            if (!empty($item['location'])) {
+                $tech_details[] = esc_html($item['location']);
+            }
+            foreach ($service_names as $service_name) {
+                $tech_details[] = esc_html($service_name);
+            }
+            echo implode(' - ', $tech_details);
+            ?>
         </div>
         <?php endif; ?>
     </div>

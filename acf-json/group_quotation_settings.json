@@ -554,6 +554,42 @@
             ]
         },
         {
+            "key": "field_tab_services",
+            "label": "Services",
+            "name": "",
+            "type": "tab",
+            "placement": "left"
+        },
+        {
+            "key": "field_services",
+            "label": "Services",
+            "name": "services",
+            "type": "repeater",
+            "instructions": "All services offered. Drag rows to reorder.",
+            "layout": "table",
+            "button_label": "Add Service",
+            "pagination": 1,
+            "rows_per_page": 40,
+            "sub_fields": [
+                {
+                    "key": "field_service_name",
+                    "label": "Service Name",
+                    "name": "name",
+                    "type": "text",
+                    "instructions": "Service display name (e.g., Supply & Fit, Remove & replace)",
+                    "required": 1
+                },
+                {
+                    "key": "field_service_slug",
+                    "label": "Service Slug",
+                    "name": "slug",
+                    "type": "text",
+                    "instructions": "Unique identifier (e.g., supply-fit, remove-replace)",
+                    "required": 1
+                }
+            ]
+        },
+        {
             "key": "field_tab_email",
             "label": "Email Settings",
             "name": "",
@@ -600,5 +636,5 @@
     "style": "default",
     "label_placement": "top",
     "instruction_placement": "label",
-    "modified": 1766351666
+    "modified": 1766352993
 }
