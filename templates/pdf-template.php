@@ -247,12 +247,30 @@ body {
 $item_number = 1;
 foreach ($data['basket_items'] as $item):
     $item_letter = chr(64 + $item_number); // A, B, C, etc.
+
+    // Determine which brand to use (per-item brand overrides centralized brand)
+    $brand_slug = '';
+    if (!empty($item['brand'])) {
+        $brand_slug = $item['brand'];
+    } elseif (!empty($data['centralized_brand'])) {
+        $brand_slug = $data['centralized_brand'];
+    }
+
+    // Look up brand name from slug
+    $brand_name = '';
+    if (!empty($brand_slug) && !empty($data['brand_lookup'][$brand_slug])) {
+        $brand_name = $data['brand_lookup'][$brand_slug];
+    }
 ?>
 <div class="item">
     <div class="item-header">
-        <?php echo $item_letter; ?>) <?php echo esc_html($item['type_name']); ?>
+        <?php echo $item_letter; ?>)
+        <?php if (!empty($brand_name)): ?>
+            <?php echo esc_html($brand_name); ?>
+        <?php endif; ?>
+        <?php echo esc_html($item['type_name']); ?>
         <?php if (!empty($item['material_name']) && $item['material_name'] !== 'N/A'): ?>
-            - <?php echo esc_html($item['material_name']); ?>
+            <?php echo esc_html($item['material_name']); ?>
         <?php endif; ?>
     </div>
 

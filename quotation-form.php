@@ -1354,6 +1354,20 @@ class Quotation_Form_Plugin {
         $customer_postcode = get_field('customer_postcode', $post_id);
         $quote_price = get_field('quote_price', $post_id);
 
+        // Get brand information
+        $centralized_brand = get_field('centralized_brand', $post_id);
+        $brands = get_field('brands', 'option'); // Get all brands from settings
+
+        // Create a brand lookup array (slug => name)
+        $brand_lookup = array();
+        if (!empty($brands)) {
+            foreach ($brands as $brand) {
+                if (isset($brand['slug']) && isset($brand['name'])) {
+                    $brand_lookup[$brand['slug']] = $brand['name'];
+                }
+            }
+        }
+
         $debug_log[] = "Customer: " . $customer_name;
         $debug_log[] = "Total quote price: £" . $quote_price;
 
@@ -1367,7 +1381,9 @@ class Quotation_Form_Plugin {
             'customer_county' => $customer_county,
             'customer_postcode' => $customer_postcode,
             'basket_items' => $basket_items,
-            'quote_price' => $quote_price
+            'quote_price' => $quote_price,
+            'centralized_brand' => $centralized_brand,
+            'brand_lookup' => $brand_lookup
         );
 
         // Generate PDF file and save it
@@ -1520,6 +1536,20 @@ class Quotation_Form_Plugin {
         $basket_items = get_field('basket_items', $post_id);
         $quote_price = get_field('quote_price', $post_id);
 
+        // Get brand information
+        $centralized_brand = get_field('centralized_brand', $post_id);
+        $brands = get_field('brands', 'option'); // Get all brands from settings
+
+        // Create a brand lookup array (slug => name)
+        $brand_lookup = array();
+        if (!empty($brands)) {
+            foreach ($brands as $brand) {
+                if (isset($brand['slug']) && isset($brand['name'])) {
+                    $brand_lookup[$brand['slug']] = $brand['name'];
+                }
+            }
+        }
+
         $data = array(
             'customer_name' => $customer_name,
             'customer_email' => $customer_email,
@@ -1529,7 +1559,9 @@ class Quotation_Form_Plugin {
             'customer_county' => $customer_county,
             'customer_postcode' => $customer_postcode,
             'basket_items' => $basket_items,
-            'quote_price' => $quote_price
+            'quote_price' => $quote_price,
+            'centralized_brand' => $centralized_brand,
+            'brand_lookup' => $brand_lookup
         );
 
         // Generate PDF using mPDF
