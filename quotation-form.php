@@ -84,7 +84,7 @@ class Quotation_Form_Plugin {
         add_filter('acf/load_field/key=field_centralized_brand', array($this, 'populate_brand_choices'));
         add_filter('acf/load_field/key=field_item_services', array($this, 'populate_service_choices'));
         add_filter('acf/load_field/key=field_centralized_services', array($this, 'populate_service_choices'));
-        add_filter('acf/format_value/key=field_item_style_image', array($this, 'format_style_image'), 10, 3);
+        add_filter('acf/prepare_field/key=field_item_style_image', array($this, 'prepare_style_image_field'));
 
         // Add admin scripts for auto-slug generation
         add_action('acf/input/admin_enqueue_scripts', array($this, 'enqueue_admin_scripts'));
@@ -266,16 +266,63 @@ class Quotation_Form_Plugin {
     }
 
     /**
-     * Format style image URL to display as HTML image
-     * This converts the stored URL into an image tag for display
+     * Prepare style image field to display the image from settings
+     * Looks up the style image based on style_name from the same repeater row
      */
-    public function format_style_image($value, $post_id, $field) {
-        // If we have a URL value, convert it to an image tag
-        if (!empty($value) && is_string($value)) {
-            return '<img src="' . esc_url($value) . '" alt="Style Image" style="max-width: 150px; height: auto; border: 1px solid #ddd; border-radius: 4px; padding: 5px; background: white; display: block;">';
+    public function prepare_style_image_field($field) {
+        // Get the current value (might be empty for old submissions)
+        $style_image_url = $field['value'];
+
+        // If we don't have a saved URL, try to look it up from settings based on style_name
+        if (empty($style_image_url)) {
+            // We're in a repeater, so we need to get the style_name from the same row
+            // The row index is available in the field name: basket_items_0_style_image
+            if (isset($field['name']) && preg_match('/basket_items_(\d+)_style_image/', $field['name'], $matches)) {
+                $row_index = $matches[1];
+
+                // Get the post ID
+                $post_id = 0;
+                if (isset($_GET['post'])) {
+                    $post_id = intval($_GET['post']);
+                }
+
+                // Get basket items
+                if ($post_id && function_exists('get_field')) {
+                    $basket_items = get_field('basket_items', $post_id);
+
+                    if (!empty($basket_items) && isset($basket_items[$row_index])) {
+                        $item = $basket_items[$row_index];
+
+                        // Get the style name (e.g., "Style 0004")
+                        $style_name = isset($item['style_name']) ? $item['style_name'] : '';
+
+                        // Get all styles from settings
+                        $styles = get_field('styles', 'option');
+
+                        if (!empty($styles) && is_array($styles)) {
+                            foreach ($styles as $style) {
+                                $settings_style_name = isset($style['name']) ? $style['name'] : '';
+
+                                // Match the style name
+                                if ($settings_style_name === $style_name) {
+                                    $style_image_url = isset($style['image']['url']) ? $style['image']['url'] : '';
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
 
-        return '';
+        // Set the message to display the image
+        if (!empty($style_image_url)) {
+            $field['message'] = '<img src="' . esc_url($style_image_url) . '" alt="Style Image" style="max-width: 150px; height: auto; border: 1px solid #ddd; border-radius: 4px; padding: 5px; background: white; display: block;">';
+        } else {
+            $field['message'] = '<p style="color: #999; font-style: italic;">No style image available</p>';
+        }
+
+        return $field;
     }
 
     /**
