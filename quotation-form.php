@@ -79,6 +79,7 @@ class Quotation_Form_Plugin {
         add_filter('acf/load_field/key=field_material_available_types', array($this, 'populate_type_choices'));
         add_filter('acf/load_field/key=field_style_types', array($this, 'populate_type_choices'));
         add_filter('acf/load_field/key=field_pattern_available_glazing_types', array($this, 'populate_glazing_type_choices'));
+        add_filter('acf/load_field/key=field_brand_available_types', array($this, 'populate_type_choices'));
 
         // Add admin scripts for auto-slug generation
         add_action('acf/input/admin_enqueue_scripts', array($this, 'enqueue_admin_scripts'));

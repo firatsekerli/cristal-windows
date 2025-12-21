@@ -538,18 +538,18 @@
                     "required": 1
                 },
                 {
-                    "key": "field_brand_categories",
-                    "label": "Available for Categories",
-                    "name": "available_categories",
+                    "key": "field_brand_available_types",
+                    "label": "Available for Types",
+                    "name": "available_types",
                     "type": "select",
-                    "instructions": "Leave empty for all categories",
+                    "instructions": "Leave empty for all types",
                     "choices": {},
                     "default_value": [],
                     "allow_null": 1,
                     "multiple": 1,
                     "ui": 1,
                     "ajax": 0,
-                    "placeholder": "Select categories..."
+                    "placeholder": "Select types..."
                 }
             ]
         },
@@ -600,5 +600,5 @@
     "style": "default",
     "label_placement": "top",
     "instruction_placement": "label",
-    "modified": 1766349615
+    "modified": 1766351666
 }
