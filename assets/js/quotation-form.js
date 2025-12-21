@@ -1676,8 +1676,11 @@ jQuery(document).ready(function($) {
             if (selectedType) {
                 const $selectedCard = $('.glazing-type-card[data-glazing-type="' + selectedType + '"]');
                 if ($selectedCard.length > 0) {
-                    const typeName = $selectedCard.find('.glazing-type-label').text();
+                    const typeName = $selectedCard.find('.glazing-type-label').text().trim();
                     self.modalSelectedGlazingTypeName = typeName;
+
+                    // Set initial display to just the type name
+                    $('#modal-glazing-type-name').text(typeName);
 
                     const patterns = $selectedCard.data('patterns');
                     if (patterns && patterns.length > 0) {
