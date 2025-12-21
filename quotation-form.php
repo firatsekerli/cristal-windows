@@ -80,6 +80,8 @@ class Quotation_Form_Plugin {
         add_filter('acf/load_field/key=field_style_types', array($this, 'populate_type_choices'));
         add_filter('acf/load_field/key=field_pattern_available_glazing_types', array($this, 'populate_glazing_type_choices'));
         add_filter('acf/load_field/key=field_brand_available_types', array($this, 'populate_type_choices'));
+        add_filter('acf/load_field/key=field_item_brand', array($this, 'populate_brand_choices'));
+        add_filter('acf/load_field/key=field_centralized_brand', array($this, 'populate_brand_choices'));
 
         // Add admin scripts for auto-slug generation
         add_action('acf/input/admin_enqueue_scripts', array($this, 'enqueue_admin_scripts'));
@@ -204,6 +206,30 @@ class Quotation_Form_Plugin {
 
                     if ($value && $label) {
                         $field['choices'][$value] = $label;
+                    }
+                }
+            }
+        }
+
+        return $field;
+    }
+
+    /**
+     * Populate brand choices for quotation items and centralized brand
+     */
+    public function populate_brand_choices($field) {
+        $field['choices'] = array();
+
+        // Get all brands from settings
+        if (function_exists('get_field')) {
+            $brands = get_field('brands', 'option');
+            if (!empty($brands) && is_array($brands)) {
+                foreach ($brands as $brand) {
+                    $slug = isset($brand['slug']) ? $brand['slug'] : '';
+                    $name = isset($brand['name']) ? $brand['name'] : '';
+
+                    if ($slug && $name) {
+                        $field['choices'][$slug] = $name;
                     }
                 }
             }
