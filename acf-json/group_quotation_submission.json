@@ -119,10 +119,10 @@
                     "key": "field_item_style_image",
                     "label": "Style Image",
                     "name": "style_image",
-                    "type": "message",
-                    "message": "",
-                    "new_lines": "",
-                    "esc_html": 0
+                    "type": "text",
+                    "wrapper": {
+                        "class": "style-image-field-wrapper"
+                    }
                 },
                 {
                     "key": "field_item_style",
@@ -387,5 +387,5 @@
     "style": "default",
     "label_placement": "top",
     "instruction_placement": "label",
-    "modified": 1766354358
+    "modified": 1766355454
 }

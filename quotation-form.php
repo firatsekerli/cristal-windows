@@ -84,10 +84,12 @@ class Quotation_Form_Plugin {
         add_filter('acf/load_field/key=field_centralized_brand', array($this, 'populate_brand_choices'));
         add_filter('acf/load_field/key=field_item_services', array($this, 'populate_service_choices'));
         add_filter('acf/load_field/key=field_centralized_services', array($this, 'populate_service_choices'));
-        add_filter('acf/prepare_field/key=field_item_style_image', array($this, 'prepare_style_image_field'));
 
         // Add admin scripts for auto-slug generation
         add_action('acf/input/admin_enqueue_scripts', array($this, 'enqueue_admin_scripts'));
+
+        // Localize settings data for admin JavaScript
+        add_action('admin_enqueue_scripts', array($this, 'enqueue_settings_data'));
 
         // Auto-calculate quote price when quotation is saved
         add_action('acf/save_post', array($this, 'auto_calculate_quote_price'), 20);
@@ -266,63 +268,33 @@ class Quotation_Form_Plugin {
     }
 
     /**
-     * Prepare style image field to display the image from settings
-     * Looks up the style image based on style_name from the same repeater row
+     * Enqueue settings data for JavaScript
+     * Passes styles data to admin JavaScript for style image lookup
      */
-    public function prepare_style_image_field($field) {
-        // Get the current value (might be empty for old submissions)
-        $style_image_url = $field['value'];
-
-        // If we don't have a saved URL, try to look it up from settings based on style_name
-        if (empty($style_image_url)) {
-            // We're in a repeater, so we need to get the style_name from the same row
-            // The row index is available in the field name: basket_items_0_style_image
-            if (isset($field['name']) && preg_match('/basket_items_(\d+)_style_image/', $field['name'], $matches)) {
-                $row_index = $matches[1];
-
-                // Get the post ID
-                $post_id = 0;
-                if (isset($_GET['post'])) {
-                    $post_id = intval($_GET['post']);
-                }
-
-                // Get basket items
-                if ($post_id && function_exists('get_field')) {
-                    $basket_items = get_field('basket_items', $post_id);
-
-                    if (!empty($basket_items) && isset($basket_items[$row_index])) {
-                        $item = $basket_items[$row_index];
-
-                        // Get the style name (e.g., "Style 0004")
-                        $style_name = isset($item['style_name']) ? $item['style_name'] : '';
-
-                        // Get all styles from settings
-                        $styles = get_field('styles', 'option');
-
-                        if (!empty($styles) && is_array($styles)) {
-                            foreach ($styles as $style) {
-                                $settings_style_name = isset($style['name']) ? $style['name'] : '';
-
-                                // Match the style name
-                                if ($settings_style_name === $style_name) {
-                                    $style_image_url = isset($style['image']['url']) ? $style['image']['url'] : '';
-                                    break;
-                                }
-                            }
-                        }
+    public function enqueue_settings_data() {
+        // Only on quotation edit pages
+        $screen = get_current_screen();
+        if ($screen && $screen->post_type === 'quotation') {
+            // Get all styles from settings
+            $styles = array();
+            if (function_exists('get_field')) {
+                $styles_data = get_field('styles', 'option');
+                if (!empty($styles_data) && is_array($styles_data)) {
+                    foreach ($styles_data as $style) {
+                        $styles[] = array(
+                            'name' => isset($style['name']) ? $style['name'] : '',
+                            'slug' => isset($style['slug']) ? $style['slug'] : '',
+                            'image_url' => isset($style['image']['url']) ? $style['image']['url'] : ''
+                        );
                     }
                 }
             }
-        }
 
-        // Set the message to display the image
-        if (!empty($style_image_url)) {
-            $field['message'] = '<img src="' . esc_url($style_image_url) . '" alt="Style Image" style="max-width: 150px; height: auto; border: 1px solid #ddd; border-radius: 4px; padding: 5px; background: white; display: block;">';
-        } else {
-            $field['message'] = '<p style="color: #999; font-style: italic;">No style image available</p>';
+            // Pass to JavaScript
+            wp_localize_script('jquery', 'quotationSettings', array(
+                'styles' => $styles
+            ));
         }
-
-        return $field;
     }
 
     /**
@@ -371,6 +343,30 @@ class Quotation_Form_Plugin {
             height: 75px !important;
             object-fit: cover !important;
             display: block;
+        }
+        /* Hide style_image text input and show custom image preview */
+        .acf-field[data-name="style_image"] input[type="text"] {
+            display: none !important;
+        }
+        .acf-field[data-name="style_image"] .acf-input {
+            min-height: auto;
+        }
+        .style-image-preview-container {
+            margin-top: 5px;
+        }
+        .style-image-preview-container img {
+            max-width: 150px;
+            height: auto;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 5px;
+            background: white;
+            display: block;
+        }
+        .style-image-preview-container .no-image {
+            color: #999;
+            font-style: italic;
+            font-size: 13px;
         }
         </style>
         <script type="text/javascript">
@@ -535,6 +531,52 @@ class Quotation_Form_Plugin {
                 }
             });
 
+            // Display style images in basket items
+            function displayStyleImages() {
+                $('.acf-field[data-name="style_image"]').each(function() {
+                    var $field = $(this);
+                    var $input = $field.find('input[type="text"]');
+                    var $acfInput = $field.find('.acf-input');
+
+                    // Check if preview container already exists
+                    if ($field.find('.style-image-preview-container').length > 0) {
+                        return; // Already processed
+                    }
+
+                    // Get the saved style_image URL from the input
+                    var styleImageUrl = $input.val();
+
+                    // If no URL is saved, try to look it up from settings based on style_name
+                    if (!styleImageUrl) {
+                        var $row = $field.closest('.acf-row');
+                        var $styleNameField = $row.find('.acf-field[data-name="style_name"] input');
+                        var styleName = $styleNameField.val();
+
+                        if (styleName && typeof quotationSettings !== 'undefined' && quotationSettings.styles) {
+                            // Look up the style by name
+                            for (var i = 0; i < quotationSettings.styles.length; i++) {
+                                if (quotationSettings.styles[i].name === styleName) {
+                                    styleImageUrl = quotationSettings.styles[i].image_url;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    // Create preview container
+                    var $previewContainer = $('<div class="style-image-preview-container"></div>');
+
+                    if (styleImageUrl) {
+                        $previewContainer.html('<img src="' + styleImageUrl + '" alt="Style Image">');
+                    } else {
+                        $previewContainer.html('<p class="no-image">No style image available</p>');
+                    }
+
+                    // Append preview after the input
+                    $acfInput.append($previewContainer);
+                });
+            }
+
             // Add "View Image" button to attached_image fields
             function addViewImageButtons() {
                 console.log('Adding view image buttons...');
@@ -588,6 +630,10 @@ class Quotation_Form_Plugin {
                 setTimeout(addViewImageButtons, 500);
                 setTimeout(addViewImageButtons, 1000);
                 setTimeout(addViewImageButtons, 2000);
+                // Also display style images
+                setTimeout(displayStyleImages, 500);
+                setTimeout(displayStyleImages, 1000);
+                setTimeout(displayStyleImages, 2000);
             });
 
             // Run when ACF is ready
@@ -597,17 +643,20 @@ class Quotation_Form_Plugin {
                 acf.addAction('ready', function() {
                     console.log('ACF ready event');
                     addViewImageButtons();
+                    displayStyleImages();
                 });
 
                 acf.addAction('load', function() {
                     console.log('ACF load event');
                     addViewImageButtons();
+                    displayStyleImages();
                 });
 
                 // Handle repeater row additions
                 acf.addAction('append', function($el) {
                     console.log('ACF append event');
                     setTimeout(addViewImageButtons, 100);
+                    setTimeout(displayStyleImages, 100);
                 });
             }
 
