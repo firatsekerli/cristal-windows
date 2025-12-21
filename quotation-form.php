@@ -84,6 +84,7 @@ class Quotation_Form_Plugin {
         add_filter('acf/load_field/key=field_centralized_brand', array($this, 'populate_brand_choices'));
         add_filter('acf/load_field/key=field_item_services', array($this, 'populate_service_choices'));
         add_filter('acf/load_field/key=field_centralized_services', array($this, 'populate_service_choices'));
+        add_filter('acf/format_value/key=field_item_style_image', array($this, 'format_style_image'), 10, 3);
 
         // Add admin scripts for auto-slug generation
         add_action('acf/input/admin_enqueue_scripts', array($this, 'enqueue_admin_scripts'));
@@ -262,6 +263,19 @@ class Quotation_Form_Plugin {
         }
 
         return $field;
+    }
+
+    /**
+     * Format style image URL to display as HTML image
+     * This converts the stored URL into an image tag for display
+     */
+    public function format_style_image($value, $post_id, $field) {
+        // If we have a URL value, convert it to an image tag
+        if (!empty($value) && is_string($value)) {
+            return '<img src="' . esc_url($value) . '" alt="Style Image" style="max-width: 150px; height: auto; border: 1px solid #ddd; border-radius: 4px; padding: 5px; background: white; display: block;">';
+        }
+
+        return '';
     }
 
     /**
