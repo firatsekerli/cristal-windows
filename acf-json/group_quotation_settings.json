@@ -17,6 +17,8 @@
             "instructions": "All categories. Drag rows to reorder.",
             "layout": "table",
             "button_label": "Add Category",
+            "pagination": 1,
+            "rows_per_page": 40,
             "sub_fields": [
                 {
                     "key": "field_category_name",
@@ -57,6 +59,8 @@
             "instructions": "All types. Drag rows to reorder.",
             "layout": "table",
             "button_label": "Add Type",
+            "pagination": 1,
+            "rows_per_page": 40,
             "sub_fields": [
                 {
                     "key": "field_type_name",
@@ -110,6 +114,8 @@
             "instructions": "All materials. Drag rows to reorder.",
             "layout": "table",
             "button_label": "Add Material",
+            "pagination": 1,
+            "rows_per_page": 40,
             "sub_fields": [
                 {
                     "key": "field_material_name",
@@ -164,6 +170,8 @@
             "instructions": "All styles. Drag rows to reorder.",
             "layout": "table",
             "button_label": "Add Style",
+            "pagination": 1,
+            "rows_per_page": 40,
             "sub_fields": [
                 {
                     "key": "field_style_name",
@@ -218,6 +226,8 @@
             "instructions": "All colours. Drag rows to reorder.",
             "layout": "table",
             "button_label": "Add Colour",
+            "pagination": 1,
+            "rows_per_page": 40,
             "sub_fields": [
                 {
                     "key": "field_colour_name",
@@ -272,6 +282,8 @@
             "instructions": "All cill options. Drag rows to reorder.",
             "layout": "table",
             "button_label": "Add Cill Option",
+            "pagination": 1,
+            "rows_per_page": 40,
             "sub_fields": [
                 {
                     "key": "field_cill_label",
@@ -304,6 +316,8 @@
             "instructions": "All glazing types. Drag rows to reorder.",
             "layout": "table",
             "button_label": "Add Glazing Type",
+            "pagination": 1,
+            "rows_per_page": 40,
             "sub_fields": [
                 {
                     "key": "field_glazing_type_label",
@@ -346,6 +360,8 @@
             "instructions": "All glazing patterns. Drag rows to reorder.",
             "layout": "table",
             "button_label": "Add Glazing Pattern",
+            "pagination": 1,
+            "rows_per_page": 40,
             "sub_fields": [
                 {
                     "key": "field_pattern_name",
@@ -403,6 +419,8 @@
             "instructions": "All glazing features. Drag rows to reorder.",
             "layout": "table",
             "button_label": "Add Glazing Feature",
+            "pagination": 1,
+            "rows_per_page": 40,
             "sub_fields": [
                 {
                     "key": "field_feature_name",
@@ -458,6 +476,8 @@
             "instructions": "All hardware colours. Drag rows to reorder.",
             "layout": "table",
             "button_label": "Add Hardware Colour",
+            "pagination": 1,
+            "rows_per_page": 40,
             "sub_fields": [
                 {
                     "key": "field_hardware_colour_label",
@@ -530,5 +550,5 @@
     "style": "default",
     "label_placement": "top",
     "instruction_placement": "label",
-    "modified": 1766347473
+    "modified": 1766348115
 }
