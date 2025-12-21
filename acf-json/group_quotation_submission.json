@@ -199,6 +199,20 @@
                     "prepend": "£",
                     "step": 0.01,
                     "min": 0
+                },
+                {
+                    "key": "field_item_brand",
+                    "label": "Brand",
+                    "name": "brand",
+                    "type": "select",
+                    "instructions": "Optional: Select brand for this item (overrides centralized brand)",
+                    "choices": {},
+                    "default_value": "",
+                    "allow_null": 1,
+                    "multiple": 0,
+                    "ui": 1,
+                    "ajax": 0,
+                    "placeholder": "Select brand..."
                 }
             ]
         },
@@ -223,6 +237,20 @@
                 "completed": "Completed"
             },
             "default_value": "pending"
+        },
+        {
+            "key": "field_centralized_brand",
+            "label": "Default Brand (All Items)",
+            "name": "centralized_brand",
+            "type": "select",
+            "instructions": "Optional: Select a default brand for all items (can be overridden per item)",
+            "choices": {},
+            "default_value": "",
+            "allow_null": 1,
+            "multiple": 0,
+            "ui": 1,
+            "ajax": 0,
+            "placeholder": "Select brand..."
         },
         {
             "key": "field_installation_price",
@@ -322,5 +350,5 @@
     "style": "default",
     "label_placement": "top",
     "instruction_placement": "label",
-    "modified": 1766347473
+    "modified": 1766349615
 }

@@ -504,6 +504,56 @@
             ]
         },
         {
+            "key": "field_tab_brands",
+            "label": "Brands",
+            "name": "",
+            "type": "tab",
+            "placement": "left"
+        },
+        {
+            "key": "field_brands",
+            "label": "Brands",
+            "name": "brands",
+            "type": "repeater",
+            "instructions": "All product brands. Drag rows to reorder.",
+            "layout": "table",
+            "button_label": "Add Brand",
+            "pagination": 1,
+            "rows_per_page": 40,
+            "sub_fields": [
+                {
+                    "key": "field_brand_name",
+                    "label": "Brand Name",
+                    "name": "name",
+                    "type": "text",
+                    "instructions": "Brand display name (e.g., REHAU, VEKA, Apeer)",
+                    "required": 1
+                },
+                {
+                    "key": "field_brand_slug",
+                    "label": "Brand Slug",
+                    "name": "slug",
+                    "type": "text",
+                    "instructions": "Unique identifier (e.g., rehau, veka, apeer)",
+                    "required": 1
+                },
+                {
+                    "key": "field_brand_categories",
+                    "label": "Available for Categories",
+                    "name": "available_categories",
+                    "type": "select",
+                    "instructions": "Leave empty for all categories",
+                    "choices": {},
+                    "default_value": [],
+                    "allow_null": 1,
+                    "multiple": 1,
+                    "ui": 1,
+                    "ajax": 0,
+                    "placeholder": "Select categories..."
+                }
+            ]
+        },
+        {
             "key": "field_tab_email",
             "label": "Email Settings",
             "name": "",
@@ -550,5 +600,5 @@
     "style": "default",
     "label_placement": "top",
     "instruction_placement": "label",
-    "modified": 1766348115
+    "modified": 1766349615
 }
