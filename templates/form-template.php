@@ -148,7 +148,7 @@ if (!$use_acf) {
                     <div class="image-card" data-category="<?php echo esc_attr($slug); ?>">
                         <div class="card-image">
                             <?php if ($image_url): ?>
-                                <img src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($name); ?>">
+                                <img src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($name); ?>" loading="lazy">
                             <?php endif; ?>
                         </div>
                         <h3 class="quotation-subheading"><?php echo esc_html($name); ?></h3>
@@ -169,7 +169,7 @@ if (!$use_acf) {
                     <div class="image-card" data-type="<?php echo esc_attr($slug); ?>">
                         <div class="card-image">
                             <?php if ($image_url): ?>
-                                <img src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($name); ?>">
+                                <img src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($name); ?>" loading="lazy">
                             <?php endif; ?>
                         </div>
                         <h3 class="quotation-subheading"><?php echo esc_html($name); ?></h3>
@@ -190,7 +190,7 @@ if (!$use_acf) {
                     <div class="image-card" data-type="<?php echo esc_attr($slug); ?>">
                         <div class="card-image">
                             <?php if ($image_url): ?>
-                                <img src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($name); ?>">
+                                <img src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($name); ?>" loading="lazy">
                             <?php endif; ?>
                         </div>
                         <h3 class="quotation-subheading"><?php echo esc_html($name); ?></h3>
@@ -211,7 +211,7 @@ if (!$use_acf) {
                     <div class="image-card" data-type="<?php echo esc_attr($slug); ?>">
                         <div class="card-image">
                             <?php if ($image_url): ?>
-                                <img src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($name); ?>">
+                                <img src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($name); ?>" loading="lazy">
                             <?php endif; ?>
                         </div>
                         <h3 class="quotation-subheading"><?php echo esc_html($name); ?></h3>
@@ -237,7 +237,7 @@ if (!$use_acf) {
                          data-available-types="<?php echo esc_attr(json_encode($available_types)); ?>">
                         <div class="card-image">
                             <?php if ($image_url): ?>
-                                <img src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($name); ?>">
+                                <img src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($name); ?>" loading="lazy">
                             <?php endif; ?>
                         </div>
                         <h3 class="quotation-subheading"><?php echo esc_html($name); ?></h3>
@@ -267,7 +267,7 @@ if (!$use_acf) {
                          data-available-types="<?php echo esc_attr(json_encode($available_types)); ?>">
                         <div class="card-image">
                             <?php if ($image_url): ?>
-                                <img src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($name); ?>">
+                                <img src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($name); ?>" loading="lazy">
                             <?php endif; ?>
                         </div>
                         <h3 class="quotation-subheading"><?php echo esc_html($name); ?></h3>
@@ -279,7 +279,7 @@ if (!$use_acf) {
                     for ($i = 1; $i <= 12; $i++): ?>
                     <div class="image-card style-card" data-style="w<?php echo $i; ?>">
                         <div class="card-image">
-                            <img src="<?php echo $plugin_url; ?>assets/images/styles/w<?php echo $i; ?>.jpg" alt="Style W<?php echo $i; ?>">
+                            <img src="<?php echo $plugin_url; ?>assets/images/styles/w<?php echo $i; ?>.jpg" alt="Style W<?php echo $i; ?>" loading="lazy">
                         </div>
                         <h3 class="quotation-subheading">Style W<?php echo $i; ?></h3>
                     </div>
@@ -297,7 +297,7 @@ if (!$use_acf) {
                 <div class="configuration-preview">
                     <h3 class="quotation-subheading">Preview</h3>
                     <div class="preview-image">
-                        <img id="style-preview" src="" alt="Selected Style">
+                        <img id="style-preview" src="" alt="Selected Style" loading="lazy">
                     </div>
                     <div class="preview-details">
                         <p><strong>Category:</strong> <span id="preview-category"></span></p>
@@ -391,7 +391,7 @@ if (!$use_acf) {
                                             <div class="glazing-type-card" data-glazing-type="<?php echo esc_attr($value); ?>" data-patterns='<?php echo esc_attr(json_encode($patterns)); ?>'>
                                                 <div class="glazing-type-icon">
                                                     <?php if (!empty($icon)): ?>
-                                                        <img src="<?php echo esc_url($icon); ?>" alt="<?php echo esc_attr($label); ?>">
+                                                        <img src="<?php echo esc_url($icon); ?>" alt="<?php echo esc_attr($label); ?>" loading="lazy">
                                                     <?php endif; ?>
                                                 </div>
                                                 <div class="glazing-type-label"><?php echo esc_html($label); ?></div>

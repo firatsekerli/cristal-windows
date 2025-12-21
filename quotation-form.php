@@ -1081,6 +1081,7 @@ class Quotation_Form_Plugin {
                 'category' => isset($item['category']) ? $this->capitalize_value($item['category']) : '',
                 'type_name' => isset($item['typeName']) ? $this->capitalize_value($item['typeName']) : '',
                 'material_name' => isset($item['materialName']) ? $this->capitalize_value($item['materialName']) : '',
+                'style_image' => isset($item['styleImage']) ? $item['styleImage'] : '',
                 'style_name' => isset($item['styleName']) ? $this->capitalize_value($item['styleName']) : '',
                 'width' => isset($item['width']) ? $item['width'] : '',
                 'height' => isset($item['height']) ? $item['height'] : '',

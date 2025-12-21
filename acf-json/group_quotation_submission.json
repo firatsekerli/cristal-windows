@@ -116,6 +116,15 @@
                     "type": "text"
                 },
                 {
+                    "key": "field_item_style_image",
+                    "label": "Style Image",
+                    "name": "style_image",
+                    "type": "image",
+                    "return_format": "url",
+                    "preview_size": "thumbnail",
+                    "library": "all"
+                },
+                {
                     "key": "field_item_style",
                     "label": "Style",
                     "name": "style_name",
@@ -378,5 +387,5 @@
     "style": "default",
     "label_placement": "top",
     "instruction_placement": "label",
-    "modified": 1766352993
+    "modified": 1766353682
 }

@@ -1154,7 +1154,8 @@ jQuery(document).ready(function($) {
             const $itemDiv = $('<div class="basket-item" data-item-id="' + item.id + '"></div>');
 
             const $thumbnail = $('<div class="item-thumbnail"></div>');
-            $thumbnail.append('<img src="' + item.styleImage + '" alt="' + item.styleName + '">');
+            $thumbnail.append('<img src="' + item.styleImage + '" alt="' + item.styleName + '" loading="lazy">');
+            $thumbnail.append('<p class="style-name">' + item.styleName + '</p>');
 
             const $details = $('<div class="item-details"></div>');
             $details.append('<h3>Item ' + (index + 1) + '</h3>');
