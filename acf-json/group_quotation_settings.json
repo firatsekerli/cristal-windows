@@ -260,10 +260,12 @@
                         "Gloss": "Gloss",
                         "Metallic": "Metallic"
                     },
-                    "default_value": "Matt",
-                    "allow_null": 0,
-                    "multiple": 0,
+                    "default_value": [],
+                    "allow_null": 1,
+                    "multiple": 1,
                     "ui": 1,
+                    "ajax": 0,
+                    "placeholder": "Select finish types...",
                     "conditional_logic": [
                         [
                             {
@@ -689,5 +691,5 @@
     "style": "default",
     "label_placement": "top",
     "instruction_placement": "label",
-    "modified": 1766534400
+    "modified": 1766534500
 }

@@ -853,10 +853,23 @@ jQuery(document).ready(function($) {
                 };
 
                 specialColours.forEach(colour => {
-                    const finishType = colour.finish_type || 'Matt';
-                    if (finishTypes[finishType]) {
-                        finishTypes[finishType].push(colour);
+                    let finishTypesArray = [];
+
+                    // Handle both array (multi-select) and string (old single select)
+                    if (Array.isArray(colour.finish_type)) {
+                        finishTypesArray = colour.finish_type.length > 0 ? colour.finish_type : ['Matt'];
+                    } else if (colour.finish_type) {
+                        finishTypesArray = [colour.finish_type];
+                    } else {
+                        finishTypesArray = ['Matt']; // Default
                     }
+
+                    // Add colour to all selected finish types
+                    finishTypesArray.forEach(ft => {
+                        if (finishTypes[ft]) {
+                            finishTypes[ft].push(colour);
+                        }
+                    });
                 });
 
                 // Render colours by finish type (similar to category grouping)
