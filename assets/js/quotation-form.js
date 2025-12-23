@@ -701,9 +701,13 @@ jQuery(document).ready(function($) {
 
             $grid.empty();
 
+            // Filter colours by selected material
+            const selectedMaterial = this.currentItem.material || '';
+            const filteredColours = this.filterColoursByMaterial(selectedMaterial);
+
             // Group by category
             const categories = {};
-            this.colours.forEach(colour => {
+            filteredColours.forEach(colour => {
                 if (!categories[colour.category]) {
                     categories[colour.category] = [];
                 }
@@ -884,8 +888,10 @@ jQuery(document).ready(function($) {
             const $grid = $('#inside-colour-grid');
             $grid.empty();
 
-            // Filter for stock colours only
-            const stockColours = this.colours.filter(c => c.category === 'Aluminium Stock Colours');
+            // Filter colours by selected material first, then by category
+            const selectedMaterial = this.currentItem.material || '';
+            const materialFilteredColours = this.filterColoursByMaterial(selectedMaterial);
+            const stockColours = materialFilteredColours.filter(c => c.category === 'Aluminium Stock Colours');
 
             const $colourItems = $('<div class="colour-items aluminium-stock-items"></div>');
             stockColours.forEach(colour => {
@@ -924,8 +930,10 @@ jQuery(document).ready(function($) {
         renderAluminiumSpecialColours: function() {
             const self = this;
 
-            // Filter for special colours only
-            const specialColours = this.colours.filter(c => c.category === 'Aluminium Special Colours');
+            // Filter colours by selected material first, then by category
+            const selectedMaterial = this.currentItem.material || '';
+            const materialFilteredColours = this.filterColoursByMaterial(selectedMaterial);
+            const specialColours = materialFilteredColours.filter(c => c.category === 'Aluminium Special Colours');
 
             // Render for both inside and outside grids
             ['inside-colour-grid', 'outside-colour-grid'].forEach(gridId => {
