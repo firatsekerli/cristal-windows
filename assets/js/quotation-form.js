@@ -2148,7 +2148,13 @@ jQuery(document).ready(function($) {
                         if (selectedPattern) {
                             const selectedPatternObj = patterns.find(p => p.value === selectedPattern);
                             if (selectedPatternObj && selectedPatternObj.name) {
-                                $('#modal-glazing-type-name').text(typeName + ' - ' + selectedPatternObj.name);
+                                // Extract just the pattern name, in case it contains the full glazing type name
+                                let patternDisplayName = selectedPatternObj.name;
+                                // If the pattern name starts with the type name, extract just the pattern part
+                                if (patternDisplayName.startsWith(typeName)) {
+                                    patternDisplayName = patternDisplayName.substring(typeName.length).replace(/^\s*-\s*/, '').trim();
+                                }
+                                $('#modal-glazing-type-name').text(typeName + ' - ' + patternDisplayName);
                             }
                         }
                     }
