@@ -101,7 +101,14 @@
                     "key": "field_item_category",
                     "label": "Category",
                     "name": "category",
-                    "type": "text"
+                    "type": "select",
+                    "choices": [],
+                    "default_value": false,
+                    "allow_null": 0,
+                    "multiple": 0,
+                    "ui": 1,
+                    "return_format": "value",
+                    "ajax": 0
                 },
                 {
                     "key": "field_item_type",
@@ -387,5 +394,5 @@
     "style": "default",
     "label_placement": "top",
     "instruction_placement": "label",
-    "modified": 1766355454
+    "modified": 1766529071
 }

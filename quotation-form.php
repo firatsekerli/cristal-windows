@@ -86,6 +86,9 @@ class Quotation_Form_Plugin {
         add_filter('acf/load_field/key=field_item_services', array($this, 'populate_service_choices'));
         add_filter('acf/load_field/key=field_centralized_services', array($this, 'populate_service_choices'));
 
+        // Populate basket item dropdowns dynamically from settings
+        add_filter('acf/load_field/key=field_item_category', array($this, 'populate_basket_item_category_choices'));
+
         // Add admin scripts for auto-slug generation
         add_action('acf/input/admin_enqueue_scripts', array($this, 'enqueue_admin_scripts'));
 
@@ -284,6 +287,30 @@ class Quotation_Form_Plugin {
 
                     if ($slug && $name) {
                         $field['choices'][$slug] = $name;
+                    }
+                }
+            }
+        }
+
+        return $field;
+    }
+
+    /**
+     * Populate basket item category dropdown with values from settings
+     */
+    public function populate_basket_item_category_choices($field) {
+        $field['choices'] = array();
+
+        // Get product categories from settings
+        if (function_exists('get_field')) {
+            $categories = get_field('product_categories', 'option');
+            if (!empty($categories) && is_array($categories)) {
+                foreach ($categories as $category) {
+                    $name = isset($category['name']) ? $category['name'] : '';
+
+                    if ($name) {
+                        // Use the name as both key and value for display consistency
+                        $field['choices'][$name] = $name;
                     }
                 }
             }
