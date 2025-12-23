@@ -807,12 +807,27 @@ jQuery(document).ready(function($) {
         },
 
         filterColours: function(gridId, searchTerm) {
-            $('#' + gridId + ' .colour-item').each(function() {
+            const $grid = $('#' + gridId);
+
+            // Filter individual colour items
+            $grid.find('.colour-item').each(function() {
                 const colourName = $(this).find('.colour-swatch').data('colour').toLowerCase();
                 if (colourName.includes(searchTerm)) {
                     $(this).show();
                 } else {
                     $(this).hide();
+                }
+            });
+
+            // Hide/show finish type groups based on whether they have visible items
+            $grid.find('.colour-category').each(function() {
+                const $category = $(this);
+                const visibleItems = $category.find('.colour-item:visible').length;
+
+                if (visibleItems > 0) {
+                    $category.show();
+                } else {
+                    $category.hide();
                 }
             });
         },
