@@ -867,7 +867,21 @@ class Quotation_Form_Plugin {
                 }
             }
 
-            $processed[] = $processed_colour;
+            // For Aluminium Special Colours with multiple finish types, create separate entries
+            if ($processed_colour['category'] === 'Aluminium Special Colours' &&
+                !empty($processed_colour['finish_type']) &&
+                is_array($processed_colour['finish_type'])) {
+
+                // Create one entry for each finish type
+                foreach ($processed_colour['finish_type'] as $finish_type) {
+                    $colour_variant = $processed_colour;
+                    $colour_variant['finish_type'] = $finish_type; // Single value, not array
+                    $processed[] = $colour_variant;
+                }
+            } else {
+                // Normal processing - add as is
+                $processed[] = $processed_colour;
+            }
         }
 
         return $processed;

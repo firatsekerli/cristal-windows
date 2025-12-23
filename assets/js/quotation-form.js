@@ -758,7 +758,7 @@ jQuery(document).ready(function($) {
             });
         },
 
-        selectColour: function(gridId, colourName, isInside, colourCategory, selectedFinishType) {
+        selectColour: function(gridId, colourName, isInside, colourCategory) {
             const prefix = isInside ? 'inside' : 'outside';
 
             // Update hidden field
@@ -771,16 +771,16 @@ jQuery(document).ready(function($) {
             let displayText = colourName;
 
             // Debug logging
-            console.log('Selected colour:', colourName, 'Category:', colourCategory, 'Finish:', selectedFinishType);
+            console.log('Selected colour:', colourName, 'Category:', colourCategory);
             console.log('Colour object:', colour);
             if (colour) {
                 console.log('Category:', colour.category);
                 console.log('Finish type:', colour.finish_type);
             }
 
-            // For aluminium special colours, prepend the specific finish type that was clicked
-            if (colour && colour.category === 'Aluminium Special Colours' && selectedFinishType) {
-                displayText = selectedFinishType + ' ' + colourName;
+            // For aluminium special colours, prepend finish type (now single value from backend)
+            if (colour && colour.category === 'Aluminium Special Colours' && colour.finish_type) {
+                displayText = colour.finish_type + ' ' + colourName;
                 console.log('Display text with finish type:', displayText);
             }
 
@@ -955,8 +955,7 @@ jQuery(document).ready(function($) {
                         $colourItem.on('click', function() {
                             const colourName = String($(this).find('.colour-swatch').data('colour'));
                             const colourCategory = $(this).find('.colour-swatch').data('category');
-                            const selectedFinishType = $(this).find('.colour-swatch').data('finish-type');
-                            self.selectColour(gridId, colourName, isInside, colourCategory, selectedFinishType);
+                            self.selectColour(gridId, colourName, isInside, colourCategory);
                         });
 
                         $colourItems.append($colourItem);
@@ -1858,14 +1857,13 @@ jQuery(document).ready(function($) {
             $colourItem.on('click', function() {
                 const colourName = String($(this).find('.colour-swatch').data('colour'));
                 const colourCategory = $(this).find('.colour-swatch').data('category');
-                const selectedFinishType = $(this).find('.colour-swatch').data('finish-type');
-                self.selectModalColour(gridId, colourName, isInside, colourCategory, selectedFinishType);
+                self.selectModalColour(gridId, colourName, isInside, colourCategory);
             });
 
             $container.append($colourItem);
         },
 
-        selectModalColour: function(gridId, colourName, isInside, colourCategory, selectedFinishType) {
+        selectModalColour: function(gridId, colourName, isInside, colourCategory) {
             const prefix = isInside ? 'inside' : 'outside';
 
             // Update the modalSelectedColors object
@@ -1881,9 +1879,9 @@ jQuery(document).ready(function($) {
                 : this.colours.find(c => c.name === colourName);
             let displayText = colourName;
 
-            // For aluminium special colours, prepend the specific finish type that was clicked
-            if (colour && colour.category === 'Aluminium Special Colours' && selectedFinishType) {
-                displayText = selectedFinishType + ' ' + colourName;
+            // For aluminium special colours, prepend finish type (now single value from backend)
+            if (colour && colour.category === 'Aluminium Special Colours' && colour.finish_type) {
+                displayText = colour.finish_type + ' ' + colourName;
             }
 
             // Update display
