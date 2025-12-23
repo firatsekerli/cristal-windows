@@ -369,8 +369,19 @@ class Quotation_Form_Plugin {
             font-size: 13px;
         }
         /* Move publish box lower on settings pages to give more room for columns */
-        .acf-options-page #postbox-container-1 {
-            margin-top: 400px !important;
+        /* Only apply to quotation form settings page */
+        body.toplevel_page_quotation-form-settings #poststuff #post-body.columns-2 {
+            margin-right: 0 !important;
+            display: flex;
+            flex-direction: column-reverse;
+        }
+
+        body.toplevel_page_quotation-form-settings #post-body.columns-2 #postbox-container-1 {
+            float: none !important;
+            margin-right: 0 !important;
+            width: 280px;
+            margin-left: auto;
+            min-height: unset !important;
         }
         </style>
         <script type="text/javascript">
