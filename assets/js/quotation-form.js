@@ -753,10 +753,19 @@ jQuery(document).ready(function($) {
             const colour = this.colours.find(c => c.name === colourName);
             let displayText = colourName;
 
+            // Debug logging
+            console.log('Selected colour:', colourName);
+            console.log('Colour object:', colour);
+            if (colour) {
+                console.log('Category:', colour.category);
+                console.log('Finish type:', colour.finish_type);
+            }
+
             // For aluminium special colours, prepend finish type
             if (colour && colour.category === 'Aluminium Special Colours' && colour.finish_type) {
                 const finishTypes = Array.isArray(colour.finish_type) ? colour.finish_type : [colour.finish_type];
                 displayText = finishTypes.join(', ') + ' ' + colourName;
+                console.log('Display text with finish type:', displayText);
             }
 
             // Update display
