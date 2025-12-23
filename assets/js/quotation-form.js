@@ -11,9 +11,10 @@ jQuery(document).ready(function($) {
         uploadedFiles: [], // Store uploaded files as base64
 
         // Available colours - Use dynamic colours from config if available, otherwise fallback to hardcoded
-        colours: (typeof quotationFormAjax !== 'undefined' && quotationFormAjax.config && quotationFormAjax.config.colours)
-            ? quotationFormAjax.config.colours
-            : [
+        colours: (function() {
+            const colours = (typeof quotationFormAjax !== 'undefined' && quotationFormAjax.config && quotationFormAjax.config.colours)
+                ? quotationFormAjax.config.colours
+                : [
                 { name: 'White', category: 'Base', hex: '#FFFFFF' },
                 { name: 'Cream', category: 'Colour', hex: '#FFFDD0' },
                 { name: 'Agate Grey', category: 'Colour', hex: '#B5B5B5' },
@@ -30,7 +31,21 @@ jQuery(document).ready(function($) {
                 { name: 'Irish Oak', category: 'Colour', hex: '#C19A6B' },
                 { name: 'Light Oak', category: 'Colour', hex: '#D4A76A' },
                 { name: 'Rosewood', category: 'Colour', hex: '#65000B' },
-            ],
+            ];
+
+            // Debug logging
+            console.log('=== COLOURS LOADED ===');
+            console.log('Total colours:', colours.length);
+            const colour1007 = colours.find(c => c.name === '1007');
+            console.log('Colour 1007:', colour1007);
+            if (colour1007) {
+                console.log('1007 category:', colour1007.category);
+                console.log('1007 finish_type:', colour1007.finish_type);
+            }
+            console.log('======================');
+
+            return colours;
+        })(),
 
         // Available glazing features - Use dynamic features from config if available
         glazingFeatures: (typeof quotationFormAjax !== 'undefined' && quotationFormAjax.config && quotationFormAjax.config.glazingFeatures)
