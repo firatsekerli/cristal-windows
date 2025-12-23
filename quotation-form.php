@@ -369,8 +369,8 @@ class Quotation_Form_Plugin {
             font-size: 13px;
         }
         /* Move publish box lower on settings pages to give more room for columns */
-        .acf-options-page #publishing-action {
-            margin-top: 400px;
+        .acf-options-page #postbox-container-1 {
+            margin-top: 400px !important;
         }
         </style>
         <script type="text/javascript">
