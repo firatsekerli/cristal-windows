@@ -346,11 +346,27 @@ if (!$use_acf) {
                         </select>
                     </div>
 
+                    <!-- Aluminium Colour Type Selection (only shown when aluminium material selected) -->
+                    <div class="form-group aluminium-colour-type-selection" style="display: none;">
+                        <label>Select Colour Type</label>
+                        <div class="aluminium-type-grid">
+                            <div class="aluminium-type-card" data-aluminium-type="stock">
+                                <h4>Aluminium Stock Colours</h4>
+                                <p>Choose from 4 standard colours</p>
+                            </div>
+                            <div class="aluminium-type-card" data-aluminium-type="special">
+                                <h4>Aluminium Special Colours</h4>
+                                <p>Choose custom external and internal colours</p>
+                            </div>
+                        </div>
+                        <input type="hidden" id="aluminium-colour-type" name="aluminium_colour_type">
+                    </div>
+
                     <div class="form-group">
                         <label>Section Colour</label>
 
                         <div class="colour-selection">
-                            <h4>Inside Colour</h4>
+                            <h4 class="colour-section-label inside-colour-label">Inside Colour</h4>
                             <div class="colour-picker-container">
                                 <input type="text" id="inside-colour-search" placeholder="Search colours...">
                                 <div class="colour-grid" id="inside-colour-grid">
@@ -362,7 +378,7 @@ if (!$use_acf) {
                         </div>
 
                         <div class="colour-selection">
-                            <h4>Outside Colour</h4>
+                            <h4 class="colour-section-label outside-colour-label">Outside Colour</h4>
                             <div class="colour-picker-container">
                                 <input type="text" id="outside-colour-search" placeholder="Search colours...">
                                 <div class="colour-grid" id="outside-colour-grid">

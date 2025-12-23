@@ -244,7 +244,9 @@
                     "choices": {
                         "Base": "Base",
                         "Colour": "Colour",
-                        "Woodgrain": "Woodgrain"
+                        "Woodgrain": "Woodgrain",
+                        "Aluminium Stock Colours": "Aluminium Stock Colours",
+                        "Aluminium Special Colours": "Aluminium Special Colours"
                     },
                     "default_value": "Colour"
                 },
@@ -650,5 +652,5 @@
     "style": "default",
     "label_placement": "top",
     "instruction_placement": "label",
-    "modified": 1766483396
+    "modified": 1766485265
 }
