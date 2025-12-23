@@ -552,6 +552,53 @@
     color: var(--primary-color);
 }
 
+/* Aluminium Colour Type Selection */
+.aluminium-colour-type-selection {
+    margin-bottom: 30px;
+}
+
+.aluminium-type-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.aluminium-type-card {
+    padding: 20px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    background: white;
+}
+
+.aluminium-type-card:hover {
+    border-color: var(--primary-color);
+    background: rgba(0, 102, 204, 0.05);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.aluminium-type-card.selected {
+    border-color: var(--primary-color);
+    background: rgba(0, 102, 204, 0.1);
+    box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.2);
+}
+
+.aluminium-type-card h4 {
+    margin: 0 0 10px 0;
+    font-size: 16px;
+    color: var(--text-dark);
+}
+
+.aluminium-type-card p {
+    margin: 0;
+    font-size: 13px;
+    color: #666;
+}
+
 /* Hardware Colour Selection */
 .hardware-colour-selection {
     padding: 15px;

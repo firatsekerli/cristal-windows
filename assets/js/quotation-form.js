@@ -341,6 +341,20 @@ jQuery(document).ready(function($) {
                 self.navigateToStep(2);
             });
 
+            // Aluminium colour type selection (Stock vs Special)
+            $('.aluminium-type-card').on('click', function() {
+                const aluminiumType = $(this).data('aluminium-type');
+                self.currentItem.aluminiumColourType = aluminiumType;
+                $('#aluminium-colour-type').val(aluminiumType);
+
+                // Visual selection
+                $('.aluminium-type-card').removeClass('selected');
+                $(this).addClass('selected');
+
+                // Handle Stock vs Special
+                self.handleAluminiumColourType(aluminiumType);
+            });
+
             // Style selection (Step 2)
             $('.card-grid.style-grid .image-card').on('click', function() {
                 const style = $(this).data('style');
@@ -552,6 +566,11 @@ jQuery(document).ready(function($) {
                 if (step === 2) {
                     this.filterItemsForProduct($targetStep.find('.style-grid'));
                 }
+
+                // Handle aluminium material in configuration step
+                if (step === 3) {
+                    this.handleAluminiumMaterialConfiguration();
+                }
             }
 
             this.updateProgressIndicator();
@@ -749,6 +768,131 @@ jQuery(document).ready(function($) {
                     $(this).hide();
                 }
             });
+        },
+
+        handleAluminiumColourType: function(aluminiumType) {
+            if (aluminiumType === 'stock') {
+                // Stock colours: Hide Inside/Outside sections, show only stock colours
+                $('.colour-selection').hide();
+                $('.inside-colour-label').text('Select Colour');
+                $('.outside-colour-label').text('Outside Colour');
+
+                // Re-render grid with only stock colours
+                this.renderAluminiumStockColours();
+            } else if (aluminiumType === 'special') {
+                // Special colours: Show Inside/Outside sections, change labels
+                $('.colour-selection').show();
+                $('.inside-colour-label').text('External');
+                $('.outside-colour-label').text('Internal');
+
+                // Re-render grids with only special colours
+                this.renderAluminiumSpecialColours();
+            }
+        },
+
+        renderAluminiumStockColours: function() {
+            const self = this;
+            const $grid = $('#inside-colour-grid');
+            $grid.empty();
+
+            // Filter for stock colours only
+            const stockColours = this.colours.filter(c => c.category === 'Aluminium Stock Colours');
+
+            const $colourItems = $('<div class="colour-items aluminium-stock-items"></div>');
+            stockColours.forEach(colour => {
+                const $colourSwatch = $('<div class="colour-swatch" data-colour="' + colour.name + '" data-hex="' + colour.hex + '"></div>');
+
+                if (colour.colour_image && colour.colour_image.url) {
+                    const $img = $('<img src="' + colour.colour_image.url + '" alt="' + colour.name + '" />');
+                    $colourSwatch.addClass('has-image').append($img);
+                } else {
+                    $colourSwatch.css('background-color', colour.hex);
+                }
+
+                $colourSwatch.attr('title', colour.name);
+                const $colourLabel = $('<span class="colour-label">' + colour.name + '</span>');
+                const $colourItem = $('<div class="colour-item"></div>');
+                $colourItem.append($colourSwatch).append($colourLabel);
+
+                $colourItem.on('click', function() {
+                    const colourName = $(this).find('.colour-swatch').data('colour');
+                    // Apply to both inside and outside
+                    self.selectColour('inside-colour-grid', colourName, true);
+                    self.selectColour('outside-colour-grid', colourName, false);
+                    $('#inside-colour').val(colourName);
+                    $('#outside-colour').val(colourName);
+                    $('#inside-colour-name').text(colourName);
+                    $('#outside-colour-name').text(colourName);
+                });
+
+                $colourItems.append($colourItem);
+            });
+
+            $grid.append($colourItems);
+        },
+
+        renderAluminiumSpecialColours: function() {
+            const self = this;
+
+            // Filter for special colours only
+            const specialColours = this.colours.filter(c => c.category === 'Aluminium Special Colours');
+
+            // Render for both inside and outside grids
+            ['inside-colour-grid', 'outside-colour-grid'].forEach(gridId => {
+                const $grid = $('#' + gridId);
+                const isInside = gridId.includes('inside');
+                $grid.empty();
+
+                const $colourItems = $('<div class="colour-items aluminium-special-items"></div>');
+                specialColours.forEach(colour => {
+                    const $colourSwatch = $('<div class="colour-swatch" data-colour="' + colour.name + '" data-hex="' + colour.hex + '"></div>');
+
+                    if (colour.colour_image && colour.colour_image.url) {
+                        const $img = $('<img src="' + colour.colour_image.url + '" alt="' + colour.name + '" />');
+                        $colourSwatch.addClass('has-image').append($img);
+                    } else {
+                        $colourSwatch.css('background-color', colour.hex);
+                    }
+
+                    $colourSwatch.attr('title', colour.name);
+                    const $colourLabel = $('<span class="colour-label">' + colour.name + '</span>');
+                    const $colourItem = $('<div class="colour-item"></div>');
+                    $colourItem.append($colourSwatch).append($colourLabel);
+
+                    $colourItem.on('click', function() {
+                        const colourName = $(this).find('.colour-swatch').data('colour');
+                        self.selectColour(gridId, colourName, isInside);
+                    });
+
+                    $colourItems.append($colourItem);
+                });
+
+                $grid.append($colourItems);
+            });
+        },
+
+        handleAluminiumMaterialConfiguration: function() {
+            const material = this.currentItem.material || '';
+
+            // Check if aluminium material is selected
+            if (material.toLowerCase().includes('aluminium') || material.toLowerCase().includes('aluminum')) {
+                // Show aluminium colour type selection
+                $('.aluminium-colour-type-selection').show();
+
+                // Hide regular colour selection until type is chosen
+                $('.form-group:has(.colour-selection)').hide();
+            } else {
+                // Hide aluminium colour type selection
+                $('.aluminium-colour-type-selection').hide();
+
+                // Show regular colour selection with normal labels
+                $('.form-group:has(.colour-selection)').show();
+                $('.inside-colour-label').text('Inside Colour');
+                $('.outside-colour-label').text('Outside Colour');
+
+                // Render normal colours
+                this.initializeColourPickers();
+            }
         },
 
         initializeHardwareColourPicker: function() {
