@@ -749,8 +749,18 @@ jQuery(document).ready(function($) {
             // Update hidden field
             $('#' + prefix + '-colour').val(colourName);
 
+            // Find the colour object to get finish type
+            const colour = this.colours.find(c => c.name === colourName);
+            let displayText = colourName;
+
+            // For aluminium special colours, prepend finish type
+            if (colour && colour.category === 'Aluminium Special Colours' && colour.finish_type) {
+                const finishTypes = Array.isArray(colour.finish_type) ? colour.finish_type : [colour.finish_type];
+                displayText = finishTypes.join(', ') + ' ' + colourName;
+            }
+
             // Update display
-            $('#' + prefix + '-colour-name').text(colourName);
+            $('#' + prefix + '-colour-name').text(displayText);
 
             // Update visual selection
             $('#' + gridId + ' .colour-item').removeClass('selected');
@@ -1830,8 +1840,18 @@ jQuery(document).ready(function($) {
                 this.modalSelectedColors.outside = colourName;
             }
 
+            // Find the colour object to get finish type
+            const colour = this.colours.find(c => c.name === colourName);
+            let displayText = colourName;
+
+            // For aluminium special colours, prepend finish type
+            if (colour && colour.category === 'Aluminium Special Colours' && colour.finish_type) {
+                const finishTypes = Array.isArray(colour.finish_type) ? colour.finish_type : [colour.finish_type];
+                displayText = finishTypes.join(', ') + ' ' + colourName;
+            }
+
             // Update display
-            $('#modal-' + prefix + '-colour-name').text(colourName);
+            $('#modal-' + prefix + '-colour-name').text(displayText);
 
             // Update visual selection
             $('#' + gridId + ' .colour-item').removeClass('selected');
