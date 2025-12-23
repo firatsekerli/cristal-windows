@@ -845,31 +845,50 @@ jQuery(document).ready(function($) {
                 const isInside = gridId.includes('inside');
                 $grid.empty();
 
-                const $colourItems = $('<div class="colour-items aluminium-special-items"></div>');
+                // Group colours by finish type
+                const finishTypes = {
+                    'Matt': [],
+                    'Gloss': [],
+                    'Metallic': []
+                };
+
                 specialColours.forEach(colour => {
-                    const $colourSwatch = $('<div class="colour-swatch" data-colour="' + colour.name + '" data-hex="' + colour.hex + '"></div>');
-
-                    if (colour.colour_image && colour.colour_image.url) {
-                        const $img = $('<img src="' + colour.colour_image.url + '" alt="' + colour.name + '" />');
-                        $colourSwatch.addClass('has-image').append($img);
-                    } else {
-                        $colourSwatch.css('background-color', colour.hex);
+                    const finishType = colour.finish_type || 'Matt';
+                    if (finishTypes[finishType]) {
+                        finishTypes[finishType].push(colour);
                     }
-
-                    $colourSwatch.attr('title', colour.name);
-                    const $colourLabel = $('<span class="colour-label">' + colour.name + '</span>');
-                    const $colourItem = $('<div class="colour-item"></div>');
-                    $colourItem.append($colourSwatch).append($colourLabel);
-
-                    $colourItem.on('click', function() {
-                        const colourName = $(this).find('.colour-swatch').data('colour');
-                        self.selectColour(gridId, colourName, isInside);
-                    });
-
-                    $colourItems.append($colourItem);
                 });
 
-                $grid.append($colourItems);
+                // Render colours by finish type (similar to category grouping)
+                Object.keys(finishTypes).forEach(finishType => {
+                    if (finishTypes[finishType].length === 0) return; // Skip empty groups
+
+                    const $finishGroup = $('<div class="colour-category"></div>');
+                    $finishGroup.append('<h5>' + finishType.toUpperCase() + '</h5>');
+
+                    const $colourItems = $('<div class="colour-items"></div>');
+                    finishTypes[finishType].forEach(colour => {
+                        const $colourSwatch = $('<div class="colour-swatch" data-colour="' + colour.name + '" data-hex="' + colour.hex + '"></div>');
+
+                        // Use hex color only (no image for aluminium special colours)
+                        $colourSwatch.css('background-color', colour.hex);
+                        $colourSwatch.attr('title', colour.name);
+
+                        const $colourLabel = $('<span class="colour-label">' + colour.name + '</span>');
+                        const $colourItem = $('<div class="colour-item"></div>');
+                        $colourItem.append($colourSwatch).append($colourLabel);
+
+                        $colourItem.on('click', function() {
+                            const colourName = $(this).find('.colour-swatch').data('colour');
+                            self.selectColour(gridId, colourName, isInside);
+                        });
+
+                        $colourItems.append($colourItem);
+                    });
+
+                    $finishGroup.append($colourItems);
+                    $grid.append($finishGroup);
+                });
             });
         },
 

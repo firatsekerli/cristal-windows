@@ -251,6 +251,30 @@
                     "default_value": "Colour"
                 },
                 {
+                    "key": "field_colour_finish_type",
+                    "label": "Finish Type",
+                    "name": "finish_type",
+                    "type": "select",
+                    "choices": {
+                        "Matt": "Matt",
+                        "Gloss": "Gloss",
+                        "Metallic": "Metallic"
+                    },
+                    "default_value": "Matt",
+                    "allow_null": 0,
+                    "multiple": 0,
+                    "ui": 1,
+                    "conditional_logic": [
+                        [
+                            {
+                                "field": "field_colour_category",
+                                "operator": "==",
+                                "value": "Aluminium Special Colours"
+                            }
+                        ]
+                    ]
+                },
+                {
                     "key": "field_colour_hex",
                     "label": "Hex Code",
                     "name": "hex",
@@ -265,7 +289,20 @@
                     "instructions": "Upload an image for this colour (optional, recommended for Woodgrain)",
                     "return_format": "array",
                     "preview_size": "thumbnail",
-                    "conditional_logic": 0
+                    "conditional_logic": [
+                        [
+                            {
+                                "field": "field_colour_category",
+                                "operator": "!=",
+                                "value": "Aluminium Stock Colours"
+                            },
+                            {
+                                "field": "field_colour_category",
+                                "operator": "!=",
+                                "value": "Aluminium Special Colours"
+                            }
+                        ]
+                    ]
                 },
                 {
                     "key": "field_colour_available_materials",
@@ -652,5 +689,5 @@
     "style": "default",
     "label_placement": "top",
     "instruction_placement": "label",
-    "modified": 1766485265
+    "modified": 1735000000
 }
