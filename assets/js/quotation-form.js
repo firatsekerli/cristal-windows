@@ -862,6 +862,10 @@ jQuery(document).ready(function($) {
             this.currentItem.insideColour = '';
             this.currentItem.outsideColour = '';
 
+            // Clear search inputs
+            $('#inside-colour-search').val('');
+            $('#outside-colour-search').val('');
+
             if (aluminiumType === 'stock') {
                 // Stock colours: Show form group and first colour section
                 $('.form-group:has(.colour-selection)').show();
