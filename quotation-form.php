@@ -80,6 +80,7 @@ class Quotation_Form_Plugin {
         add_filter('acf/load_field/key=field_style_types', array($this, 'populate_type_choices'));
         add_filter('acf/load_field/key=field_pattern_available_glazing_types', array($this, 'populate_glazing_type_choices'));
         add_filter('acf/load_field/key=field_brand_available_types', array($this, 'populate_type_choices'));
+        add_filter('acf/load_field/key=field_colour_available_materials', array($this, 'populate_material_choices'));
         add_filter('acf/load_field/key=field_item_brand', array($this, 'populate_brand_choices'));
         add_filter('acf/load_field/key=field_centralized_brand', array($this, 'populate_brand_choices'));
         add_filter('acf/load_field/key=field_item_services', array($this, 'populate_service_choices'));
@@ -211,6 +212,30 @@ class Quotation_Form_Plugin {
 
                     if ($value && $label) {
                         $field['choices'][$value] = $label;
+                    }
+                }
+            }
+        }
+
+        return $field;
+    }
+
+    /**
+     * Populate material choices for colour availability
+     */
+    public function populate_material_choices($field) {
+        $field['choices'] = array();
+
+        // Get all materials from settings
+        if (function_exists('get_field')) {
+            $materials = get_field('materials', 'option');
+            if (!empty($materials) && is_array($materials)) {
+                foreach ($materials as $material) {
+                    $slug = isset($material['slug']) ? $material['slug'] : '';
+                    $name = isset($material['name']) ? $material['name'] : '';
+
+                    if ($slug && $name) {
+                        $field['choices'][$slug] = $name;
                     }
                 }
             }

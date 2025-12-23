@@ -264,6 +264,20 @@
                     "return_format": "array",
                     "preview_size": "thumbnail",
                     "conditional_logic": 0
+                },
+                {
+                    "key": "field_colour_available_materials",
+                    "label": "Available for Materials",
+                    "name": "available_materials",
+                    "type": "select",
+                    "instructions": "Leave empty for all materials",
+                    "choices": {},
+                    "default_value": [],
+                    "allow_null": 1,
+                    "multiple": 1,
+                    "ui": 1,
+                    "ajax": 0,
+                    "placeholder": "Select materials..."
                 }
             ]
         },
@@ -636,5 +650,5 @@
     "style": "default",
     "label_placement": "top",
     "instruction_placement": "label",
-    "modified": 1766352993
+    "modified": 1766483396
 }

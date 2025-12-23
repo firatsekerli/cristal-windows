@@ -243,7 +243,7 @@
 }
 
 .material-grid {
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(max(200px, calc((100% - 40px) / 3)), 1fr));
 }
 
 .style-grid {
