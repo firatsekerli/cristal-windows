@@ -701,8 +701,8 @@ jQuery(document).ready(function($) {
 
             $grid.empty();
 
-            // Filter colours by selected material
-            const selectedMaterial = this.currentItem.material || '';
+            // Filter colours by selected material (use materialName for comparison)
+            const selectedMaterial = this.currentItem.materialName || '';
             const filteredColours = this.filterColoursByMaterial(selectedMaterial);
 
             // Group by category
@@ -888,8 +888,8 @@ jQuery(document).ready(function($) {
             const $grid = $('#inside-colour-grid');
             $grid.empty();
 
-            // Filter colours by selected material first, then by category
-            const selectedMaterial = this.currentItem.material || '';
+            // Filter colours by selected material first, then by category (use materialName for comparison)
+            const selectedMaterial = this.currentItem.materialName || '';
             const materialFilteredColours = this.filterColoursByMaterial(selectedMaterial);
             const stockColours = materialFilteredColours.filter(c => c.category === 'Aluminium Stock Colours');
 
@@ -930,8 +930,8 @@ jQuery(document).ready(function($) {
         renderAluminiumSpecialColours: function() {
             const self = this;
 
-            // Filter colours by selected material first, then by category
-            const selectedMaterial = this.currentItem.material || '';
+            // Filter colours by selected material first, then by category (use materialName for comparison)
+            const selectedMaterial = this.currentItem.materialName || '';
             const materialFilteredColours = this.filterColoursByMaterial(selectedMaterial);
             const specialColours = materialFilteredColours.filter(c => c.category === 'Aluminium Special Colours');
 
