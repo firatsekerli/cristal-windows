@@ -772,15 +772,17 @@ jQuery(document).ready(function($) {
 
         handleAluminiumColourType: function(aluminiumType) {
             if (aluminiumType === 'stock') {
-                // Stock colours: Hide Inside/Outside sections, show only stock colours
-                $('.colour-selection').hide();
+                // Stock colours: Show form group and first colour section
+                $('.form-group:has(.colour-selection)').show();
+                $('.colour-selection').first().show(); // Show first (inside)
+                $('.colour-selection').last().hide(); // Hide second (outside)
                 $('.inside-colour-label').text('Select Colour');
-                $('.outside-colour-label').text('Outside Colour');
 
                 // Re-render grid with only stock colours
                 this.renderAluminiumStockColours();
             } else if (aluminiumType === 'special') {
-                // Special colours: Show Inside/Outside sections, change labels
+                // Special colours: Show both Inside/Outside sections, change labels
+                $('.form-group:has(.colour-selection)').show();
                 $('.colour-selection').show();
                 $('.inside-colour-label').text('External');
                 $('.outside-colour-label').text('Internal');
@@ -879,8 +881,16 @@ jQuery(document).ready(function($) {
                 // Show aluminium colour type selection
                 $('.aluminium-colour-type-selection').show();
 
-                // Hide regular colour selection until type is chosen
-                $('.form-group:has(.colour-selection)').hide();
+                // Default to Stock colours
+                this.currentItem.aluminiumColourType = 'stock';
+                $('#aluminium-colour-type').val('stock');
+
+                // Select stock card by default
+                $('.aluminium-type-card').removeClass('selected');
+                $('.aluminium-type-card[data-aluminium-type="stock"]').addClass('selected');
+
+                // Automatically show stock colours
+                this.handleAluminiumColourType('stock');
             } else {
                 // Hide aluminium colour type selection
                 $('.aluminium-colour-type-selection').hide();
