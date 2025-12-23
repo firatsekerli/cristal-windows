@@ -770,6 +770,20 @@ jQuery(document).ready(function($) {
             });
         },
 
+        filterColoursByMaterial: function(material) {
+            const materialSlug = (material || '').toLowerCase();
+
+            return this.colours.filter(colour => {
+                // If colour has no available_materials specified, it's available for all
+                if (!colour.available_materials || colour.available_materials.length === 0) {
+                    return true;
+                }
+
+                // Check if this material is in the colour's available_materials
+                return colour.available_materials.some(m => m.toLowerCase() === materialSlug);
+            });
+        },
+
         handleAluminiumColourType: function(aluminiumType) {
             // Reset colour selections when switching between Stock/Special
             $('#inside-colour').val('');
@@ -1476,26 +1490,89 @@ jQuery(document).ready(function($) {
                     outside: item.outsideColour
                 };
 
+                // Store item material for filtering
+                this.modalItemMaterial = item.material || '';
+
+                // Check if material is aluminium
+                const isAluminium = this.modalItemMaterial.toLowerCase().includes('aluminium') ||
+                                   this.modalItemMaterial.toLowerCase().includes('aluminum');
+
+                // Add aluminium type selection if aluminium material
+                if (isAluminium) {
+                    // Get or default aluminium type
+                    this.modalAluminiumType = item.aluminiumColourType || 'stock';
+
+                    $content.append('<div class="edit-field-group">' +
+                        '<label>Select Colour Type</label>' +
+                        '<div class="aluminium-type-grid">' +
+                            '<div class="aluminium-type-card' + (this.modalAluminiumType === 'stock' ? ' selected' : '') + '" data-aluminium-type="stock">' +
+                                '<h4>Aluminium Stock Colours</h4>' +
+                                '<p>Choose from 4 standard colours</p>' +
+                            '</div>' +
+                            '<div class="aluminium-type-card' + (this.modalAluminiumType === 'special' ? ' selected' : '') + '" data-aluminium-type="special">' +
+                                '<h4>Aluminium Special Colours</h4>' +
+                                '<p>Choose custom external and internal colours</p>' +
+                            '</div>' +
+                        '</div>' +
+                        '</div>');
+                }
+
                 // Create inside colour picker
+                const insideLabel = isAluminium && this.modalAluminiumType === 'stock' ? 'Select Colour' :
+                                   isAluminium && this.modalAluminiumType === 'special' ? 'External' : 'Inside Colour';
+
                 $content.append('<div class="edit-field-group modal-colour-picker">' +
-                    '<label>Inside Colour:</label>' +
+                    '<label id="modal-inside-colour-label">' + insideLabel + ':</label>' +
                     '<div class="colour-selection-display">Selected: <strong id="modal-inside-colour-name">' + item.insideColour + '</strong></div>' +
                     '<input type="text" id="modal-inside-colour-search" class="modal-colour-search" placeholder="Search colours...">' +
                     '<div id="modal-inside-colour-grid" class="colour-grid modal-colour-grid"></div>' +
                     '</div>');
 
-                // Create outside colour picker
-                $content.append('<div class="edit-field-group modal-colour-picker">' +
-                    '<label>Outside Colour:</label>' +
+                // Create outside colour picker (hide for aluminium stock)
+                const outsideLabel = isAluminium && this.modalAluminiumType === 'special' ? 'Internal' : 'Outside Colour';
+                const outsideDisplay = isAluminium && this.modalAluminiumType === 'stock' ? 'style="display:none;"' : '';
+
+                $content.append('<div class="edit-field-group modal-colour-picker" id="modal-outside-colour-picker" ' + outsideDisplay + '>' +
+                    '<label id="modal-outside-colour-label">' + outsideLabel + ':</label>' +
                     '<div class="colour-selection-display">Selected: <strong id="modal-outside-colour-name">' + item.outsideColour + '</strong></div>' +
                     '<input type="text" id="modal-outside-colour-search" class="modal-colour-search" placeholder="Search colours...">' +
                     '<div id="modal-outside-colour-grid" class="colour-grid modal-colour-grid"></div>' +
                     '</div>');
 
+                // Handle aluminium type selection
+                if (isAluminium) {
+                    $('.aluminium-type-card').on('click', function() {
+                        const alType = $(this).data('aluminium-type');
+                        self.modalAluminiumType = alType;
+
+                        $('.aluminium-type-card').removeClass('selected');
+                        $(this).addClass('selected');
+
+                        // Reset selections
+                        self.modalSelectedColors = { inside: '', outside: '' };
+                        $('#modal-inside-colour-name').text('None');
+                        $('#modal-outside-colour-name').text('None');
+
+                        // Update labels and visibility
+                        if (alType === 'stock') {
+                            $('#modal-inside-colour-label').text('Select Colour');
+                            $('#modal-outside-colour-picker').hide();
+                        } else {
+                            $('#modal-inside-colour-label').text('External');
+                            $('#modal-outside-colour-label').text('Internal');
+                            $('#modal-outside-colour-picker').show();
+                        }
+
+                        // Re-render grids
+                        self.renderModalColourGrid('modal-inside-colour-grid', '', self.modalItemMaterial, alType);
+                        self.renderModalColourGrid('modal-outside-colour-grid', '', self.modalItemMaterial, alType);
+                    });
+                }
+
                 // Render colour grids after a brief delay to ensure DOM is ready
                 setTimeout(function() {
-                    self.renderModalColourGrid('modal-inside-colour-grid', item.insideColour);
-                    self.renderModalColourGrid('modal-outside-colour-grid', item.outsideColour);
+                    self.renderModalColourGrid('modal-inside-colour-grid', item.insideColour, self.modalItemMaterial, self.modalAluminiumType);
+                    self.renderModalColourGrid('modal-outside-colour-grid', item.outsideColour, self.modalItemMaterial, self.modalAluminiumType);
                 }, 10);
 
                 // Add search functionality
@@ -1611,64 +1688,136 @@ jQuery(document).ready(function($) {
             });
         },
 
-        renderModalColourGrid: function(gridId, selectedColour) {
+        renderModalColourGrid: function(gridId, selectedColour, material, aluminiumType) {
             const self = this;
             const $grid = $('#' + gridId);
             const isInside = gridId.includes('inside');
 
             $grid.empty();
 
-            // Group by category
-            const categories = {};
-            this.colours.forEach(colour => {
-                if (!categories[colour.category]) {
-                    categories[colour.category] = [];
+            // Filter colours by material
+            let filteredColours = material ? this.filterColoursByMaterial(material) : this.colours;
+
+            // Check if aluminium material
+            const isAluminium = material && (material.toLowerCase().includes('aluminium') || material.toLowerCase().includes('aluminum'));
+
+            // For aluminium, filter by colour type (stock/special)
+            if (isAluminium && aluminiumType) {
+                if (aluminiumType === 'stock') {
+                    filteredColours = filteredColours.filter(c => c.category === 'Aluminium Stock Colours');
+                } else if (aluminiumType === 'special') {
+                    filteredColours = filteredColours.filter(c => c.category === 'Aluminium Special Colours');
                 }
-                categories[colour.category].push(colour);
-            });
+            } else if (isAluminium) {
+                // Default to stock if no type specified
+                filteredColours = filteredColours.filter(c => c.category === 'Aluminium Stock Colours');
+            } else {
+                // For non-aluminium, exclude aluminium colours
+                filteredColours = filteredColours.filter(c =>
+                    c.category !== 'Aluminium Stock Colours' &&
+                    c.category !== 'Aluminium Special Colours'
+                );
+            }
 
-            // Render colours by category
-            Object.keys(categories).forEach(category => {
-                const $categoryGroup = $('<div class="colour-category"></div>');
-                $categoryGroup.append('<h5>' + category + '</h5>');
+            // For aluminium special colours, group by finish type
+            if (isAluminium && aluminiumType === 'special') {
+                const finishTypes = {
+                    'Matt': [],
+                    'Gloss': [],
+                    'Metallic': []
+                };
 
-                const $colourItems = $('<div class="colour-items"></div>');
-                categories[category].forEach(colour => {
-                    const $colourSwatch = $('<div class="colour-swatch" data-colour="' + colour.name + '" data-hex="' + colour.hex + '"></div>');
+                filteredColours.forEach(colour => {
+                    let finishTypesArray = [];
 
-                    // Check if colour has an image
-                    if (colour.colour_image && colour.colour_image.url) {
-                        // Use image instead of hex color
-                        const $img = $('<img src="' + colour.colour_image.url + '" alt="' + colour.name + '" />');
-                        $colourSwatch.addClass('has-image').append($img);
+                    if (Array.isArray(colour.finish_type)) {
+                        finishTypesArray = colour.finish_type.length > 0 ? colour.finish_type : ['Matt'];
+                    } else if (colour.finish_type) {
+                        finishTypesArray = [colour.finish_type];
                     } else {
-                        // Fall back to hex color
-                        $colourSwatch.css('background-color', colour.hex);
+                        finishTypesArray = ['Matt'];
                     }
 
-                    $colourSwatch.attr('title', colour.name);
-
-                    const $colourLabel = $('<span class="colour-label">' + colour.name + '</span>');
-
-                    const $colourItem = $('<div class="colour-item"></div>');
-                    $colourItem.append($colourSwatch).append($colourLabel);
-
-                    // Mark selected colour
-                    if (colour.name === selectedColour) {
-                        $colourItem.addClass('selected');
-                    }
-
-                    $colourItem.on('click', function() {
-                        const colourName = $(this).find('.colour-swatch').data('colour');
-                        self.selectModalColour(gridId, colourName, isInside);
+                    finishTypesArray.forEach(ft => {
+                        if (finishTypes[ft]) {
+                            finishTypes[ft].push(colour);
+                        }
                     });
-
-                    $colourItems.append($colourItem);
                 });
 
-                $categoryGroup.append($colourItems);
-                $grid.append($categoryGroup);
+                // Render by finish type
+                Object.keys(finishTypes).forEach(finishType => {
+                    if (finishTypes[finishType].length === 0) return;
+
+                    const $finishGroup = $('<div class="colour-category"></div>');
+                    $finishGroup.append('<h5>' + finishType.toUpperCase() + '</h5>');
+
+                    const $colourItems = $('<div class="colour-items"></div>');
+                    finishTypes[finishType].forEach(colour => {
+                        this.renderModalColourItem($colourItems, colour, selectedColour, gridId, isInside);
+                    });
+
+                    $finishGroup.append($colourItems);
+                    $grid.append($finishGroup);
+                });
+            } else {
+                // Group by category for regular colours
+                const categories = {};
+                filteredColours.forEach(colour => {
+                    if (!categories[colour.category]) {
+                        categories[colour.category] = [];
+                    }
+                    categories[colour.category].push(colour);
+                });
+
+                // Render colours by category
+                Object.keys(categories).forEach(category => {
+                    const $categoryGroup = $('<div class="colour-category"></div>');
+                    $categoryGroup.append('<h5>' + category + '</h5>');
+
+                    const $colourItems = $('<div class="colour-items"></div>');
+                    categories[category].forEach(colour => {
+                        this.renderModalColourItem($colourItems, colour, selectedColour, gridId, isInside);
+                    });
+
+                    $categoryGroup.append($colourItems);
+                    $grid.append($categoryGroup);
+                });
+            }
+        },
+
+        renderModalColourItem: function($container, colour, selectedColour, gridId, isInside) {
+            const self = this;
+            const $colourSwatch = $('<div class="colour-swatch" data-colour="' + colour.name + '" data-hex="' + colour.hex + '"></div>');
+
+            // Check if colour has an image
+            if (colour.colour_image && colour.colour_image.url) {
+                // Use image instead of hex color
+                const $img = $('<img src="' + colour.colour_image.url + '" alt="' + colour.name + '" />');
+                $colourSwatch.addClass('has-image').append($img);
+            } else {
+                // Fall back to hex color
+                $colourSwatch.css('background-color', colour.hex);
+            }
+
+            $colourSwatch.attr('title', colour.name);
+
+            const $colourLabel = $('<span class="colour-label">' + colour.name + '</span>');
+
+            const $colourItem = $('<div class="colour-item"></div>');
+            $colourItem.append($colourSwatch).append($colourLabel);
+
+            // Mark selected colour
+            if (colour.name === selectedColour) {
+                $colourItem.addClass('selected');
+            }
+
+            $colourItem.on('click', function() {
+                const colourName = $(this).find('.colour-swatch').data('colour');
+                self.selectModalColour(gridId, colourName, isInside);
             });
+
+            $container.append($colourItem);
         },
 
         selectModalColour: function(gridId, colourName, isInside) {
