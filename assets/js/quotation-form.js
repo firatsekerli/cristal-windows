@@ -758,20 +758,32 @@ jQuery(document).ready(function($) {
             });
         },
 
-        selectColour: function(gridId, colourName, isInside, colourCategory) {
+        selectColour: function(gridId, colourName, isInside, colourCategory, clickedFinishType) {
             const prefix = isInside ? 'inside' : 'outside';
 
             // Update hidden field
             $('#' + prefix + '-colour').val(colourName);
 
-            // Find the colour object - use category if provided to handle duplicate names
-            const colour = colourCategory
-                ? this.colours.find(c => c.name === colourName && c.category === colourCategory)
-                : this.colours.find(c => c.name === colourName);
+            // Find the colour object - for Aluminium Special Colours, also match finish type
+            let colour;
+            if (colourCategory === 'Aluminium Special Colours' && clickedFinishType) {
+                // Match by name, category AND finish type to get the correct variant
+                colour = this.colours.find(c =>
+                    c.name === colourName &&
+                    c.category === colourCategory &&
+                    c.finish_type === clickedFinishType
+                );
+            } else if (colourCategory) {
+                // Match by name and category
+                colour = this.colours.find(c => c.name === colourName && c.category === colourCategory);
+            } else {
+                // Match by name only
+                colour = this.colours.find(c => c.name === colourName);
+            }
             let displayText = colourName;
 
             // Debug logging
-            console.log('Selected colour:', colourName, 'Category:', colourCategory);
+            console.log('Selected colour:', colourName, 'Category:', colourCategory, 'Finish:', clickedFinishType);
             console.log('Colour object:', colour);
             if (colour) {
                 console.log('Category:', colour.category);
@@ -955,7 +967,8 @@ jQuery(document).ready(function($) {
                         $colourItem.on('click', function() {
                             const colourName = String($(this).find('.colour-swatch').data('colour'));
                             const colourCategory = $(this).find('.colour-swatch').data('category');
-                            self.selectColour(gridId, colourName, isInside, colourCategory);
+                            const clickedFinishType = $(this).find('.colour-swatch').data('finish-type');
+                            self.selectColour(gridId, colourName, isInside, colourCategory, clickedFinishType);
                         });
 
                         $colourItems.append($colourItem);
@@ -1857,13 +1870,14 @@ jQuery(document).ready(function($) {
             $colourItem.on('click', function() {
                 const colourName = String($(this).find('.colour-swatch').data('colour'));
                 const colourCategory = $(this).find('.colour-swatch').data('category');
-                self.selectModalColour(gridId, colourName, isInside, colourCategory);
+                const clickedFinishType = $(this).find('.colour-swatch').data('finish-type');
+                self.selectModalColour(gridId, colourName, isInside, colourCategory, clickedFinishType);
             });
 
             $container.append($colourItem);
         },
 
-        selectModalColour: function(gridId, colourName, isInside, colourCategory) {
+        selectModalColour: function(gridId, colourName, isInside, colourCategory, clickedFinishType) {
             const prefix = isInside ? 'inside' : 'outside';
 
             // Update the modalSelectedColors object
@@ -1873,10 +1887,22 @@ jQuery(document).ready(function($) {
                 this.modalSelectedColors.outside = colourName;
             }
 
-            // Find the colour object - use category if provided to handle duplicate names
-            const colour = colourCategory
-                ? this.colours.find(c => c.name === colourName && c.category === colourCategory)
-                : this.colours.find(c => c.name === colourName);
+            // Find the colour object - for Aluminium Special Colours, also match finish type
+            let colour;
+            if (colourCategory === 'Aluminium Special Colours' && clickedFinishType) {
+                // Match by name, category AND finish type to get the correct variant
+                colour = this.colours.find(c =>
+                    c.name === colourName &&
+                    c.category === colourCategory &&
+                    c.finish_type === clickedFinishType
+                );
+            } else if (colourCategory) {
+                // Match by name and category
+                colour = this.colours.find(c => c.name === colourName && c.category === colourCategory);
+            } else {
+                // Match by name only
+                colour = this.colours.find(c => c.name === colourName);
+            }
             let displayText = colourName;
 
             // For aluminium special colours, prepend finish type (now single value from backend)
