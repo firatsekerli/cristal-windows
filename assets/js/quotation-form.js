@@ -922,7 +922,8 @@ jQuery(document).ready(function($) {
                 const finishTypes = {
                     'Matt': [],
                     'Gloss': [],
-                    'Metallic': []
+                    'Metallic': [],
+                    'Satin': []
                 };
 
                 specialColours.forEach(colour => {
@@ -1774,7 +1775,8 @@ jQuery(document).ready(function($) {
                 const finishTypes = {
                     'Matt': [],
                     'Gloss': [],
-                    'Metallic': []
+                    'Metallic': [],
+                    'Satin': []
                 };
 
                 filteredColours.forEach(colour => {

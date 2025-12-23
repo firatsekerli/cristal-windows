@@ -258,7 +258,8 @@
                     "choices": {
                         "Matt": "Matt",
                         "Gloss": "Gloss",
-                        "Metallic": "Metallic"
+                        "Metallic": "Metallic",
+                        "Satin": "Satin"
                     },
                     "default_value": [],
                     "allow_null": 1,
@@ -691,5 +692,5 @@
     "style": "default",
     "label_placement": "top",
     "instruction_placement": "label",
-    "modified": 1766485265
+    "modified": 1766508975
 }
