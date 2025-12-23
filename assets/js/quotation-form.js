@@ -771,6 +771,17 @@ jQuery(document).ready(function($) {
         },
 
         handleAluminiumColourType: function(aluminiumType) {
+            // Reset colour selections when switching between Stock/Special
+            $('#inside-colour').val('');
+            $('#outside-colour').val('');
+            $('#inside-colour-name').text('None');
+            $('#outside-colour-name').text('None');
+            $('.colour-item').removeClass('selected');
+
+            // Clear currentItem colour values
+            this.currentItem.insideColour = '';
+            this.currentItem.outsideColour = '';
+
             if (aluminiumType === 'stock') {
                 // Stock colours: Show form group and first colour section
                 $('.form-group:has(.colour-selection)').show();
