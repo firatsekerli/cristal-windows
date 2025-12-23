@@ -880,7 +880,7 @@ jQuery(document).ready(function($) {
                 $colourItem.append($colourSwatch).append($colourLabel);
 
                 $colourItem.on('click', function() {
-                    const colourName = $(this).find('.colour-swatch').data('colour');
+                    const colourName = String($(this).find('.colour-swatch').data('colour'));
                     const colourCategory = $(this).find('.colour-swatch').data('category');
                     // Apply to both inside and outside
                     self.selectColour('inside-colour-grid', colourName, true, colourCategory);
@@ -956,7 +956,7 @@ jQuery(document).ready(function($) {
                         $colourItem.append($colourSwatch).append($colourLabel);
 
                         $colourItem.on('click', function() {
-                            const colourName = $(this).find('.colour-swatch').data('colour');
+                            const colourName = String($(this).find('.colour-swatch').data('colour'));
                             const colourCategory = $(this).find('.colour-swatch').data('category');
                             self.selectColour(gridId, colourName, isInside, colourCategory);
                         });
@@ -1853,7 +1853,7 @@ jQuery(document).ready(function($) {
             }
 
             $colourItem.on('click', function() {
-                const colourName = $(this).find('.colour-swatch').data('colour');
+                const colourName = String($(this).find('.colour-swatch').data('colour'));
                 const colourCategory = $(this).find('.colour-swatch').data('category');
                 self.selectModalColour(gridId, colourName, isInside, colourCategory);
             });
