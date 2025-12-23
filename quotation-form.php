@@ -368,6 +368,10 @@ class Quotation_Form_Plugin {
             font-style: italic;
             font-size: 13px;
         }
+        /* Move publish box lower on settings pages to give more room for columns */
+        .acf-options-page #publishing-action {
+            margin-top: 400px;
+        }
         </style>
         <script type="text/javascript">
         // Wait for jQuery to be ready
