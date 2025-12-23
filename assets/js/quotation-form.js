@@ -815,7 +815,8 @@ jQuery(document).ready(function($) {
 
             // Filter individual colour items
             $grid.find('.colour-item').each(function() {
-                const colourName = $(this).find('.colour-swatch').data('colour').toLowerCase();
+                const colourData = $(this).find('.colour-swatch').data('colour');
+                const colourName = String(colourData || '').toLowerCase();
                 if (colourName.includes(searchTerm)) {
                     $(this).show();
                 } else {
