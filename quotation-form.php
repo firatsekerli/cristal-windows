@@ -1256,7 +1256,7 @@ class Quotation_Form_Plugin {
                 'outside_colour' => isset($item['outsideColour']) ? $this->capitalize_value($item['outsideColour']) : '',
                 'glazing_type' => isset($item['glazingType']) ? $this->capitalize_value($item['glazingType']) : '',
                 'glazing_features' => isset($item['glazingFeatures']) ? $this->capitalize_value($item['glazingFeatures']) : '',
-                'glazing_patterns' => isset($item['glazingPatterns']) ? $this->capitalize_value($item['glazingPatterns']) : '',
+                'glazing_patterns' => isset($item['glazingPattern']) ? $this->capitalize_value($item['glazingPattern']) : '',
                 'hardware_colour' => isset($item['hardwareColour']) ? $this->capitalize_value($item['hardwareColour']) : '',
                 'location' => isset($item['location']) ? $this->capitalize_value($item['location']) : '',
             );
