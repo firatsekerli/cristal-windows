@@ -341,7 +341,7 @@
                     "name": "finish_exclusions",
                     "type": "repeater",
                     "instructions": "Exclude specific finishes for specific product types (optional, for fine-grained control)",
-                    "layout": "table",
+                    "layout": "row",
                     "button_label": "Add Exclusion Rule",
                     "sub_fields": [
                         {
@@ -748,5 +748,5 @@
     "style": "default",
     "label_placement": "top",
     "instruction_placement": "label",
-    "modified": 1766602774
+    "modified": 1766603304
 }
