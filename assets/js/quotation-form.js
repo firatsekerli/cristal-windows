@@ -839,15 +839,23 @@ jQuery(document).ready(function($) {
 
         filterColoursByMaterial: function(material) {
             const materialSlug = (material || '').toLowerCase();
+            const typeSlug = (this.currentItem.type || '').toLowerCase();
 
             return this.colours.filter(colour => {
-                // If colour has no available_materials specified, it's available for all
-                if (!colour.available_materials || colour.available_materials.length === 0) {
-                    return true;
+                // Check material availability
+                let materialMatches = true;
+                if (colour.available_materials && colour.available_materials.length > 0) {
+                    materialMatches = colour.available_materials.some(m => m.toLowerCase() === materialSlug);
                 }
 
-                // Check if this material is in the colour's available_materials
-                return colour.available_materials.some(m => m.toLowerCase() === materialSlug);
+                // Check type availability
+                let typeMatches = true;
+                if (colour.available_types && colour.available_types.length > 0) {
+                    typeMatches = colour.available_types.some(t => t.toLowerCase() === typeSlug);
+                }
+
+                // Both conditions must be true
+                return materialMatches && typeMatches;
             });
         },
 

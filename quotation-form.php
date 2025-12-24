@@ -1038,7 +1038,8 @@ class Quotation_Form_Plugin {
                 'category' => isset($colour['category']) ? $colour['category'] : 'Colour',
                 'hex' => isset($colour['hex']) ? $colour['hex'] : '#FFFFFF',
                 'finish_type' => isset($colour['finish_type']) ? $colour['finish_type'] : null,
-                'available_materials' => isset($colour['available_materials']) ? $colour['available_materials'] : array()
+                'available_materials' => isset($colour['available_materials']) ? $colour['available_materials'] : array(),
+                'available_types' => isset($colour['available_types']) ? $colour['available_types'] : array()
             );
 
             // Handle colour_image field - ensure it's in the correct format
