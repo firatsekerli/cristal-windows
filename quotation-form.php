@@ -88,6 +88,13 @@ class Quotation_Form_Plugin {
 
         // Populate basket item dropdowns dynamically from settings
         add_filter('acf/load_field/key=field_item_category', array($this, 'populate_basket_item_category_choices'));
+        add_filter('acf/load_field/key=field_item_type', array($this, 'populate_basket_item_type_choices'));
+        add_filter('acf/load_field/key=field_item_material', array($this, 'populate_basket_item_material_choices'));
+        add_filter('acf/load_field/key=field_item_cill', array($this, 'populate_basket_item_cill_choices'));
+        add_filter('acf/load_field/key=field_item_glazing_type', array($this, 'populate_basket_item_glazing_type_choices'));
+        add_filter('acf/load_field/key=field_item_glazing_patterns', array($this, 'populate_basket_item_glazing_pattern_choices'));
+        add_filter('acf/load_field/key=field_item_glazing_features', array($this, 'populate_basket_item_glazing_feature_choices'));
+        add_filter('acf/load_field/key=field_item_hardware_colour', array($this, 'populate_basket_item_hardware_colour_choices'));
 
         // Add admin scripts for auto-slug generation
         add_action('acf/input/admin_enqueue_scripts', array($this, 'enqueue_admin_scripts'));
@@ -311,6 +318,174 @@ class Quotation_Form_Plugin {
                     if ($name) {
                         // Use the name as both key and value for display consistency
                         $field['choices'][$name] = $name;
+                    }
+                }
+            }
+        }
+
+        return $field;
+    }
+
+    /**
+     * Populate basket item type dropdown with values from settings
+     */
+    public function populate_basket_item_type_choices($field) {
+        $field['choices'] = array();
+
+        // Get product types from settings
+        if (function_exists('get_field')) {
+            $types = get_field('product_types', 'option');
+            if (!empty($types) && is_array($types)) {
+                foreach ($types as $type) {
+                    $name = isset($type['name']) ? $type['name'] : '';
+
+                    if ($name) {
+                        // Use the name as both key and value for display consistency
+                        $field['choices'][$name] = $name;
+                    }
+                }
+            }
+        }
+
+        return $field;
+    }
+
+    /**
+     * Populate basket item material dropdown with values from settings
+     */
+    public function populate_basket_item_material_choices($field) {
+        $field['choices'] = array();
+
+        // Get materials from settings
+        if (function_exists('get_field')) {
+            $materials = get_field('materials', 'option');
+            if (!empty($materials) && is_array($materials)) {
+                foreach ($materials as $material) {
+                    $name = isset($material['name']) ? $material['name'] : '';
+
+                    if ($name) {
+                        // Use the name as both key and value for display consistency
+                        $field['choices'][$name] = $name;
+                    }
+                }
+            }
+        }
+
+        return $field;
+    }
+
+    /**
+     * Populate basket item cill dropdown with values from settings
+     */
+    public function populate_basket_item_cill_choices($field) {
+        $field['choices'] = array();
+
+        // Get cill options from settings
+        if (function_exists('get_field')) {
+            $cill_options = get_field('cill_options', 'option');
+            if (!empty($cill_options) && is_array($cill_options)) {
+                foreach ($cill_options as $cill) {
+                    $label = isset($cill['label']) ? $cill['label'] : '';
+
+                    if ($label) {
+                        // Use the label as both key and value for display consistency
+                        $field['choices'][$label] = $label;
+                    }
+                }
+            }
+        }
+
+        return $field;
+    }
+
+    /**
+     * Populate basket item glazing type dropdown with values from settings
+     */
+    public function populate_basket_item_glazing_type_choices($field) {
+        $field['choices'] = array();
+
+        // Get glazing types from settings
+        if (function_exists('get_field')) {
+            $glazing_types = get_field('glazing_types', 'option');
+            if (!empty($glazing_types) && is_array($glazing_types)) {
+                foreach ($glazing_types as $type) {
+                    $label = isset($type['label']) ? $type['label'] : '';
+
+                    if ($label) {
+                        // Use the label as both key and value for display consistency
+                        $field['choices'][$label] = $label;
+                    }
+                }
+            }
+        }
+
+        return $field;
+    }
+
+    /**
+     * Populate basket item glazing pattern dropdown with values from settings
+     */
+    public function populate_basket_item_glazing_pattern_choices($field) {
+        $field['choices'] = array();
+
+        // Get glazing patterns from settings
+        if (function_exists('get_field')) {
+            $patterns = get_field('patterns', 'option');
+            if (!empty($patterns) && is_array($patterns)) {
+                foreach ($patterns as $pattern) {
+                    $name = isset($pattern['name']) ? $pattern['name'] : '';
+
+                    if ($name) {
+                        // Use the name as both key and value for display consistency
+                        $field['choices'][$name] = $name;
+                    }
+                }
+            }
+        }
+
+        return $field;
+    }
+
+    /**
+     * Populate basket item glazing feature dropdown with values from settings
+     */
+    public function populate_basket_item_glazing_feature_choices($field) {
+        $field['choices'] = array();
+
+        // Get glazing features from settings
+        if (function_exists('get_field')) {
+            $glazing_features = get_field('glazing_features', 'option');
+            if (!empty($glazing_features) && is_array($glazing_features)) {
+                foreach ($glazing_features as $feature) {
+                    $name = isset($feature['name']) ? $feature['name'] : '';
+
+                    if ($name) {
+                        // Use the name as both key and value for display consistency
+                        $field['choices'][$name] = $name;
+                    }
+                }
+            }
+        }
+
+        return $field;
+    }
+
+    /**
+     * Populate basket item hardware colour dropdown with values from settings
+     */
+    public function populate_basket_item_hardware_colour_choices($field) {
+        $field['choices'] = array();
+
+        // Get hardware colours from settings
+        if (function_exists('get_field')) {
+            $hardware_colours = get_field('hardware_colours', 'option');
+            if (!empty($hardware_colours) && is_array($hardware_colours)) {
+                foreach ($hardware_colours as $colour) {
+                    $label = isset($colour['label']) ? $colour['label'] : '';
+
+                    if ($label) {
+                        // Use the label as both key and value for display consistency
+                        $field['choices'][$label] = $label;
                     }
                 }
             }

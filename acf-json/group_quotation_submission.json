@@ -114,13 +114,27 @@
                     "key": "field_item_type",
                     "label": "Type",
                     "name": "type_name",
-                    "type": "text"
+                    "type": "select",
+                    "choices": [],
+                    "default_value": false,
+                    "allow_null": 0,
+                    "multiple": 0,
+                    "ui": 1,
+                    "return_format": "value",
+                    "ajax": 0
                 },
                 {
                     "key": "field_item_material",
                     "label": "Material",
                     "name": "material_name",
-                    "type": "text"
+                    "type": "select",
+                    "choices": [],
+                    "default_value": false,
+                    "allow_null": 0,
+                    "multiple": 0,
+                    "ui": 1,
+                    "return_format": "value",
+                    "ajax": 0
                 },
                 {
                     "key": "field_item_style_image",
@@ -153,7 +167,14 @@
                     "key": "field_item_cill",
                     "label": "Cill",
                     "name": "cill",
-                    "type": "text"
+                    "type": "select",
+                    "choices": [],
+                    "default_value": false,
+                    "allow_null": 0,
+                    "multiple": 0,
+                    "ui": 1,
+                    "return_format": "value",
+                    "ajax": 0
                 },
                 {
                     "key": "field_item_inside_colour",
@@ -171,25 +192,53 @@
                     "key": "field_item_glazing_type",
                     "label": "Glazing Type",
                     "name": "glazing_type",
-                    "type": "text"
+                    "type": "select",
+                    "choices": [],
+                    "default_value": false,
+                    "allow_null": 0,
+                    "multiple": 0,
+                    "ui": 1,
+                    "return_format": "value",
+                    "ajax": 0
                 },
                 {
                     "key": "field_item_glazing_patterns",
                     "label": "Glazing Pattern",
                     "name": "glazing_patterns",
-                    "type": "text"
+                    "type": "select",
+                    "choices": [],
+                    "default_value": false,
+                    "allow_null": 0,
+                    "multiple": 0,
+                    "ui": 1,
+                    "return_format": "value",
+                    "ajax": 0
                 },
                 {
                     "key": "field_item_glazing_features",
                     "label": "Glazing Feature",
                     "name": "glazing_features",
-                    "type": "text"
+                    "type": "select",
+                    "choices": [],
+                    "default_value": false,
+                    "allow_null": 0,
+                    "multiple": 0,
+                    "ui": 1,
+                    "return_format": "value",
+                    "ajax": 0
                 },
                 {
                     "key": "field_item_hardware_colour",
                     "label": "Hardware Colour",
                     "name": "hardware_colour",
-                    "type": "text"
+                    "type": "select",
+                    "choices": [],
+                    "default_value": false,
+                    "allow_null": 0,
+                    "multiple": 0,
+                    "ui": 1,
+                    "return_format": "value",
+                    "ajax": 0
                 },
                 {
                     "key": "field_item_location",
@@ -394,5 +443,5 @@
     "style": "default",
     "label_placement": "top",
     "instruction_placement": "label",
-    "modified": 1766529071
+    "modified": 1766584025
 }
