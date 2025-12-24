@@ -326,7 +326,7 @@
                     "label": "Unavailable for Types",
                     "name": "available_types",
                     "type": "select",
-                    "instructions": "Select types to exclude (leave empty to show for all types)",
+                    "instructions": "Select types to exclude ALL finishes (leave empty to show for all types)",
                     "choices": {},
                     "default_value": [],
                     "allow_null": 1,
@@ -334,6 +334,48 @@
                     "ui": 1,
                     "ajax": 0,
                     "placeholder": "Select types to exclude..."
+                },
+                {
+                    "key": "field_colour_finish_exclusions",
+                    "label": "Type-Specific Finish Exclusions",
+                    "name": "finish_exclusions",
+                    "type": "repeater",
+                    "instructions": "Exclude specific finishes for specific product types (optional, for fine-grained control)",
+                    "layout": "table",
+                    "button_label": "Add Exclusion Rule",
+                    "sub_fields": [
+                        {
+                            "key": "field_exclusion_product_type",
+                            "label": "Product Type",
+                            "name": "product_type",
+                            "type": "select",
+                            "required": 1,
+                            "choices": {},
+                            "allow_null": 0,
+                            "ui": 1,
+                            "ajax": 0,
+                            "placeholder": "Select type..."
+                        },
+                        {
+                            "key": "field_exclusion_finishes",
+                            "label": "Excluded Finishes",
+                            "name": "excluded_finishes",
+                            "type": "select",
+                            "required": 1,
+                            "choices": {
+                                "Matt": "Matt",
+                                "Gloss": "Gloss",
+                                "Metallic": "Metallic",
+                                "Satin": "Satin"
+                            },
+                            "default_value": [],
+                            "allow_null": 0,
+                            "multiple": 1,
+                            "ui": 1,
+                            "ajax": 0,
+                            "placeholder": "Select finishes to exclude..."
+                        }
+                    ]
                 }
             ]
         },
@@ -706,5 +748,5 @@
     "style": "default",
     "label_placement": "top",
     "instruction_placement": "label",
-    "modified": 1766595243
+    "modified": 1766602774
 }

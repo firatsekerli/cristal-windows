@@ -82,6 +82,7 @@ class Quotation_Form_Plugin {
         add_filter('acf/load_field/key=field_brand_available_types', array($this, 'populate_type_choices'));
         add_filter('acf/load_field/key=field_colour_available_materials', array($this, 'populate_material_choices'));
         add_filter('acf/load_field/key=field_colour_available_types', array($this, 'populate_type_choices'));
+        add_filter('acf/load_field/key=field_exclusion_product_type', array($this, 'populate_type_choices'));
         add_filter('acf/load_field/key=field_item_brand', array($this, 'populate_brand_choices'));
         add_filter('acf/load_field/key=field_centralized_brand', array($this, 'populate_brand_choices'));
         add_filter('acf/load_field/key=field_item_services', array($this, 'populate_service_choices'));
@@ -1039,7 +1040,8 @@ class Quotation_Form_Plugin {
                 'hex' => isset($colour['hex']) ? $colour['hex'] : '#FFFFFF',
                 'finish_type' => isset($colour['finish_type']) ? $colour['finish_type'] : null,
                 'available_materials' => isset($colour['available_materials']) ? $colour['available_materials'] : array(),
-                'available_types' => isset($colour['available_types']) ? $colour['available_types'] : array()
+                'available_types' => isset($colour['available_types']) ? $colour['available_types'] : array(),
+                'finish_exclusions' => isset($colour['finish_exclusions']) ? $colour['finish_exclusions'] : array()
             );
 
             // Handle colour_image field - ensure it's in the correct format
