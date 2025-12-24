@@ -19,6 +19,11 @@
     --transition-speed: 0.3s;
 }
 
+/* Universal Box Sizing */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
 /* General Container */
 .quotation-form-container {
     max-width: 1200px;
@@ -405,6 +410,7 @@
     border-radius: 4px;
     font-size: 14px;
     transition: border-color var(--transition-speed);
+    box-sizing: border-box;
 }
 
 .form-group input:focus,
@@ -1424,6 +1430,25 @@
 
     .modal-content {
         padding: 20px;
+    }
+
+    /* Fix input fields on mobile - prevent zoom and overflow */
+    .form-group input[type="number"],
+    .form-group input[type="text"],
+    .form-group input[type="email"],
+    .form-group input[type="tel"],
+    .form-group select,
+    .form-group textarea {
+        font-size: 16px; /* Prevent iOS auto-zoom */
+        padding: 12px;
+    }
+
+    .form-group label {
+        font-size: 14px;
+    }
+
+    .field-hint {
+        font-size: 11px;
     }
 }
 
