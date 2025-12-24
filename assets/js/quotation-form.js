@@ -848,10 +848,11 @@ jQuery(document).ready(function($) {
                     materialMatches = colour.available_materials.some(m => m.toLowerCase() === materialSlug);
                 }
 
-                // Check type availability
+                // Check type availability (exclusion list)
                 let typeMatches = true;
                 if (colour.available_types && colour.available_types.length > 0) {
-                    typeMatches = colour.available_types.some(t => t.toLowerCase() === typeSlug);
+                    // If type is in the list, EXCLUDE the colour (invert the logic)
+                    typeMatches = !colour.available_types.some(t => t.toLowerCase() === typeSlug);
                 }
 
                 // Both conditions must be true

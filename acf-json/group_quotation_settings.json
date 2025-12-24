@@ -323,17 +323,17 @@
                 },
                 {
                     "key": "field_colour_available_types",
-                    "label": "Available for Types",
+                    "label": "Unavailable for Types",
                     "name": "available_types",
                     "type": "select",
-                    "instructions": "Leave empty for all types",
+                    "instructions": "Select types to exclude (leave empty to show for all types)",
                     "choices": {},
                     "default_value": [],
                     "allow_null": 1,
                     "multiple": 1,
                     "ui": 1,
                     "ajax": 0,
-                    "placeholder": "Select types..."
+                    "placeholder": "Select types to exclude..."
                 }
             ]
         },
@@ -706,5 +706,5 @@
     "style": "default",
     "label_placement": "top",
     "instruction_placement": "label",
-    "modified": 1766592612
+    "modified": 1766595243
 }
