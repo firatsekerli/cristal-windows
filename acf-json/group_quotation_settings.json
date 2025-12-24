@@ -320,6 +320,20 @@
                     "ui": 1,
                     "ajax": 0,
                     "placeholder": "Select materials..."
+                },
+                {
+                    "key": "field_colour_available_types",
+                    "label": "Available for Types",
+                    "name": "available_types",
+                    "type": "select",
+                    "instructions": "Leave empty for all types",
+                    "choices": {},
+                    "default_value": [],
+                    "allow_null": 1,
+                    "multiple": 1,
+                    "ui": 1,
+                    "ajax": 0,
+                    "placeholder": "Select types..."
                 }
             ]
         },
@@ -692,5 +706,5 @@
     "style": "default",
     "label_placement": "top",
     "instruction_placement": "label",
-    "modified": 1766517107
+    "modified": 1766592612
 }
