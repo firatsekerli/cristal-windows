@@ -224,7 +224,7 @@
             "name": "colours",
             "type": "repeater",
             "instructions": "All colours. Drag rows to reorder.",
-            "layout": "table",
+            "layout": "row",
             "button_label": "Add Colour",
             "pagination": 1,
             "rows_per_page": 40,
@@ -320,20 +320,6 @@
                     "ui": 1,
                     "ajax": 0,
                     "placeholder": "Select materials..."
-                },
-                {
-                    "key": "field_colour_available_types",
-                    "label": "Unavailable for Types",
-                    "name": "available_types",
-                    "type": "select",
-                    "instructions": "Select types to exclude ALL finishes (leave empty to show for all types)",
-                    "choices": {},
-                    "default_value": [],
-                    "allow_null": 1,
-                    "multiple": 1,
-                    "ui": 1,
-                    "ajax": 0,
-                    "placeholder": "Select types to exclude..."
                 },
                 {
                     "key": "field_colour_finish_exclusions",
@@ -748,5 +734,5 @@
     "style": "default",
     "label_placement": "top",
     "instruction_placement": "label",
-    "modified": 1766603526
+    "modified": 1766661721
 }

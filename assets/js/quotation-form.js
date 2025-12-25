@@ -848,13 +848,6 @@ jQuery(document).ready(function($) {
                     materialMatches = colour.available_materials.some(m => m.toLowerCase() === materialSlug);
                 }
 
-                // Check type availability (global exclusion - excludes ALL finishes)
-                let typeMatches = true;
-                if (colour.available_types && colour.available_types.length > 0) {
-                    // If type is in the list, EXCLUDE the colour (invert the logic)
-                    typeMatches = !colour.available_types.some(t => t.toLowerCase() === typeSlug);
-                }
-
                 // Check finish-specific exclusions (for fine-grained control)
                 let finishMatches = true;
                 if (colour.finish_exclusions && colour.finish_exclusions.length > 0 && typeSlug) {
@@ -871,8 +864,8 @@ jQuery(document).ready(function($) {
                     }
                 }
 
-                // All conditions must be true
-                return materialMatches && typeMatches && finishMatches;
+                // Both conditions must be true
+                return materialMatches && finishMatches;
             });
         },
 
