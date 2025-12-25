@@ -402,6 +402,7 @@
 .form-group input[type="text"],
 .form-group input[type="email"],
 .form-group input[type="tel"],
+.form-group input[type="file"],
 .form-group select,
 .form-group textarea {
     width: 100%;
@@ -411,6 +412,7 @@
     font-size: 14px;
     transition: border-color var(--transition-speed);
     box-sizing: border-box;
+    max-width: 100%;
 }
 
 .form-group input:focus,
@@ -1437,10 +1439,17 @@
     .form-group input[type="text"],
     .form-group input[type="email"],
     .form-group input[type="tel"],
+    .form-group input[type="file"],
     .form-group select,
     .form-group textarea {
         font-size: 16px; /* Prevent iOS auto-zoom */
         padding: 12px;
+    }
+
+    /* File inputs need special handling on mobile */
+    .form-group input[type="file"] {
+        padding: 8px;
+        font-size: 14px;
     }
 
     .form-group label {
