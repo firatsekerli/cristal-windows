@@ -838,8 +838,13 @@ jQuery(document).ready(function($) {
         },
 
         filterColoursByMaterial: function(material) {
-            const materialSlug = (material || '').toLowerCase();
             const typeSlug = (this.currentItem.type || '').toLowerCase();
+            return this.filterColoursByMaterialAndType(material, typeSlug);
+        },
+
+        filterColoursByMaterialAndType: function(material, type) {
+            const materialSlug = (material || '').toLowerCase();
+            const typeSlug = (type || '').toLowerCase();
 
             return this.colours.filter(colour => {
                 // Check material availability
@@ -1587,8 +1592,9 @@ jQuery(document).ready(function($) {
                     outside: item.outsideColour
                 };
 
-                // Store item material for filtering
+                // Store item material and type for filtering
                 this.modalItemMaterial = item.material || '';
+                this.modalItemType = item.type || '';
 
                 // Check if material is aluminium
                 const isAluminium = this.modalItemMaterial.toLowerCase().includes('aluminium') ||
@@ -1792,8 +1798,8 @@ jQuery(document).ready(function($) {
 
             $grid.empty();
 
-            // Filter colours by material
-            let filteredColours = material ? this.filterColoursByMaterial(material) : this.colours;
+            // Filter colours by material and type (use modal item type for proper filtering)
+            let filteredColours = material ? this.filterColoursByMaterialAndType(material, this.modalItemType) : this.colours;
 
             // Check if aluminium material
             const isAluminium = material && (material.toLowerCase().includes('aluminium') || material.toLowerCase().includes('aluminum'));
