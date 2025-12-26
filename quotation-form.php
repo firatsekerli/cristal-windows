@@ -901,12 +901,12 @@ class Quotation_Form_Plugin {
                     setTimeout(addViewImageButtons, 100);
                     setTimeout(displayStyleImages, 100);
                 });
-            }
 
-            // Watch for any changes in attached_image fields
-            $(document).on('DOMNodeInserted', '.acf-field[data-name="attached_image"]', function() {
-                setTimeout(addViewImageButtons, 100);
-            });
+                // Handle when images are added/changed
+                acf.addAction('change', function($el) {
+                    setTimeout(addViewImageButtons, 100);
+                });
+            }
 
             })(jQuery); // End of jQuery wrapper
 
