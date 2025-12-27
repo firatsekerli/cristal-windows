@@ -1043,9 +1043,11 @@ jQuery(document).ready(function($) {
 
         handleAluminiumMaterialConfiguration: function() {
             const material = this.currentItem.material || '';
+            console.log('handleAluminiumMaterialConfiguration - Material:', material);
 
             // Check if aluminium material is selected
             if (material.toLowerCase().includes('aluminium') || material.toLowerCase().includes('aluminum')) {
+                console.log('Aluminium detected - showing aluminium colour type selection');
                 // Show aluminium colour type selection
                 $('.aluminium-colour-type-selection').show();
 
@@ -1060,12 +1062,20 @@ jQuery(document).ready(function($) {
                 // Automatically show stock colours
                 this.handleAluminiumColourType('stock');
             } else {
+                console.log('Non-aluminium material - showing both colour sections');
                 // Hide aluminium colour type selection
                 $('.aluminium-colour-type-selection').hide();
 
                 // Show regular colour selection with normal labels
                 $('.form-group:has(.colour-selection)').show();
                 $('.colour-selection').show(); // Ensure both colour sections are visible
+
+                console.log('Colour sections visibility:', {
+                    insideVisible: $('.colour-selection').first().is(':visible'),
+                    outsideVisible: $('.colour-selection').last().is(':visible'),
+                    count: $('.colour-selection').length
+                });
+
                 $('.inside-colour-label').text('Inside Colour');
                 $('.outside-colour-label').text('Outside Colour');
 
