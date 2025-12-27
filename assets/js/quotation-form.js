@@ -329,22 +329,12 @@ jQuery(document).ready(function($) {
             $('.card-grid.type-grid .image-card').on('click', function() {
                 const type = $(this).data('type');
 
-                console.log('=== TYPE SELECTED ===');
-                console.log('Previous type:', self.currentItem.type);
-                console.log('New type:', type);
-
                 self.currentItem.type = type;
                 self.currentItem.typeName = $(this).find('h3').text();
                 self.selectCard($(this));
 
-                // Debug logging
-                console.log('Selected type:', type);
-                console.log('Config:', quotationFormAjax.config);
-                console.log('Materials:', quotationFormAjax.config.materials);
-
                 // Dynamically determine if material selection is needed
                 const hasMaterialsAvailable = self.checkMaterialsAvailable(type);
-                console.log('Has materials available:', hasMaterialsAvailable);
 
                 if (hasMaterialsAvailable) {
                     // Navigate to material selection
@@ -387,17 +377,11 @@ jQuery(document).ready(function($) {
                 self.currentItem.styleImage = $(this).find('img').attr('src');
                 self.selectCard($(this));
 
-                console.log('=== STYLE SELECTED ===');
-                console.log('Current type before opening check:', self.currentItem.type);
-
                 // Check if current product type has openings
                 setTimeout(function() {
-                    console.log('Checking for openings with type:', self.currentItem.type);
                     if (self.hasOpeningsForCurrentType()) {
-                        console.log('Showing opening selection');
                         self.showOpeningSelection();
                     } else {
-                        console.log('No openings - navigating to step 3');
                         self.navigateToStep(3);
                         self.updateConfigurationPreview();
                     }
@@ -589,7 +573,6 @@ jQuery(document).ready(function($) {
 
             // Clean up opening selection when leaving step 2
             if (this.currentStep !== 2 && $('.opening-grid').length > 0) {
-                console.log('Cleaning up opening selection when leaving step 2');
                 $('.opening-grid').remove();
                 $('.opening-back-btn').parent().remove();
                 $('.style-grid').show();
@@ -1065,11 +1048,9 @@ jQuery(document).ready(function($) {
 
         handleAluminiumMaterialConfiguration: function() {
             const material = this.currentItem.material || '';
-            console.log('handleAluminiumMaterialConfiguration - Material:', material);
 
             // Check if aluminium material is selected
             if (material.toLowerCase().includes('aluminium') || material.toLowerCase().includes('aluminum')) {
-                console.log('Aluminium detected - showing aluminium colour type selection');
                 // Show aluminium colour type selection
                 $('.aluminium-colour-type-selection').show();
 
@@ -1084,20 +1065,12 @@ jQuery(document).ready(function($) {
                 // Automatically show stock colours
                 this.handleAluminiumColourType('stock');
             } else {
-                console.log('Non-aluminium material - showing both colour sections');
                 // Hide aluminium colour type selection
                 $('.aluminium-colour-type-selection').hide();
 
                 // Show regular colour selection with normal labels
                 $('.form-group:has(.colour-selection)').show();
                 $('.colour-selection').show(); // Ensure both colour sections are visible
-
-                console.log('Colour sections visibility:', {
-                    insideVisible: $('.colour-selection').first().is(':visible'),
-                    outsideVisible: $('.colour-selection').last().is(':visible'),
-                    count: $('.colour-selection').length
-                });
-
                 $('.inside-colour-label').text('Inside Colour');
                 $('.outside-colour-label').text('Outside Colour');
 
@@ -2403,40 +2376,25 @@ jQuery(document).ready(function($) {
 
         hasOpeningsForCurrentType: function() {
             if (!this.openings || this.openings.length === 0) {
-                console.log('No openings configured');
                 return false;
             }
 
             const currentTypeSlug = (this.currentItem.type || '').toLowerCase();
             if (!currentTypeSlug) {
-                console.log('No current type selected');
                 return false;
             }
 
-            console.log('Checking openings for type:', currentTypeSlug);
-            console.log('Available openings:', this.openings);
-
             // Check if any opening is available for current type
-            const hasOpenings = this.openings.some(opening => {
-                console.log('Checking opening:', opening.name, 'available_types:', opening.available_types);
-
+            return this.openings.some(opening => {
                 // If no types specified, don't show opening for any type
                 if (!opening.available_types || opening.available_types.length === 0) {
-                    console.log('  -> No types specified for this opening');
                     return false;
                 }
 
-                const typeMatch = opening.available_types.some(type => {
-                    const typeSlug = (type || '').toLowerCase();
-                    console.log('  -> Comparing:', typeSlug, 'with', currentTypeSlug, '=', typeSlug === currentTypeSlug);
-                    return typeSlug === currentTypeSlug;
+                return opening.available_types.some(type => {
+                    return (type || '').toLowerCase() === currentTypeSlug;
                 });
-
-                return typeMatch;
             });
-
-            console.log('Has openings for current type:', hasOpenings);
-            return hasOpenings;
         },
 
         showOpeningSelection: function() {
