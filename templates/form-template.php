@@ -138,7 +138,7 @@ if (!$use_acf) {
 
             <!-- Sub-Step 1A: Product Category -->
             <div class="sub-step active" data-substep="1a">
-                <h2 class="quotation-heading">Select Product Category</h2>
+                <h2 class="quotation-heading">Select Category</h2>
                 <div class="card-grid category-grid">
                     <?php foreach ($categories as $category):
                         $image_url = isset($category['image']['url']) ? $category['image']['url'] : '';
