@@ -2443,7 +2443,7 @@ jQuery(document).ready(function($) {
                 openingGridHtml += `
                     <div class="image-card" data-opening="${slug}">
                         ${imageUrl ? `<img src="${imageUrl}" alt="${name}">` : ''}
-                        <h3>${name}</h3>
+                        <h3 class="opening-card-title">${name}</h3>
                     </div>
                 `;
             });

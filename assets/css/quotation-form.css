@@ -264,6 +264,12 @@
     grid-template-columns: repeat(auto-fit, minmax(225px, 1fr));
 }
 
+.opening-card-title {
+    font-size: 18px !important;
+    font-weight: 600 !important;
+    color: var(--text-dark) !important;
+}
+
 .image-card {
     background: white;
     border: 2px solid var(--border-color);
