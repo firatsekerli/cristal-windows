@@ -696,7 +696,7 @@
 
 .glazing-pattern-grid {
     display: grid;
-    grid-template-columns: repeat(8, 1fr);
+    grid-template-columns: repeat(9, minmax(0, 1fr));
     gap: 10px;
 }
 
@@ -728,8 +728,8 @@
 }
 
 .glazing-pattern-label {
-    padding: 8px;
-    font-size: 11px;
+    padding: 4px;
+    font-size: 10px;
     text-align: center;
     color: var(--text-dark);
     background: #f9f9f9;
@@ -768,7 +768,7 @@
 
 .glazing-feature-items {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    grid-template-columns: repeat(6, minmax(0, 1fr));
     gap: 10px;
 }
 
@@ -1224,7 +1224,7 @@
     border-radius: 4px;
     padding: 10px;
     background: #fafafa;
-    max-height: 250px;
+    max-height: 300px;
     overflow-y: auto;
 }
 
@@ -1249,7 +1249,7 @@
 }
 
 .modal-glazing-features-grid {
-    max-height: 250px;
+    max-height: 300px;
     overflow-y: auto;
     border: 1px solid var(--border-color);
     border-radius: 4px;
@@ -1315,7 +1315,7 @@
 }
 
 #edit-item-content:has(.modal-glazing-type-picker) {
-    max-height: 600px;
+    max-height: 500px;
     overflow-y: auto;
 }
 
