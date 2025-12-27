@@ -1507,11 +1507,11 @@ jQuery(document).ready(function($) {
             const hardwareColourDisplay = item.hardwareColourName || item.hardwareColour;
 
             const fields = [
-                { label: 'Product Template', value: item.typeName + ' ' + (item.materialName || ''), field: 'product' },
+                { label: 'Product Template', value: (item.materialName || '') + ' ' + item.typeName, field: 'product' },
                 { label: 'Size', value: item.width + 'w x ' + item.height + 'h mm', field: 'size' },
                 { label: 'Colours', value: item.insideColour + ' / ' + item.outsideColour, field: 'colour' },
                 { label: 'Glazing Type', value: glazingValue, field: 'glazing' },
-                { label: 'Glazing Features', value: glazingFeaturesDisplay, field: 'glazingFeatures' },
+                { label: 'Glazing Feature', value: glazingFeaturesDisplay, field: 'glazingFeatures' },
                 { label: 'Hardware Colour', value: hardwareColourDisplay, field: 'hardware' }
             ];
 
