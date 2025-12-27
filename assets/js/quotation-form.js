@@ -329,6 +329,10 @@ jQuery(document).ready(function($) {
             $('.card-grid.type-grid .image-card').on('click', function() {
                 const type = $(this).data('type');
 
+                console.log('=== TYPE SELECTED ===');
+                console.log('Previous type:', self.currentItem.type);
+                console.log('New type:', type);
+
                 self.currentItem.type = type;
                 self.currentItem.typeName = $(this).find('h3').text();
                 self.selectCard($(this));
@@ -383,11 +387,17 @@ jQuery(document).ready(function($) {
                 self.currentItem.styleImage = $(this).find('img').attr('src');
                 self.selectCard($(this));
 
+                console.log('=== STYLE SELECTED ===');
+                console.log('Current type before opening check:', self.currentItem.type);
+
                 // Check if current product type has openings
                 setTimeout(function() {
+                    console.log('Checking for openings with type:', self.currentItem.type);
                     if (self.hasOpeningsForCurrentType()) {
+                        console.log('Showing opening selection');
                         self.showOpeningSelection();
                     } else {
+                        console.log('No openings - navigating to step 3');
                         self.navigateToStep(3);
                         self.updateConfigurationPreview();
                     }
@@ -576,6 +586,18 @@ jQuery(document).ready(function($) {
 
         navigateToStep: function(step) {
             this.currentStep = step;
+
+            // Clean up opening selection when leaving step 2
+            if (this.currentStep !== 2 && $('.opening-grid').length > 0) {
+                console.log('Cleaning up opening selection when leaving step 2');
+                $('.opening-grid').remove();
+                $('.opening-back-btn').parent().remove();
+                $('.style-grid').show();
+                $('.form-step[data-step="2"] h2').text('Select Configuration Style');
+                delete this.currentItem.opening;
+                delete this.currentItem.openingName;
+                delete this.currentItem.openingImage;
+            }
 
             // Handle basket vs regular steps
             if (step === 'basket') {
