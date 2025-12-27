@@ -82,6 +82,7 @@ class Quotation_Form_Plugin {
         add_filter('acf/load_field/key=field_brand_available_types', array($this, 'populate_type_choices'));
         add_filter('acf/load_field/key=field_colour_available_materials', array($this, 'populate_material_choices'));
         add_filter('acf/load_field/key=field_exclusion_product_type', array($this, 'populate_type_choices'));
+        add_filter('acf/load_field/key=field_opening_available_types', array($this, 'populate_type_choices'));
         add_filter('acf/load_field/key=field_item_brand', array($this, 'populate_brand_choices'));
         add_filter('acf/load_field/key=field_centralized_brand', array($this, 'populate_brand_choices'));
         add_filter('acf/load_field/key=field_item_services', array($this, 'populate_service_choices'));
@@ -983,6 +984,10 @@ class Quotation_Form_Plugin {
         // Get cill options
         $cill_options = $this->get_acf_field_or_default('cill_options', 'option');
 
+        // Get openings
+        $openings = $this->get_acf_field_or_default('openings', 'option');
+        $openings = $this->process_opening_data($openings);
+
         $config = array(
             'categories' => $this->get_acf_field_or_default('product_categories', 'option'),
             'productTypes' => $product_types,
@@ -995,6 +1000,7 @@ class Quotation_Form_Plugin {
             'glazingFeatures' => $glazing_features,
             'hardwareColours' => $hardware_colours,
             'cillOptions' => $cill_options,
+            'openings' => $openings,
             'useAcfData' => function_exists('get_field') && get_field('product_categories', 'option') ? true : false
         );
 
@@ -1144,6 +1150,63 @@ class Quotation_Form_Plugin {
             }
 
             $processed[] = $processed_feature;
+        }
+
+        return $processed;
+    }
+
+    /**
+     * Process opening data to ensure image URLs are properly formatted
+     */
+    private function process_opening_data($openings) {
+        if (empty($openings) || !is_array($openings)) {
+            return array();
+        }
+
+        $processed = array();
+        foreach ($openings as $opening) {
+            // Ensure the opening has the basic fields
+            if (!isset($opening['name'])) {
+                continue;
+            }
+
+            $processed_opening = array(
+                'name' => $opening['name'],
+                'slug' => isset($opening['slug']) ? $opening['slug'] : '',
+                'available_types' => isset($opening['available_types']) ? $opening['available_types'] : array()
+            );
+
+            // Handle image field - ensure it's in the correct format
+            if (!empty($opening['image'])) {
+                // If it's an array (ACF return format 'array'), extract the URL
+                if (is_array($opening['image'])) {
+                    $processed_opening['image'] = array(
+                        'url' => isset($opening['image']['url']) ? $opening['image']['url'] : '',
+                        'id' => isset($opening['image']['id']) ? $opening['image']['id'] : '',
+                        'alt' => isset($opening['image']['alt']) ? $opening['image']['alt'] : $opening['name']
+                    );
+                }
+                // If it's a numeric ID (ACF return format 'id'), get the URL
+                elseif (is_numeric($opening['image'])) {
+                    $image_url = wp_get_attachment_image_url($opening['image'], 'medium');
+                    if ($image_url) {
+                        $processed_opening['image'] = array(
+                            'url' => $image_url,
+                            'id' => $opening['image'],
+                            'alt' => $opening['name']
+                        );
+                    }
+                }
+                // If it's a URL string (ACF return format 'url')
+                elseif (is_string($opening['image']) && filter_var($opening['image'], FILTER_VALIDATE_URL)) {
+                    $processed_opening['image'] = array(
+                        'url' => $opening['image'],
+                        'alt' => $opening['name']
+                    );
+                }
+            }
+
+            $processed[] = $processed_opening;
         }
 
         return $processed;

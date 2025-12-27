@@ -71,6 +71,11 @@ jQuery(document).ready(function($) {
                 { label: 'No Sill', value: 'none' }
             ],
 
+        // Available openings - Use dynamic openings from config if available
+        openings: (typeof quotationFormAjax !== 'undefined' && quotationFormAjax.config && quotationFormAjax.config.openings)
+            ? quotationFormAjax.config.openings
+            : [],
+
         debugColours: function() {
             console.log('=== COLOUR DEBUG INFO ===');
             console.log('Total colours:', this.colours.length);
@@ -378,10 +383,14 @@ jQuery(document).ready(function($) {
                 self.currentItem.styleImage = $(this).find('img').attr('src');
                 self.selectCard($(this));
 
-                // Auto-navigate to configuration after brief delay
+                // Check if current product type has openings
                 setTimeout(function() {
-                    self.navigateToStep(3);
-                    self.updateConfigurationPreview();
+                    if (self.hasOpeningsForCurrentType()) {
+                        self.showOpeningSelection();
+                    } else {
+                        self.navigateToStep(3);
+                        self.updateConfigurationPreview();
+                    }
                 }, 300);
             });
 
@@ -2357,6 +2366,103 @@ jQuery(document).ready(function($) {
                     $('#submit-btn').prop('disabled', false).text('Submit Quote Request');
                 }
             });
+        },
+
+        hasOpeningsForCurrentType: function() {
+            if (!this.openings || this.openings.length === 0) {
+                return false;
+            }
+
+            const currentTypeSlug = (this.currentItem.type || '').toLowerCase();
+            if (!currentTypeSlug) {
+                return false;
+            }
+
+            // Check if any opening is available for current type
+            return this.openings.some(opening => {
+                if (!opening.available_types || opening.available_types.length === 0) {
+                    return false;
+                }
+                return opening.available_types.some(type => type.toLowerCase() === currentTypeSlug);
+            });
+        },
+
+        showOpeningSelection: function() {
+            const self = this;
+
+            // Hide style grid and show opening selection
+            $('.style-grid').hide();
+            $('.form-step[data-step="2"] h2').text('Select Opening Direction');
+
+            // Filter openings for current type
+            const currentTypeSlug = (this.currentItem.type || '').toLowerCase();
+            const availableOpenings = this.openings.filter(opening => {
+                if (!opening.available_types || opening.available_types.length === 0) {
+                    return false;
+                }
+                return opening.available_types.some(type => type.toLowerCase() === currentTypeSlug);
+            });
+
+            // Create opening grid
+            let openingGridHtml = '<div class="card-grid opening-grid">';
+            availableOpenings.forEach(opening => {
+                const imageUrl = opening.image && opening.image.url ? opening.image.url : '';
+                const slug = opening.slug || '';
+                const name = opening.name || '';
+
+                openingGridHtml += `
+                    <div class="image-card" data-opening="${slug}">
+                        ${imageUrl ? `<img src="${imageUrl}" alt="${name}">` : ''}
+                        <h3>${name}</h3>
+                    </div>
+                `;
+            });
+            openingGridHtml += '</div>';
+
+            // Add back button
+            openingGridHtml += '<div class="form-navigation" style="margin-top: 20px;"><button type="button" class="btn btn-secondary opening-back-btn">Back to Styles</button></div>';
+
+            // Insert opening grid after heading
+            $('.form-step[data-step="2"] h2').after(openingGridHtml);
+
+            // Handle opening selection
+            $('.opening-grid .image-card').on('click', function() {
+                const opening = $(this).data('opening');
+                const openingName = $(this).find('h3').text();
+                const openingImage = $(this).find('img').attr('src');
+
+                self.currentItem.opening = opening;
+                self.currentItem.openingName = openingName;
+                self.currentItem.openingImage = openingImage;
+
+                self.selectCard($(this));
+
+                // Navigate to configuration after brief delay
+                setTimeout(function() {
+                    self.navigateToStep(3);
+                    self.updateConfigurationPreview();
+                }, 300);
+            });
+
+            // Handle back button
+            $('.opening-back-btn').on('click', function() {
+                self.hideOpeningSelection();
+            });
+        },
+
+        hideOpeningSelection: function() {
+            // Remove opening grid
+            $('.opening-grid').remove();
+            $('.opening-back-btn').parent().remove();
+
+            // Show style grid again
+            $('.style-grid').show();
+            $('.form-step[data-step="2"] h2').text('Select Configuration Style');
+
+            // Clear opening selection
+            delete this.currentItem.opening;
+            delete this.currentItem.openingName;
+            delete this.currentItem.openingImage;
         },
 
         resetForm: function() {

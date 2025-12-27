@@ -602,6 +602,66 @@
             ]
         },
         {
+            "key": "field_tab_openings",
+            "label": "Openings",
+            "name": "",
+            "type": "tab",
+            "placement": "left"
+        },
+        {
+            "key": "field_openings",
+            "label": "Openings",
+            "name": "openings",
+            "type": "repeater",
+            "instructions": "Opening configurations (e.g., Open In - Master Right). Only shown for selected product types. Drag rows to reorder.",
+            "layout": "table",
+            "button_label": "Add Opening",
+            "pagination": 1,
+            "rows_per_page": 20,
+            "sub_fields": [
+                {
+                    "key": "field_opening_name",
+                    "label": "Opening Name",
+                    "name": "name",
+                    "type": "text",
+                    "instructions": "Display name (e.g., Open In - Master Right)",
+                    "required": 1
+                },
+                {
+                    "key": "field_opening_slug",
+                    "label": "Slug",
+                    "name": "slug",
+                    "type": "text",
+                    "instructions": "Unique identifier (auto-generated from name)",
+                    "required": 1
+                },
+                {
+                    "key": "field_opening_image",
+                    "label": "Image",
+                    "name": "image",
+                    "type": "image",
+                    "instructions": "Upload opening diagram/image",
+                    "return_format": "array",
+                    "preview_size": "thumbnail",
+                    "required": 1
+                },
+                {
+                    "key": "field_opening_available_types",
+                    "label": "Available for Product Types",
+                    "name": "available_types",
+                    "type": "select",
+                    "instructions": "Select product types that can use this opening",
+                    "choices": {},
+                    "default_value": [],
+                    "allow_null": 1,
+                    "multiple": 1,
+                    "ui": 1,
+                    "ajax": 0,
+                    "placeholder": "Select types..."
+                }
+            ]
+        },
+        {
             "key": "field_tab_brands",
             "label": "Brands",
             "name": "",
@@ -734,5 +794,5 @@
     "style": "default",
     "label_placement": "top",
     "instruction_placement": "label",
-    "modified": 1766661721
+    "modified": 1766864841
 }
