@@ -1065,6 +1065,7 @@ jQuery(document).ready(function($) {
 
                 // Show regular colour selection with normal labels
                 $('.form-group:has(.colour-selection)').show();
+                $('.colour-selection').show(); // Ensure both colour sections are visible
                 $('.inside-colour-label').text('Inside Colour');
                 $('.outside-colour-label').text('Outside Colour');
 
