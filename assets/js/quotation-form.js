@@ -2370,21 +2370,40 @@ jQuery(document).ready(function($) {
 
         hasOpeningsForCurrentType: function() {
             if (!this.openings || this.openings.length === 0) {
+                console.log('No openings configured');
                 return false;
             }
 
             const currentTypeSlug = (this.currentItem.type || '').toLowerCase();
             if (!currentTypeSlug) {
+                console.log('No current type selected');
                 return false;
             }
 
+            console.log('Checking openings for type:', currentTypeSlug);
+            console.log('Available openings:', this.openings);
+
             // Check if any opening is available for current type
-            return this.openings.some(opening => {
+            const hasOpenings = this.openings.some(opening => {
+                console.log('Checking opening:', opening.name, 'available_types:', opening.available_types);
+
+                // If no types specified, don't show opening for any type
                 if (!opening.available_types || opening.available_types.length === 0) {
+                    console.log('  -> No types specified for this opening');
                     return false;
                 }
-                return opening.available_types.some(type => type.toLowerCase() === currentTypeSlug);
+
+                const typeMatch = opening.available_types.some(type => {
+                    const typeSlug = (type || '').toLowerCase();
+                    console.log('  -> Comparing:', typeSlug, 'with', currentTypeSlug, '=', typeSlug === currentTypeSlug);
+                    return typeSlug === currentTypeSlug;
+                });
+
+                return typeMatch;
             });
+
+            console.log('Has openings for current type:', hasOpenings);
+            return hasOpenings;
         },
 
         showOpeningSelection: function() {
