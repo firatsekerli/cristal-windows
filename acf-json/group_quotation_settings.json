@@ -255,32 +255,21 @@
                     "default_value": "Colour"
                 },
                 {
-                    "key": "field_colour_external_colour",
-                    "label": "External Colour",
-                    "name": "external_colour",
+                    "key": "field_colour_application",
+                    "label": "Colour Application",
+                    "name": "colour_application",
                     "type": "select",
-                    "instructions": "Select which external colour options this colour is available for",
-                    "choices": {},
+                    "instructions": "Select whether this colour is available for external, internal, or both applications",
+                    "choices": {
+                        "External": "External",
+                        "Internal": "Internal"
+                    },
                     "default_value": [],
                     "allow_null": 1,
                     "multiple": 1,
                     "ui": 1,
                     "ajax": 0,
-                    "placeholder": "Select external colours..."
-                },
-                {
-                    "key": "field_colour_internal_colour",
-                    "label": "Internal Colour",
-                    "name": "internal_colour",
-                    "type": "select",
-                    "instructions": "Select which internal colour options this colour is available for",
-                    "choices": {},
-                    "default_value": [],
-                    "allow_null": 1,
-                    "multiple": 1,
-                    "ui": 1,
-                    "ajax": 0,
-                    "placeholder": "Select internal colours..."
+                    "placeholder": "Select application..."
                 },
                 {
                     "key": "field_colour_finish_type",
@@ -900,5 +889,5 @@
     "style": "default",
     "label_placement": "top",
     "instruction_placement": "label",
-    "modified": 1766955139
+    "modified": 1766957564
 }

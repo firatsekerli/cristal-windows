@@ -85,8 +85,6 @@ class Quotation_Form_Plugin {
         add_filter('acf/load_field/key=field_opening_available_types', array($this, 'populate_type_choices'));
         add_filter('acf/load_field/key=field_panel_available_types', array($this, 'populate_type_choices'));
         add_filter('acf/load_field/key=field_panel_available_materials', array($this, 'populate_material_choices'));
-        add_filter('acf/load_field/key=field_colour_external_colour', array($this, 'populate_panel_choices'));
-        add_filter('acf/load_field/key=field_colour_internal_colour', array($this, 'populate_panel_choices'));
         add_filter('acf/load_field/key=field_item_brand', array($this, 'populate_brand_choices'));
         add_filter('acf/load_field/key=field_centralized_brand', array($this, 'populate_brand_choices'));
         add_filter('acf/load_field/key=field_item_services', array($this, 'populate_service_choices'));
@@ -249,30 +247,6 @@ class Quotation_Form_Plugin {
                 foreach ($materials as $material) {
                     $slug = isset($material['slug']) ? $material['slug'] : '';
                     $name = isset($material['name']) ? $material['name'] : '';
-
-                    if ($slug && $name) {
-                        $field['choices'][$slug] = $name;
-                    }
-                }
-            }
-        }
-
-        return $field;
-    }
-
-    /**
-     * Populate panel choices for colour external/internal availability
-     */
-    public function populate_panel_choices($field) {
-        $field['choices'] = array();
-
-        // Get all panels from settings
-        if (function_exists('get_field')) {
-            $panels = get_field('panels', 'option');
-            if (!empty($panels) && is_array($panels)) {
-                foreach ($panels as $panel) {
-                    $slug = isset($panel['slug']) ? $panel['slug'] : '';
-                    $name = isset($panel['name']) ? $panel['name'] : '';
 
                     if ($slug && $name) {
                         $field['choices'][$slug] = $name;
