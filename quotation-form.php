@@ -83,6 +83,10 @@ class Quotation_Form_Plugin {
         add_filter('acf/load_field/key=field_colour_available_materials', array($this, 'populate_material_choices'));
         add_filter('acf/load_field/key=field_exclusion_product_type', array($this, 'populate_type_choices'));
         add_filter('acf/load_field/key=field_opening_available_types', array($this, 'populate_type_choices'));
+        add_filter('acf/load_field/key=field_panel_available_types', array($this, 'populate_type_choices'));
+        add_filter('acf/load_field/key=field_panel_available_materials', array($this, 'populate_material_choices'));
+        add_filter('acf/load_field/key=field_colour_external_colour', array($this, 'populate_panel_choices'));
+        add_filter('acf/load_field/key=field_colour_internal_colour', array($this, 'populate_panel_choices'));
         add_filter('acf/load_field/key=field_item_brand', array($this, 'populate_brand_choices'));
         add_filter('acf/load_field/key=field_centralized_brand', array($this, 'populate_brand_choices'));
         add_filter('acf/load_field/key=field_item_services', array($this, 'populate_service_choices'));
@@ -245,6 +249,30 @@ class Quotation_Form_Plugin {
                 foreach ($materials as $material) {
                     $slug = isset($material['slug']) ? $material['slug'] : '';
                     $name = isset($material['name']) ? $material['name'] : '';
+
+                    if ($slug && $name) {
+                        $field['choices'][$slug] = $name;
+                    }
+                }
+            }
+        }
+
+        return $field;
+    }
+
+    /**
+     * Populate panel choices for colour external/internal availability
+     */
+    public function populate_panel_choices($field) {
+        $field['choices'] = array();
+
+        // Get all panels from settings
+        if (function_exists('get_field')) {
+            $panels = get_field('panels', 'option');
+            if (!empty($panels) && is_array($panels)) {
+                foreach ($panels as $panel) {
+                    $slug = isset($panel['slug']) ? $panel['slug'] : '';
+                    $name = isset($panel['name']) ? $panel['name'] : '';
 
                     if ($slug && $name) {
                         $field['choices'][$slug] = $name;
@@ -988,6 +1016,10 @@ class Quotation_Form_Plugin {
         $openings = $this->get_acf_field_or_default('openings', 'option');
         $openings = $this->process_opening_data($openings);
 
+        // Get panels
+        $panels = $this->get_acf_field_or_default('panels', 'option');
+        $panels = $this->process_panel_data($panels);
+
         $config = array(
             'categories' => $this->get_acf_field_or_default('product_categories', 'option'),
             'productTypes' => $product_types,
@@ -1001,6 +1033,7 @@ class Quotation_Form_Plugin {
             'hardwareColours' => $hardware_colours,
             'cillOptions' => $cill_options,
             'openings' => $openings,
+            'panels' => $panels,
             'useAcfData' => function_exists('get_field') && get_field('product_categories', 'option') ? true : false
         );
 
@@ -1207,6 +1240,64 @@ class Quotation_Form_Plugin {
             }
 
             $processed[] = $processed_opening;
+        }
+
+        return $processed;
+    }
+
+    /**
+     * Process panel data to ensure image URLs are properly formatted
+     */
+    private function process_panel_data($panels) {
+        if (empty($panels) || !is_array($panels)) {
+            return array();
+        }
+
+        $processed = array();
+        foreach ($panels as $panel) {
+            // Ensure the panel has the basic fields
+            if (!isset($panel['name'])) {
+                continue;
+            }
+
+            $processed_panel = array(
+                'name' => $panel['name'],
+                'slug' => isset($panel['slug']) ? $panel['slug'] : '',
+                'available_types' => isset($panel['available_types']) ? $panel['available_types'] : array(),
+                'available_materials' => isset($panel['available_materials']) ? $panel['available_materials'] : array()
+            );
+
+            // Handle image field - ensure it's in the correct format
+            if (!empty($panel['image'])) {
+                // If it's an array (ACF return format 'array'), extract the URL
+                if (is_array($panel['image'])) {
+                    $processed_panel['image'] = array(
+                        'url' => isset($panel['image']['url']) ? $panel['image']['url'] : '',
+                        'id' => isset($panel['image']['id']) ? $panel['image']['id'] : '',
+                        'alt' => isset($panel['image']['alt']) ? $panel['image']['alt'] : $panel['name']
+                    );
+                }
+                // If it's a numeric ID (ACF return format 'id'), get the URL
+                elseif (is_numeric($panel['image'])) {
+                    $image_url = wp_get_attachment_image_url($panel['image'], 'medium');
+                    if ($image_url) {
+                        $processed_panel['image'] = array(
+                            'url' => $image_url,
+                            'id' => $panel['image'],
+                            'alt' => $panel['name']
+                        );
+                    }
+                }
+                // If it's a URL string (ACF return format 'url')
+                elseif (is_string($panel['image']) && filter_var($panel['image'], FILTER_VALIDATE_URL)) {
+                    $processed_panel['image'] = array(
+                        'url' => $panel['image'],
+                        'alt' => $panel['name']
+                    );
+                }
+            }
+
+            $processed[] = $processed_panel;
         }
 
         return $processed;
