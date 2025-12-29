@@ -320,6 +320,12 @@ jQuery(document).ready(function($) {
             // Category selection (Step 1A)
             $('.card-grid.category-grid .image-card').on('click', function() {
                 const category = $(this).data('category');
+
+                // Clear downstream selections if category changed
+                if (self.currentItem.category !== category) {
+                    self.clearDownstreamSelections('category');
+                }
+
                 self.currentItem.category = category;
                 self.selectCard($(this));
                 self.navigateToSubStep('1b-' + category);
@@ -328,6 +334,11 @@ jQuery(document).ready(function($) {
             // Type selection (Step 1B)
             $('.card-grid.type-grid .image-card').on('click', function() {
                 const type = $(this).data('type');
+
+                // Clear downstream selections if type changed
+                if (self.currentItem.type !== type) {
+                    self.clearDownstreamSelections('type');
+                }
 
                 self.currentItem.type = type;
                 self.currentItem.typeName = $(this).find('h3').text();
@@ -349,6 +360,12 @@ jQuery(document).ready(function($) {
             // Material selection (Step 1C)
             $('.card-grid.material-grid .image-card').on('click', function() {
                 const material = $(this).data('material');
+
+                // Clear downstream selections if material changed
+                if (self.currentItem.material !== material) {
+                    self.clearDownstreamSelections('material');
+                }
+
                 self.currentItem.material = material;
                 self.currentItem.materialName = $(this).find('h3').text();
                 self.selectCard($(this));
@@ -372,6 +389,12 @@ jQuery(document).ready(function($) {
             // Style selection (Step 2)
             $('.card-grid.style-grid .image-card').on('click', function() {
                 const style = $(this).data('style');
+
+                // Clear downstream selections if style changed
+                if (self.currentItem.style !== style) {
+                    self.clearDownstreamSelections('style');
+                }
+
                 self.currentItem.style = style;
                 self.currentItem.styleName = $(this).find('h3').text();
                 self.currentItem.styleImage = $(this).find('img').attr('src');
@@ -472,6 +495,67 @@ jQuery(document).ready(function($) {
 
         selectCard: function($card) {
             $card.addClass('selected').siblings().removeClass('selected');
+        },
+
+        /**
+         * Clear downstream selections when a user changes their selection at a specific level
+         * This prevents data corruption from mixed selections
+         */
+        clearDownstreamSelections: function(level) {
+            // Clear based on hierarchy: category > type > material > style > opening > configuration
+
+            if (level === 'category') {
+                // Clear type and everything below
+                delete this.currentItem.type;
+                delete this.currentItem.typeName;
+                $('.type-grid .image-card').removeClass('selected');
+                level = 'type'; // Fall through to clear type's downstream
+            }
+
+            if (level === 'type') {
+                // Clear material and everything below
+                delete this.currentItem.material;
+                delete this.currentItem.materialName;
+                $('.material-grid .image-card').removeClass('selected');
+                level = 'material'; // Fall through to clear material's downstream
+            }
+
+            if (level === 'material') {
+                // Clear style and everything below
+                delete this.currentItem.style;
+                delete this.currentItem.styleName;
+                delete this.currentItem.styleImage;
+                $('.style-grid .image-card').removeClass('selected');
+                level = 'style'; // Fall through to clear style's downstream
+            }
+
+            if (level === 'style') {
+                // Clear opening and everything below
+                delete this.currentItem.opening;
+                delete this.currentItem.openingName;
+                delete this.currentItem.openingImage;
+                $('.opening-card').removeClass('selected');
+                level = 'opening'; // Fall through to clear opening's downstream
+            }
+
+            if (level === 'opening') {
+                // Clear all configuration data
+                this.resetConfigurationForm();
+                delete this.currentItem.width;
+                delete this.currentItem.height;
+                delete this.currentItem.cill;
+                delete this.currentItem.insideColour;
+                delete this.currentItem.outsideColour;
+                delete this.currentItem.aluminiumColourType;
+                delete this.currentItem.glazingType;
+                delete this.currentItem.glazingTypeName;
+                delete this.currentItem.glazingPattern;
+                delete this.currentItem.glazingFeatures;
+                delete this.currentItem.glazingFeaturesName;
+                delete this.currentItem.hardwareColour;
+                delete this.currentItem.hardwareColourName;
+                this.uploadedFiles = [];
+            }
         },
 
         /**
@@ -2469,6 +2553,11 @@ jQuery(document).ready(function($) {
                 const opening = $(this).data('opening');
                 const openingName = $(this).find('h3').text();
                 const openingImage = $(this).find('img').attr('src');
+
+                // Clear downstream selections if opening changed
+                if (self.currentItem.opening !== opening) {
+                    self.clearDownstreamSelections('opening');
+                }
 
                 self.currentItem.opening = opening;
                 self.currentItem.openingName = openingName;
