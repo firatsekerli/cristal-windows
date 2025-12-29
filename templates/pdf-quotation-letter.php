@@ -204,7 +204,7 @@ function format_currency($amount) {
         }
 
         .terms-page {
-            padding: 20px;
+            padding: 0;
         }
 
         .terms-page h2 {
