@@ -165,6 +165,33 @@ body {
     font-size: 9pt;
     line-height: 1.3;
 }
+.info-columns {
+    width: 100%;
+    margin-bottom: 20px;
+    border-collapse: collapse;
+}
+.info-columns td {
+    vertical-align: top;
+    padding: 15px;
+    width: 50%;
+}
+.info-columns h3 {
+    font-size: 11pt;
+    color: #0066cc;
+    margin: 0 0 10px 0;
+    padding-bottom: 5px;
+    border-bottom: 2px solid #0066cc;
+    font-weight: bold;
+}
+.info-columns p {
+    margin: 5px 0;
+    font-size: 9pt;
+    line-height: 1.4;
+}
+.info-columns .label {
+    font-weight: bold;
+    color: #333;
+}
 </style>
 </head>
 <body>
@@ -208,23 +235,39 @@ body {
 <div class="cover-letter">
 <p><strong>Date:</strong> <?php echo date('d F Y'); ?></p>
 
-<div class="customer-info-inline">
-    <p><strong>Dear <?php echo esc_html($data['customer_name']); ?>,</strong></p>
-    <?php if (!empty($data['customer_street'])): ?>
-        <p><?php echo esc_html($data['customer_street']); ?></p>
-    <?php endif; ?>
-    <?php if (!empty($data['customer_town'])): ?>
-        <p><?php echo esc_html($data['customer_town']); ?></p>
-    <?php endif; ?>
-    <?php if (!empty($data['customer_county'])): ?>
-        <p><?php echo esc_html($data['customer_county']); ?></p>
-    <?php endif; ?>
-    <?php if (!empty($data['customer_postcode'])): ?>
-        <p><?php echo esc_html($data['customer_postcode']); ?></p>
-    <?php endif; ?>
-    <p><?php echo esc_html($data['customer_phone']); ?></p>
-    <p><a href="mailto:<?php echo esc_attr($data['customer_email']); ?>"><?php echo esc_html($data['customer_email']); ?></a></p>
-</div>
+<!-- Two Column Layout: Client Details & Quote Information -->
+<table class="info-columns" cellpadding="0" cellspacing="0">
+    <tr>
+        <td>
+            <h3>CLIENT DETAILS</h3>
+            <p><span class="label">Name:</span> <?php echo esc_html($data['customer_name']); ?></p>
+            <p><span class="label">Address:</span><br>
+                <?php
+                $address_parts = array_filter([
+                    $data['customer_street'],
+                    $data['customer_town'],
+                    $data['customer_county'],
+                    $data['customer_postcode']
+                ]);
+                echo esc_html(implode('<br>', $address_parts));
+                ?>
+            </p>
+            <p><span class="label">Phone:</span> <?php echo esc_html($data['customer_phone']); ?></p>
+            <p><span class="label">Email:</span> <?php echo esc_html($data['customer_email']); ?></p>
+        </td>
+        <td>
+            <h3>QUOTE INFORMATION</h3>
+            <p><span class="label">Date:</span> <?php echo date('d F Y'); ?></p>
+            <p><span class="label">Quote Reference:</span> Q-<?php echo date('Y-m-d'); ?>-001</p>
+            <p><span class="label">Prepared by:</span> Steve Cornish</p>
+            <p><span class="label">Email:</span> steve@cristalwindows.co.uk</p>
+            <p><span class="label">Lead Time:</span> 4-6 weeks on standard range products</p>
+            <p><span class="label">Guarantee:</span> 10 years Parts & Labour</p>
+        </td>
+    </tr>
+</table>
+
+<p><strong>Dear <?php echo esc_html($data['customer_name']); ?>,</strong></p>
 
 <p>Thank you for your recent enquiry regarding windows, doors and conservatories. We are pleased to provide you with the following quotation based on your requirements.</p>
 
