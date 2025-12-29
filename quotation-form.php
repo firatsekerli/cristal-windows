@@ -1982,66 +1982,17 @@ class Quotation_Form_Plugin {
     }
 
     /**
-     * Generate PDF content from Breakdance template
+     * Generate PDF content
      */
     private function generate_pdf_content($post_id, $data) {
-        // Set up post data for ACF fields to work
-        global $post;
-        $original_post = $post;
-        $post = get_post($post_id);
-        setup_postdata($post);
+        // Use the new quotation letter template if it exists
+        $new_template = QUOTATION_FORM_PLUGIN_DIR . 'templates/pdf-quotation-letter.php';
+        $old_template = QUOTATION_FORM_PLUGIN_DIR . 'templates/pdf-template.php';
 
-        // Start output buffering to capture all content
+        $template_path = file_exists($new_template) ? $new_template : $old_template;
+
         ob_start();
-
-        // Output all styles
-        wp_head();
-
-        // Get the post content (Breakdance renders through the_content filter)
-        echo '<div class="breakdance-content">';
-        the_content();
-        echo '</div>';
-
-        $full_html = ob_get_clean();
-
-        // Reset post data
-        wp_reset_postdata();
-        $post = $original_post;
-
-        // Check if we got content
-        if (!empty($full_html)) {
-            // Extract styles
-            preg_match_all('/<style[^>]*>(.*?)<\/style>/is', $full_html, $inline_styles);
-            preg_match_all('/<link[^>]*rel=["\']stylesheet["\'][^>]*href=["\'](.*?)["\'][^>]*>/i', $full_html, $css_links);
-
-            // Extract the main content
-            if (preg_match('/<div class="breakdance-content">(.*?)<\/div>/is', $full_html, $content_match)) {
-                $content = $content_match[1];
-            } else {
-                $content = $full_html;
-            }
-
-            // Build complete HTML with all styles
-            $pdf_html = '<!DOCTYPE html><html><head><meta charset="UTF-8">';
-
-            // Add all inline styles
-            foreach ($inline_styles[0] as $style_tag) {
-                $pdf_html .= $style_tag;
-            }
-
-            // Add all stylesheet links
-            foreach ($css_links[0] as $link_tag) {
-                $pdf_html .= $link_tag;
-            }
-
-            $pdf_html .= '</head><body>' . $content . '</body></html>';
-
-            return $pdf_html;
-        }
-
-        // Fallback to old template if Breakdance render fails
-        ob_start();
-        include QUOTATION_FORM_PLUGIN_DIR . 'templates/pdf-template.php';
+        include $template_path;
         return ob_get_clean();
     }
 
