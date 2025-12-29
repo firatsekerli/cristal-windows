@@ -77,20 +77,16 @@ function format_currency($amount) {
             margin-bottom: 30px;
             display: table;
             table-layout: fixed;
+            border-spacing: 15px 0;
         }
 
         .info-section {
             background: #f8f9fa;
             padding: 15px;
             border-radius: 5px;
-            width: 48%;
             display: table-cell;
             vertical-align: top;
             box-sizing: border-box;
-        }
-
-        .info-section:first-child {
-            margin-right: 4%;
         }
 
         .info-section h3 {
