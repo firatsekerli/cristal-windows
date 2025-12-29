@@ -527,6 +527,30 @@ jQuery(document).ready(function($) {
         },
 
         /**
+         * Check if item is available for current material selection
+         */
+        isItemAvailableForMaterial: function(availableMaterials) {
+            const currentMaterial = this.currentItem.material || '';
+
+            // Parse JSON if needed
+            if (typeof availableMaterials === 'string') {
+                try {
+                    availableMaterials = JSON.parse(availableMaterials);
+                } catch (e) {
+                    availableMaterials = [];
+                }
+            }
+
+            // If no restrictions, show for all materials
+            if (!availableMaterials || !Array.isArray(availableMaterials) || availableMaterials.length === 0) {
+                return true;
+            }
+
+            // Check if current material is in the available materials list
+            return availableMaterials.includes(currentMaterial);
+        },
+
+        /**
          * Filter materials/styles based on current product selection
          */
         filterItemsForProduct: function($container) {
@@ -535,8 +559,13 @@ jQuery(document).ready(function($) {
             $container.find('.image-card').each(function() {
                 const $card = $(this);
                 const availableTypes = $card.data('available-types');
+                const availableMaterials = $card.data('available-materials');
 
-                if (self.isItemAvailableForProduct(availableTypes)) {
+                // Check both type and material availability
+                const isTypeAvailable = self.isItemAvailableForProduct(availableTypes);
+                const isMaterialAvailable = self.isItemAvailableForMaterial(availableMaterials);
+
+                if (isTypeAvailable && isMaterialAvailable) {
                     $card.show();
                 } else {
                     $card.hide();

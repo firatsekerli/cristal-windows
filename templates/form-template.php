@@ -259,12 +259,14 @@ if (!$use_acf) {
                         $slug = isset($style['slug']) ? $style['slug'] : '';
                         $name = isset($style['name']) ? $style['name'] : '';
 
-                        // Get availability data (array of type slugs)
+                        // Get availability data (array of type and material slugs)
                         $available_types = isset($style['available_types']) ? $style['available_types'] : array();
+                        $available_materials = isset($style['available_materials']) ? $style['available_materials'] : array();
                     ?>
                     <div class="image-card style-card"
                          data-style="<?php echo esc_attr($slug); ?>"
-                         data-available-types="<?php echo esc_attr(json_encode($available_types)); ?>">
+                         data-available-types="<?php echo esc_attr(json_encode($available_types)); ?>"
+                         data-available-materials="<?php echo esc_attr(json_encode($available_materials)); ?>">
                         <div class="card-image">
                             <?php if ($image_url): ?>
                                 <img src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($name); ?>" loading="lazy">
