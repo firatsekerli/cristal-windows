@@ -227,6 +227,7 @@ function format_currency($amount) {
         .company-footer {
             margin-top: 40px;
             padding-top: 20px;
+            border-top: 2px solid #ccc;
             text-align: center;
             color: #666;
             font-size: 13px;
