@@ -246,6 +246,13 @@ function format_currency($amount) {
             box-shadow: 0 2px 15px rgba(0,0,0,0.1);
         }
 
+        .header-section img {
+            max-width: 120px;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+
         .company-logo {
             font-size: 42px;
             font-weight: bold;
@@ -334,17 +341,20 @@ function format_currency($amount) {
 
         .background-graphic {
             position: absolute;
-            right: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 400px;
-            height: 400px;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             opacity: 0.15;
             z-index: 0;
-            background-image: url('https://cristalwindows.co.uk/wp-content/uploads/2024/07/Black-uPVC-windows-Door-1.jpeg');
-            background-size: cover;
-            background-position: center;
-            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .background-graphic img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
         }
 
         .house-icon {
@@ -459,7 +469,7 @@ function format_currency($amount) {
 
         <div class="main-content">
             <div class="background-graphic">
-                <div class="house-icon">🏠</div>
+                <img src="https://cristalwindows.co.uk/wp-content/uploads/2024/07/Black-uPVC-windows-Door-1.jpeg" alt="Background">
             </div>
 
             <div class="title-container">
