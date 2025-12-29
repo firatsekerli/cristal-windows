@@ -297,7 +297,7 @@ function format_currency($amount) {
         </div>
         <div class="header-contact">
             www.cristalwindows.co.uk<br>
-            01252 810777 | enquiries@cristalwindows.co.uk
+            01252 810777 | sales@cristalwindows.co.uk
         </div>
     </div>
 
@@ -333,7 +333,7 @@ function format_currency($amount) {
                 <span class="info-label">Prepared by:</span> Steve Cornish
             </div>
             <div class="info-item">
-                <span class="info-label">Email:</span> steve@cristalwindows.co.uk
+                <span class="info-label">Email:</span> sales@cristalwindows.co.uk
             </div>
             <div class="info-item">
                 <span class="info-label">Lead Time:</span> 4-6 weeks on standard range products
