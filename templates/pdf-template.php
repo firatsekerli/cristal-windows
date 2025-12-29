@@ -177,18 +177,18 @@ body {
     width: 50%;
     background-color: #F8F9FA;
 }
-.info-columns h3 {
+.info-column {
+    padding: 15px;
+}
+.info-column-title {
     font-size: 9pt;
     color: #1e3a8a;
-    margin: 0;
+    margin-bottom: 10px;
     padding: 10px 15px;
     background-color: #F8F9FA;
     border-bottom: 2px solid #333;
     font-weight: bold;
     text-transform: uppercase;
-}
-.info-columns .content {
-    padding: 15px;
 }
 .info-columns p {
     margin: 5px 0;
@@ -245,8 +245,8 @@ body {
 <!-- Two Column Layout: Client Details & Quote Information -->
 <table class="info-columns" cellpadding="0" cellspacing="0">
     <tr>
-        <td>
-            <h3>CLIENT DETAILS</h3>
+        <td class="info-column">
+            <h3 class="info-column-title">CLIENT DETAILS</h3>
             <div class="content">
                 <p><span class="label">Name:</span> <?php echo esc_html($data['customer_name']); ?></p>
                 <p><span class="label">Address:</span><br>
@@ -264,8 +264,8 @@ body {
                 <p><span class="label">Email:</span> <?php echo esc_html($data['customer_email']); ?></p>
             </div>
         </td>
-        <td>
-            <h3>QUOTE INFORMATION</h3>
+        <td class="info-column">
+            <h3 class="info-column-title">QUOTE INFORMATION</h3>
             <div class="content">
                 <p><span class="label">Date:</span> <?php echo date('d F Y'); ?></p>
                 <p><span class="label">Quote Reference:</span> Q-<?php echo date('Y-m-d'); ?>-001</p>
