@@ -36,7 +36,7 @@ function format_currency($amount) {
 
         .header {
             border-bottom: 3px solid #1a5490;
-            padding-top: 40px;
+            padding-top: 10px;
             padding-bottom: 10px;
             margin-bottom: 20px;
             overflow: hidden;
@@ -209,34 +209,6 @@ function format_currency($amount) {
             page-break-after: always;
             margin: -10px;
             padding: 0;
-        }
-
-        .dots-pattern-top {
-            position: absolute;
-            top: 30px;
-            left: 30px;
-            width: 100px;
-            height: 100px;
-            background-image: radial-gradient(circle, #ffc107 25%, transparent 25%),
-                              radial-gradient(circle, #2196F3 25%, transparent 25%);
-            background-size: 20px 20px;
-            background-position: 0 0, 10px 10px;
-            opacity: 0.6;
-            z-index: 2;
-        }
-
-        .dots-pattern-bottom {
-            position: absolute;
-            bottom: 180px;
-            right: 30px;
-            width: 120px;
-            height: 120px;
-            background-image: radial-gradient(circle, #ffc107 25%, transparent 25%),
-                              radial-gradient(circle, #2196F3 25%, transparent 25%);
-            background-size: 25px 25px;
-            background-position: 0 0, 12.5px 12.5px;
-            opacity: 0.4;
-            z-index: 2;
         }
 
         .header-section {
@@ -462,9 +434,6 @@ function format_currency($amount) {
         <div class="background-graphic">
             <img src="https://cristalwindows.co.uk/wp-content/uploads/2024/07/Black-uPVC-windows-Door-1.jpeg" alt="Background">
         </div>
-
-        <div class="dots-pattern-top"></div>
-        <div class="dots-pattern-bottom"></div>
 
         <div class="header-section">
             <img src="https://cristalwindows.co.uk/wp-content/uploads/2025/02/Cristal-Windows-LOGO-01.png" alt="Cristal Windows Logo">
