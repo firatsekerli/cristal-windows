@@ -198,6 +198,199 @@ function format_currency($amount) {
             border-radius: 3px;
         }
 
+        /* ============= COVER PAGE STYLES ============= */
+        .cover-page {
+            width: 100%;
+            height: 297mm;
+            position: relative;
+            background: #f5f5f5;
+            background: -webkit-linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+            background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+            page-break-after: always;
+            margin: 0;
+            padding: 0;
+        }
+
+        .dots-pattern-top {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            width: 100px;
+            height: 100px;
+            background-image: radial-gradient(circle, #ffc107 25%, transparent 25%),
+                              radial-gradient(circle, #2196F3 25%, transparent 25%);
+            background-size: 20px 20px;
+            background-position: 0 0, 10px 10px;
+            opacity: 0.6;
+        }
+
+        .dots-pattern-bottom {
+            position: absolute;
+            bottom: 180px;
+            right: 30px;
+            width: 120px;
+            height: 120px;
+            background-image: radial-gradient(circle, #ffc107 25%, transparent 25%),
+                              radial-gradient(circle, #2196F3 25%, transparent 25%);
+            background-size: 25px 25px;
+            background-position: 0 0, 12.5px 12.5px;
+            opacity: 0.4;
+        }
+
+        .header-section {
+            background: white;
+            padding: 50px 40px;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+        }
+
+        .company-logo {
+            font-size: 42px;
+            font-weight: bold;
+            color: #1a5490;
+            font-style: italic;
+            margin-bottom: 10px;
+            letter-spacing: -1px;
+        }
+
+        .company-tagline {
+            color: #1a5490;
+            font-size: 15px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-weight: 500;
+        }
+
+        .main-content {
+            position: relative;
+            height: 500px;
+            display: table;
+            width: 100%;
+            table-layout: fixed;
+        }
+
+        .title-container {
+            display: table-cell;
+            vertical-align: middle;
+            text-align: center;
+            padding: 50px;
+        }
+
+        .title-panel {
+            background: #1a5490;
+            background: -webkit-linear-gradient(135deg, #1a5490 0%, #2a6ab0 100%);
+            background: linear-gradient(135deg, #1a5490 0%, #2a6ab0 100%);
+            padding: 60px;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(26, 84, 144, 0.3);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            margin: 0 auto;
+            max-width: 600px;
+        }
+
+        .title-panel::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+        }
+
+        .project-title {
+            color: white;
+            font-size: 64px;
+            font-weight: bold;
+            line-height: 1.1;
+            margin: 0 0 20px 0;
+            position: relative;
+            z-index: 1;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .subtitle {
+            color: white;
+            font-size: 20px;
+            margin-top: 30px;
+            position: relative;
+            z-index: 1;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        .highlight-bar {
+            width: 180px;
+            height: 8px;
+            background: #ffc107;
+            border-radius: 4px;
+            margin: 30px auto;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 2px 10px rgba(255, 193, 7, 0.4);
+        }
+
+        .background-graphic {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 350px;
+            height: 350px;
+            opacity: 0.1;
+            z-index: 0;
+        }
+
+        .house-icon {
+            font-size: 300px;
+            color: #1a5490;
+        }
+
+        .footer-section {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background: white;
+            padding: 35px 30px;
+            display: table;
+            box-shadow: 0 -3px 15px rgba(0,0,0,0.1);
+            height: 150px;
+        }
+
+        .certification-logo {
+            display: table-cell;
+            text-align: center;
+            vertical-align: middle;
+            padding: 10px;
+            width: 20%;
+        }
+
+        .cert-placeholder {
+            width: 90px;
+            height: 60px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            display: inline-block;
+            line-height: 60px;
+            color: #999;
+            font-size: 11px;
+            background: #fafafa;
+            margin: 0 auto;
+        }
+
+        .cert-name {
+            font-size: 11px;
+            color: #666;
+            margin-top: 8px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
         .page-break {
             page-break-before: always;
             margin-top: 0;
