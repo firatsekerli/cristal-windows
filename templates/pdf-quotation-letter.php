@@ -167,12 +167,56 @@ function format_currency($amount) {
             border-radius: 3px;
         }
 
+        .page-break {
+            page-break-before: always;
+            margin-top: 0;
+            padding-top: 40px;
+        }
+
+        .terms-page {
+            padding: 20px;
+        }
+
+        .terms-page h2 {
+            color: #333;
+            font-size: 20px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .terms-page p {
+            margin: 10px 0;
+            line-height: 1.8;
+        }
+
+        .terms-page strong {
+            font-weight: bold;
+        }
+
+        .company-footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            text-align: center;
+            color: #666;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .company-footer strong {
+            color: #1a5490;
+            font-size: 14px;
+        }
+
         @media print {
             body {
                 padding: 0;
             }
             .info-section {
                 break-inside: avoid;
+            }
+            .page-break {
+                page-break-before: always;
             }
         }
     </style>
@@ -257,6 +301,26 @@ function format_currency($amount) {
         <p>Best regards,<br>
         <strong>Steve Cornish</strong><br>
         Cristal Windows, Doors & Conservatories Ltd</p>
+    </div>
+
+    <!-- Terms and Conditions Page -->
+    <div class="page-break terms-page">
+        <h2>Terms and Conditions</h2>
+
+        <p><strong>All prices are given in good faith. Subject to signed company contract and final survey.</strong></p>
+
+        <p>Based on Supply & Install, make good to immediate fitting area. Generated debris removal from site.</p>
+
+        <p><strong>Prices are inclusive of VAT@20%</strong></p>
+
+        <p><strong>PRICES ARE HELD FOR A PERIOD OF 14 DAYS.</strong></p>
+
+        <p>This quotation is valid for 14 days from the date shown above. Payment terms and schedule will be confirmed upon contract signing. Installation timescales will be confirmed following the final survey.</p>
+
+        <div class="company-footer">
+            <strong>Cristal Windows, Doors & Conservatories Ltd</strong><br>
+            Registered in England No. 5829993 | Registered address as above | VAT Registration No. 890 4307 21
+        </div>
     </div>
 </body>
 </html>
