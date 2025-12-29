@@ -36,6 +36,7 @@ function format_currency($amount) {
 
         .header {
             border-bottom: 3px solid #1a5490;
+            padding-top: 40px;
             padding-bottom: 10px;
             margin-bottom: 20px;
             overflow: hidden;
