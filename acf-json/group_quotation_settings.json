@@ -683,80 +683,6 @@
             ]
         },
         {
-            "key": "field_tab_panels",
-            "label": "Panels",
-            "name": "",
-            "type": "tab",
-            "placement": "left"
-        },
-        {
-            "key": "field_panels",
-            "label": "Panels",
-            "name": "panels",
-            "type": "repeater",
-            "instructions": "Panel configurations for DoorCo and other products. Only shown for selected product types and materials. Drag rows to reorder.",
-            "layout": "table",
-            "button_label": "Add Panel",
-            "pagination": 1,
-            "rows_per_page": 20,
-            "sub_fields": [
-                {
-                    "key": "field_panel_name",
-                    "label": "Panel Name",
-                    "name": "name",
-                    "type": "text",
-                    "instructions": "Display name (e.g., Augusta Centre Farmhouse)",
-                    "required": 1
-                },
-                {
-                    "key": "field_panel_slug",
-                    "label": "Slug",
-                    "name": "slug",
-                    "type": "text",
-                    "instructions": "Unique identifier (auto-generated from name)",
-                    "required": 1
-                },
-                {
-                    "key": "field_panel_image",
-                    "label": "Image",
-                    "name": "image",
-                    "type": "image",
-                    "instructions": "Upload panel image",
-                    "return_format": "array",
-                    "preview_size": "thumbnail",
-                    "required": 1
-                },
-                {
-                    "key": "field_panel_available_types",
-                    "label": "Available for Product Types",
-                    "name": "available_types",
-                    "type": "select",
-                    "instructions": "Select product types that can use this panel",
-                    "choices": {},
-                    "default_value": [],
-                    "allow_null": 1,
-                    "multiple": 1,
-                    "ui": 1,
-                    "ajax": 0,
-                    "placeholder": "Select types..."
-                },
-                {
-                    "key": "field_panel_available_materials",
-                    "label": "Available for Materials",
-                    "name": "available_materials",
-                    "type": "select",
-                    "instructions": "Select materials that can use this panel",
-                    "choices": {},
-                    "default_value": [],
-                    "allow_null": 1,
-                    "multiple": 1,
-                    "ui": 1,
-                    "ajax": 0,
-                    "placeholder": "Select materials..."
-                }
-            ]
-        },
-        {
             "key": "field_tab_brands",
             "label": "Brands",
             "name": "",
@@ -889,5 +815,5 @@
     "style": "default",
     "label_placement": "top",
     "instruction_placement": "label",
-    "modified": 1766995765
+    "modified": 1767024403
 }
