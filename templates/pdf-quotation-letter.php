@@ -286,10 +286,10 @@ function format_currency($amount) {
         <div class="info-section">
             <h3>Quote Information</h3>
             <div class="info-item">
-                <span class="info-label">Date:</span> <?php echo date('j F Y'); ?>
+                <span class="info-label">Date:</span> <?php echo get_the_date('j F Y', $post_id); ?>
             </div>
             <div class="info-item">
-                <span class="info-label">Quote Reference:</span> Q-<?php echo date('Y-m-d'); ?>-<?php echo str_pad($post_id, 3, '0', STR_PAD_LEFT); ?>
+                <span class="info-label">Quote Reference:</span> Q-<?php echo get_the_date('Y-m-d', $post_id); ?>-<?php echo str_pad($post_id, 3, '0', STR_PAD_LEFT); ?>
             </div>
             <div class="info-item">
                 <span class="info-label">Prepared by:</span> Steve Cornish
