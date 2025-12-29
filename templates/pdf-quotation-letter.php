@@ -200,14 +200,14 @@ function format_currency($amount) {
 
         /* ============= COVER PAGE STYLES ============= */
         .cover-page {
-            width: 100%;
+            width: calc(100% + 20px);
             height: 297mm;
             position: relative;
             background: #f5f5f5;
             background: -webkit-linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
             background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
             page-break-after: always;
-            margin: 0;
+            margin: -10px;
             padding: 0;
         }
 
@@ -275,7 +275,7 @@ function format_currency($amount) {
             display: table-cell;
             vertical-align: middle;
             text-align: center;
-            padding: 50px;
+            padding: 0 40px;
         }
 
         .title-panel {
@@ -287,7 +287,7 @@ function format_currency($amount) {
             position: relative;
             overflow: hidden;
             margin: 0 auto;
-            max-width: 600px;
+            max-width: 500px;
         }
 
         .title-panel::before {
@@ -337,15 +337,18 @@ function format_currency($amount) {
             right: 0;
             top: 50%;
             transform: translateY(-50%);
-            width: 350px;
-            height: 350px;
-            opacity: 0.1;
+            width: 400px;
+            height: 400px;
+            opacity: 0.15;
             z-index: 0;
+            background-image: url('https://cristalwindows.co.uk/wp-content/uploads/2024/07/Black-uPVC-windows-Door-1.jpeg');
+            background-size: cover;
+            background-position: center;
+            border-radius: 10px;
         }
 
         .house-icon {
-            font-size: 300px;
-            color: #1a5490;
+            display: none;
         }
 
         .footer-section {
