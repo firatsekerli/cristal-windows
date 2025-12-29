@@ -1991,40 +1991,102 @@ class Quotation_Form_Plugin {
     }
 
     /**
-     * Save PDF file to uploads directory using mPDF
+     * Save PDF file to uploads directory using wkhtmltopdf (with mPDF fallback)
      */
     private function save_pdf_file($post_id, $data, $debug_log = array()) {
-        // Check if mPDF is available
+        // Get HTML content first
+        $html = $this->generate_pdf_content($post_id, $data);
+        $debug_log[] = "✓ HTML content generated";
+
+        // Create uploads directory structure
+        $upload_dir = wp_upload_dir();
+        $quotes_dir = $upload_dir['basedir'] . '/quotes';
+        $quotes_url = $upload_dir['baseurl'] . '/quotes';
+
+        if (!file_exists($quotes_dir)) {
+            wp_mkdir_p($quotes_dir);
+            $debug_log[] = "✓ Created quotes directory: $quotes_dir";
+        }
+
+        // Generate filename
+        $filename = 'quote-' . $post_id . '-' . sanitize_title($data['customer_name']) . '.pdf';
+        $file_path = $quotes_dir . '/' . $filename;
+        $debug_log[] = "Output path: $file_path";
+
+        // Try wkhtmltopdf first
+        $wkhtmltopdf_paths = [
+            '/usr/local/bin/wkhtmltopdf',
+            '/usr/bin/wkhtmltopdf',
+            'wkhtmltopdf'  // Try from PATH
+        ];
+
+        $wkhtmltopdf_binary = null;
+        foreach ($wkhtmltopdf_paths as $path) {
+            if (@is_executable($path) || $path === 'wkhtmltopdf') {
+                // Test if it works
+                $test_output = shell_exec($path . ' --version 2>&1');
+                if ($test_output && strpos($test_output, 'wkhtmltopdf') !== false) {
+                    $wkhtmltopdf_binary = $path;
+                    break;
+                }
+            }
+        }
+
+        if ($wkhtmltopdf_binary) {
+            try {
+                $debug_log[] = "✓ Found wkhtmltopdf: $wkhtmltopdf_binary";
+                error_log("PDF Generation: Using wkhtmltopdf for post $post_id");
+
+                // Create temporary HTML file
+                $temp_html = $quotes_dir . '/temp-' . $post_id . '.html';
+                file_put_contents($temp_html, $html);
+
+                // Build wkhtmltopdf command
+                $command = sprintf(
+                    '%s --page-size A4 --margin-top 15mm --margin-right 15mm --margin-bottom 15mm --margin-left 15mm --encoding UTF-8 --enable-local-file-access --quiet %s %s 2>&1',
+                    escapeshellarg($wkhtmltopdf_binary),
+                    escapeshellarg($temp_html),
+                    escapeshellarg($file_path)
+                );
+
+                // Execute command
+                $output = shell_exec($command);
+
+                // Clean up temp file
+                @unlink($temp_html);
+
+                // Check if PDF was created
+                if (file_exists($file_path) && filesize($file_path) > 0) {
+                    $file_size = filesize($file_path);
+                    $debug_log[] = "✓ wkhtmltopdf: PDF created successfully: " . round($file_size / 1024, 2) . " KB";
+                    error_log("PDF Generation: Success - wkhtmltopdf created PDF at $file_path");
+
+                    $pdf_url = $quotes_url . '/' . $filename;
+                    return array('url' => $pdf_url, 'debug_log' => $debug_log);
+                } else {
+                    $debug_log[] = "⚠ wkhtmltopdf failed, falling back to mPDF...";
+                    if ($output) {
+                        $debug_log[] = "wkhtmltopdf output: " . substr($output, 0, 200);
+                    }
+                }
+            } catch (Exception $e) {
+                $debug_log[] = "⚠ wkhtmltopdf exception: " . $e->getMessage();
+                $debug_log[] = "Falling back to mPDF...";
+            }
+        } else {
+            $debug_log[] = "wkhtmltopdf not found, using mPDF";
+        }
+
+        // Fallback to mPDF
         if (!class_exists('Mpdf\Mpdf')) {
             $debug_log[] = "❌ ERROR: mPDF library not found";
             error_log("PDF Generation: mPDF not available for post $post_id");
             return array('url' => false, 'debug_log' => $debug_log);
         }
 
-        $debug_log[] = "✓ Using mPDF for PDF generation";
-        error_log("PDF Generation: Using mPDF for post $post_id");
-
         try {
-            $debug_log[] = "Creating PDF document with mPDF...";
-
-            // Get HTML content first
-            $html = $this->generate_pdf_content($post_id, $data);
-            $debug_log[] = "✓ HTML content generated";
-
-            // Create uploads directory structure
-            $upload_dir = wp_upload_dir();
-            $quotes_dir = $upload_dir['basedir'] . '/quotes';
-            $quotes_url = $upload_dir['baseurl'] . '/quotes';
-
-            if (!file_exists($quotes_dir)) {
-                wp_mkdir_p($quotes_dir);
-                $debug_log[] = "✓ Created quotes directory: $quotes_dir";
-            }
-
-            // Generate filename
-            $filename = 'quote-' . $post_id . '-' . sanitize_title($data['customer_name']) . '.pdf';
-            $file_path = $quotes_dir . '/' . $filename;
-            $debug_log[] = "Output path: $file_path";
+            $debug_log[] = "Using mPDF for PDF generation...";
+            error_log("PDF Generation: Using mPDF for post $post_id");
 
             // Configure mPDF
             $config = [
@@ -2148,16 +2210,73 @@ class Quotation_Form_Plugin {
             'service_lookup' => $service_lookup
         );
 
-        // Generate PDF using mPDF
+        // Generate PDF using wkhtmltopdf (with mPDF fallback)
+        $filename = 'quote-' . $post_id . '-' . sanitize_title($data['customer_name']) . '.pdf';
+        $html = $this->generate_pdf_content($post_id, $data);
+
+        // Try wkhtmltopdf first
+        $wkhtmltopdf_paths = [
+            '/usr/local/bin/wkhtmltopdf',
+            '/usr/bin/wkhtmltopdf',
+            'wkhtmltopdf'
+        ];
+
+        $wkhtmltopdf_binary = null;
+        foreach ($wkhtmltopdf_paths as $path) {
+            if (@is_executable($path) || $path === 'wkhtmltopdf') {
+                $test_output = shell_exec($path . ' --version 2>&1');
+                if ($test_output && strpos($test_output, 'wkhtmltopdf') !== false) {
+                    $wkhtmltopdf_binary = $path;
+                    break;
+                }
+            }
+        }
+
+        if ($wkhtmltopdf_binary) {
+            try {
+                // Create temporary file for output
+                $temp_pdf = tempnam(sys_get_temp_dir(), 'pdf_');
+                $temp_html = tempnam(sys_get_temp_dir(), 'html_') . '.html';
+                file_put_contents($temp_html, $html);
+
+                // Build command
+                $command = sprintf(
+                    '%s --page-size A4 --margin-top 15mm --margin-right 15mm --margin-bottom 15mm --margin-left 15mm --encoding UTF-8 --enable-local-file-access --quiet %s %s 2>&1',
+                    escapeshellarg($wkhtmltopdf_binary),
+                    escapeshellarg($temp_html),
+                    escapeshellarg($temp_pdf)
+                );
+
+                // Execute
+                shell_exec($command);
+
+                // Check if PDF was created
+                if (file_exists($temp_pdf) && filesize($temp_pdf) > 0) {
+                    header('Content-Type: application/pdf');
+                    header('Content-Disposition: attachment; filename="' . $filename . '"');
+                    header('Content-Length: ' . filesize($temp_pdf));
+                    readfile($temp_pdf);
+
+                    // Clean up
+                    @unlink($temp_pdf);
+                    @unlink($temp_html);
+                    exit;
+                }
+
+                // Clean up failed attempt
+                @unlink($temp_pdf);
+                @unlink($temp_html);
+            } catch (Exception $e) {
+                error_log('wkhtmltopdf failed for download: ' . $e->getMessage());
+            }
+        }
+
+        // Fallback to mPDF
         if (!class_exists('Mpdf\Mpdf')) {
-            wp_die('mPDF library not available');
+            wp_die('PDF library not available');
         }
 
         try {
-            // Get HTML content
-            $html = $this->generate_pdf_content($post_id, $data);
-
-            // Configure mPDF
             $upload_dir = wp_upload_dir();
             $quotes_dir = $upload_dir['basedir'] . '/quotes';
 
@@ -2174,18 +2293,11 @@ class Quotation_Form_Plugin {
             ];
 
             $mpdf = new \Mpdf\Mpdf($config);
-
-            // Set document metadata
             $mpdf->SetCreator('Cristal Windows');
             $mpdf->SetAuthor('Cristal Windows, Doors & Conservatories Ltd');
             $mpdf->SetTitle('Quotation - ' . $data['customer_name']);
             $mpdf->SetSubject('Quotation');
-
-            // Write HTML
             $mpdf->WriteHTML($html);
-
-            // Output PDF for download
-            $filename = 'quote-' . $post_id . '-' . sanitize_title($data['customer_name']) . '.pdf';
             $mpdf->Output($filename, \Mpdf\Output\Destination::DOWNLOAD);
             exit;
         } catch (Exception $e) {
