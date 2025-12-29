@@ -254,6 +254,70 @@ function format_currency($amount) {
     </style>
 </head>
 <body>
+    <!-- COVER PAGE -->
+    <div class="cover-page">
+        <div class="dots-pattern-top"></div>
+        <div class="dots-pattern-bottom"></div>
+
+        <div class="header-section">
+            <div class="company-logo">Cristal</div>
+            <div class="company-tagline">WINDOWS • DOORS • CONSERVATORIES</div>
+        </div>
+
+        <div class="main-content">
+            <div class="background-graphic">
+                <div class="house-icon">🏠</div>
+            </div>
+
+            <div class="title-container">
+                <div class="title-panel">
+                    <h1 class="project-title">PROJECT<br>PROPOSAL</h1>
+                    <div class="highlight-bar"></div>
+                    <div class="subtitle">Presented by Cristal Windows</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-section">
+            <div class="certification-logo">
+                <div class="cert-placeholder">
+                    <span>LOGO</span>
+                </div>
+                <div class="cert-name">REHAU</div>
+            </div>
+
+            <div class="certification-logo">
+                <div class="cert-placeholder">
+                    <span>LOGO</span>
+                </div>
+                <div class="cert-name">TGAS</div>
+            </div>
+
+            <div class="certification-logo">
+                <div class="cert-placeholder">
+                    <span>LOGO</span>
+                </div>
+                <div class="cert-name">FENSA</div>
+            </div>
+
+            <div class="certification-logo">
+                <div class="cert-placeholder">
+                    <span>LOGO</span>
+                </div>
+                <div class="cert-name">GGF</div>
+            </div>
+
+            <div class="certification-logo">
+                <div class="cert-placeholder">
+                    <span>LOGO</span>
+                </div>
+                <div class="cert-name">Which?</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- QUOTATION PAGE -->
+    <div class="quotation-content page-break">
     <div class="header">
         <div class="header-logo">
             <img src="https://cristalwindows.co.uk/wp-content/uploads/2025/02/Cristal-Windows-LOGO-01.png" alt="Cristal Windows Logo">
@@ -340,6 +404,7 @@ function format_currency($amount) {
         <strong>Steve Cornish</strong><br>
         Cristal Windows, Doors & Conservatories Ltd</p>
     </div>
+    </div><!-- End Quotation Content -->
 
     <!-- Terms and Conditions Page -->
     <div class="page-break terms-page">
