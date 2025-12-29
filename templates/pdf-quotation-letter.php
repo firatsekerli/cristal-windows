@@ -85,6 +85,7 @@ function format_currency($amount) {
             width: 48%;
             float: left;
             box-sizing: border-box;
+            min-height: 200px;
         }
 
         .info-section:first-child {
