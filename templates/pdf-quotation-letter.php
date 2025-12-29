@@ -280,8 +280,6 @@ function format_currency($amount) {
 
         .title-panel {
             background: #1a5490;
-            background: -webkit-linear-gradient(135deg, #1a5490 0%, #2a6ab0 100%);
-            background: linear-gradient(135deg, #1a5490 0%, #2a6ab0 100%);
             padding: 60px;
             border-radius: 10px;
             box-shadow: 0 10px 40px rgba(26, 84, 144, 0.3);
@@ -453,8 +451,7 @@ function format_currency($amount) {
         <div class="dots-pattern-bottom"></div>
 
         <div class="header-section">
-            <div class="company-logo">Cristal</div>
-            <div class="company-tagline">WINDOWS • DOORS • CONSERVATORIES</div>
+            <img src="https://cristalwindows.co.uk/wp-content/uploads/2025/02/Cristal-Windows-LOGO-01.png" alt="Cristal Windows Logo">
         </div>
 
         <div class="main-content">
