@@ -59,16 +59,28 @@ function format_currency($amount) {
         }
 
         .info-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
+            width: 100%;
             margin-bottom: 30px;
+            overflow: hidden;
         }
 
         .info-section {
             background: #f8f9fa;
             padding: 15px;
             border-radius: 5px;
+            width: 48%;
+            float: left;
+            box-sizing: border-box;
+        }
+
+        .info-section:first-child {
+            margin-right: 4%;
+        }
+
+        .info-grid:after {
+            content: "";
+            display: table;
+            clear: both;
         }
 
         .info-section h3 {
@@ -105,6 +117,8 @@ function format_currency($amount) {
         }
 
         .price-section {
+            background: #1a5490;
+            background: -webkit-linear-gradient(135deg, #1a5490 0%, #2a6ab0 100%);
             background: linear-gradient(135deg, #1a5490 0%, #2a6ab0 100%);
             color: white;
             padding: 25px;
