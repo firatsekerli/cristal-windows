@@ -209,8 +209,11 @@ function format_currency($amount) {
 
         /* Item Pages */
         .item-page {
-            page-break-before: always;
             padding: 0;
+        }
+
+        .item-page.page-break-item {
+            page-break-before: always;
         }
 
         .item-technical-detail {
@@ -272,19 +275,6 @@ function format_currency($amount) {
             color: #333;
         }
 
-        .item-price-display {
-            background: #1a5490;
-            background: -webkit-linear-gradient(135deg, #1a5490 0%, #2a6ab0 100%);
-            background: linear-gradient(135deg, #1a5490 0%, #2a6ab0 100%);
-            color: white;
-            padding: 15px;
-            border-radius: 5px;
-            margin-top: 20px;
-            text-align: right;
-            font-size: 18px;
-            font-weight: bold;
-        }
-
         @media print {
             body {
                 padding: 0;
@@ -293,9 +283,6 @@ function format_currency($amount) {
                 break-inside: avoid;
             }
             .page-break {
-                page-break-before: always;
-            }
-            .item-page {
                 page-break-before: always;
             }
         }
@@ -451,7 +438,7 @@ function format_currency($amount) {
             }
             $product_name = implode(' ', $product_name_parts);
     ?>
-    <div class="item-page">
+    <div class="item-page<?php echo ($item_number > 1) ? ' page-break-item' : ''; ?>">
         <div class="item-technical-detail">
             Technical Detail: <?php echo $technical_detail; ?>
         </div>
@@ -516,6 +503,13 @@ function format_currency($amount) {
             </div>
             <?php endif; ?>
 
+            <?php if (!empty($item['glazing_pattern'])): ?>
+            <div class="item-detail-row">
+                <span class="item-detail-label">Glazing Pattern:</span>
+                <span class="item-detail-value"><?php echo esc_html($item['glazing_pattern']); ?></span>
+            </div>
+            <?php endif; ?>
+
             <?php if (!empty($item['glazing_features'])): ?>
             <div class="item-detail-row">
                 <span class="item-detail-label">Glazing Features:</span>
@@ -530,12 +524,6 @@ function format_currency($amount) {
             </div>
             <?php endif; ?>
         </div>
-
-        <?php if (isset($item['item_price']) && !empty($item['item_price'])): ?>
-        <div class="item-price-display">
-            Item Price: <?php echo format_currency((float)$item['item_price']); ?>
-        </div>
-        <?php endif; ?>
     </div>
     <?php
             $item_number++;
