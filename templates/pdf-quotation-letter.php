@@ -29,8 +29,7 @@ function format_currency($amount) {
             font-family: 'Arial', 'Helvetica', sans-serif;
             line-height: 1.6;
             color: #333;
-            max-width: 800px;
-            margin: 0 auto;
+            margin: 0;
             padding: 10px;
             background: white;
         }
