@@ -78,6 +78,8 @@ function format_currency($amount) {
             display: table;
             table-layout: fixed;
             border-spacing: 15px 0;
+            margin-left: -15px;
+            margin-right: -15px;
         }
 
         .info-section {
