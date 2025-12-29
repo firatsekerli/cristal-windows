@@ -78,6 +78,7 @@ class Quotation_Form_Plugin {
         add_filter('acf/load_field/key=field_type_category', array($this, 'populate_category_choices'));
         add_filter('acf/load_field/key=field_material_available_types', array($this, 'populate_type_choices'));
         add_filter('acf/load_field/key=field_style_types', array($this, 'populate_type_choices'));
+        add_filter('acf/load_field/key=field_style_materials', array($this, 'populate_material_choices'));
         add_filter('acf/load_field/key=field_pattern_available_glazing_types', array($this, 'populate_glazing_type_choices'));
         add_filter('acf/load_field/key=field_brand_available_types', array($this, 'populate_type_choices'));
         add_filter('acf/load_field/key=field_colour_available_materials', array($this, 'populate_material_choices'));
