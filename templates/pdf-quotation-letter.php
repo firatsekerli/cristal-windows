@@ -61,7 +61,7 @@ function format_currency($amount) {
             display: table-cell;
             vertical-align: bottom;
             text-align: right;
-            font-size: 12px;
+            font-size: 14px;
             color: #333;
             line-height: 1.8;
         }
@@ -85,7 +85,7 @@ function format_currency($amount) {
             width: 48%;
             float: left;
             box-sizing: border-box;
-            min-height: 200px;
+            min-height: 250px;
         }
 
         .info-section:first-child {
@@ -230,8 +230,8 @@ function format_currency($amount) {
         }
 
         .item-image img {
-            max-width: 400px;
-            max-height: 400px;
+            max-width: 325px;
+            max-height: 375px;
             width: auto;
             height: auto;
             display: block;
