@@ -207,6 +207,84 @@ function format_currency($amount) {
             font-size: 14px;
         }
 
+        /* Item Pages */
+        .item-page {
+            page-break-before: always;
+            padding: 0;
+        }
+
+        .item-technical-detail {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .item-image {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .item-image img {
+            max-width: 400px;
+            max-height: 400px;
+            width: auto;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+        }
+
+        .item-product-name {
+            font-size: 20px;
+            font-weight: bold;
+            color: #1a5490;
+            margin: 20px 0 15px 0;
+            text-align: center;
+        }
+
+        .item-details-list {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        .item-detail-row {
+            padding: 8px 0;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 14px;
+        }
+
+        .item-detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .item-detail-label {
+            font-weight: bold;
+            color: #555;
+            display: inline-block;
+            min-width: 150px;
+        }
+
+        .item-detail-value {
+            color: #333;
+        }
+
+        .item-price-display {
+            background: #1a5490;
+            background: -webkit-linear-gradient(135deg, #1a5490 0%, #2a6ab0 100%);
+            background: linear-gradient(135deg, #1a5490 0%, #2a6ab0 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            text-align: right;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
         @media print {
             body {
                 padding: 0;
@@ -215,6 +293,9 @@ function format_currency($amount) {
                 break-inside: avoid;
             }
             .page-break {
+                page-break-before: always;
+            }
+            .item-page {
                 page-break-before: always;
             }
         }
@@ -308,7 +389,159 @@ function format_currency($amount) {
         <strong>Steve Cornish</strong><br>
         Cristal Windows, Doors & Conservatories Ltd</p>
     </div>
-    </div><!-- End Quotation Content -->
+
+    <!-- Item Pages -->
+    <?php
+    if (!empty($data['basket_items']) && is_array($data['basket_items'])):
+        $item_number = 1;
+        foreach ($data['basket_items'] as $item):
+            // Determine which brand to use (per-item brand overrides centralized brand)
+            $brand_slug = '';
+            if (!empty($item['brand'])) {
+                $brand_slug = $item['brand'];
+            } elseif (!empty($data['centralized_brand'])) {
+                $brand_slug = $data['centralized_brand'];
+            }
+
+            // Look up brand name from slug
+            $brand_name = '';
+            if (!empty($brand_slug) && !empty($data['brand_lookup'][$brand_slug])) {
+                $brand_name = $data['brand_lookup'][$brand_slug];
+            }
+
+            // Determine which services to use (per-item services override centralized services)
+            $service_slugs = array();
+            if (!empty($item['services']) && is_array($item['services'])) {
+                $service_slugs = $item['services'];
+            } elseif (!empty($data['centralized_services']) && is_array($data['centralized_services'])) {
+                $service_slugs = $data['centralized_services'];
+            }
+
+            // Look up service names from slugs
+            $service_names = array();
+            if (!empty($service_slugs) && !empty($data['service_lookup'])) {
+                foreach ($service_slugs as $service_slug) {
+                    if (!empty($data['service_lookup'][$service_slug])) {
+                        $service_names[] = $data['service_lookup'][$service_slug];
+                    }
+                }
+            }
+
+            // Build technical detail string
+            $tech_details = array();
+            $tech_details[] = $item_number;
+            if (!empty($item['location'])) {
+                $tech_details[] = esc_html($item['location']);
+            }
+            foreach ($service_names as $service_name) {
+                $tech_details[] = esc_html($service_name);
+            }
+            $technical_detail = implode(' - ', $tech_details);
+
+            // Build product name: Brand Material Type
+            $product_name_parts = array();
+            if (!empty($brand_name)) {
+                $product_name_parts[] = $brand_name;
+            }
+            if (!empty($item['material_name']) && $item['material_name'] !== 'N/A') {
+                $product_name_parts[] = $item['material_name'];
+            }
+            if (!empty($item['type_name'])) {
+                $product_name_parts[] = $item['type_name'];
+            }
+            $product_name = implode(' ', $product_name_parts);
+    ?>
+    <div class="item-page">
+        <div class="item-technical-detail">
+            Technical Detail: <?php echo $technical_detail; ?>
+        </div>
+
+        <?php if (!empty($item['style_image'])): ?>
+        <div class="item-image">
+            <img src="<?php echo esc_url($item['style_image']); ?>" alt="<?php echo esc_attr($item['style_name']); ?>">
+        </div>
+        <?php endif; ?>
+
+        <div class="item-product-name">
+            <?php echo esc_html($product_name); ?>
+        </div>
+
+        <div class="item-details-list">
+            <?php if (!empty($item['category'])): ?>
+            <div class="item-detail-row">
+                <span class="item-detail-label">Category:</span>
+                <span class="item-detail-value"><?php echo esc_html(ucfirst($item['category'])); ?></span>
+            </div>
+            <?php endif; ?>
+
+            <?php if (!empty($item['style_name'])): ?>
+            <div class="item-detail-row">
+                <span class="item-detail-label">Style:</span>
+                <span class="item-detail-value"><?php echo esc_html($item['style_name']); ?></span>
+            </div>
+            <?php endif; ?>
+
+            <?php if (!empty($item['width']) && !empty($item['height'])): ?>
+            <div class="item-detail-row">
+                <span class="item-detail-label">Dimensions:</span>
+                <span class="item-detail-value"><?php echo esc_html($item['width']); ?>mm (W) x <?php echo esc_html($item['height']); ?>mm (H)</span>
+            </div>
+            <?php endif; ?>
+
+            <?php if (!empty($item['cill'])): ?>
+            <div class="item-detail-row">
+                <span class="item-detail-label">Cill:</span>
+                <span class="item-detail-value"><?php echo esc_html($item['cill']); ?></span>
+            </div>
+            <?php endif; ?>
+
+            <?php if (!empty($item['inside_colour'])): ?>
+            <div class="item-detail-row">
+                <span class="item-detail-label">Inside Colour:</span>
+                <span class="item-detail-value"><?php echo esc_html($item['inside_colour']); ?></span>
+            </div>
+            <?php endif; ?>
+
+            <?php if (!empty($item['outside_colour'])): ?>
+            <div class="item-detail-row">
+                <span class="item-detail-label">Outside Colour:</span>
+                <span class="item-detail-value"><?php echo esc_html($item['outside_colour']); ?></span>
+            </div>
+            <?php endif; ?>
+
+            <?php if (!empty($item['glazing_type'])): ?>
+            <div class="item-detail-row">
+                <span class="item-detail-label">Glazing Type:</span>
+                <span class="item-detail-value"><?php echo esc_html(ucfirst($item['glazing_type'])); ?></span>
+            </div>
+            <?php endif; ?>
+
+            <?php if (!empty($item['glazing_features'])): ?>
+            <div class="item-detail-row">
+                <span class="item-detail-label">Glazing Features:</span>
+                <span class="item-detail-value"><?php echo esc_html(ucfirst($item['glazing_features'])); ?></span>
+            </div>
+            <?php endif; ?>
+
+            <?php if (!empty($item['hardware_colour'])): ?>
+            <div class="item-detail-row">
+                <span class="item-detail-label">Hardware Colour:</span>
+                <span class="item-detail-value"><?php echo esc_html(ucfirst($item['hardware_colour'])); ?></span>
+            </div>
+            <?php endif; ?>
+        </div>
+
+        <?php if (isset($item['item_price']) && !empty($item['item_price'])): ?>
+        <div class="item-price-display">
+            Item Price: <?php echo format_currency((float)$item['item_price']); ?>
+        </div>
+        <?php endif; ?>
+    </div>
+    <?php
+            $item_number++;
+        endforeach;
+    endif;
+    ?>
 
     <!-- Terms and Conditions Page -->
     <div class="page-break terms-page">
