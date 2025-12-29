@@ -1443,7 +1443,7 @@ jQuery(document).ready(function($) {
         updateConfigurationPreview: function() {
             $('#style-preview').attr('src', this.currentItem.styleImage);
             $('#preview-category').text(this.capitalizeValue(this.currentItem.category) || '');
-            $('#preview-type').text(this.capitalizeValue(this.currentItem.typeName) || '');
+            $('#preview-type').text(this.currentItem.typeName || '');
             $('#preview-material').text(this.currentItem.materialName || 'N/A');
             $('#preview-style').text(this.capitalizeValue(this.currentItem.styleName) || '');
         },
