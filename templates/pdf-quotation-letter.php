@@ -503,10 +503,10 @@ function format_currency($amount) {
             </div>
             <?php endif; ?>
 
-            <?php if (!empty($item['glazing_pattern'])): ?>
+            <?php if (!empty($item['glazing_patterns'])): ?>
             <div class="item-detail-row">
                 <span class="item-detail-label">Glazing Pattern:</span>
-                <span class="item-detail-value"><?php echo esc_html($item['glazing_pattern']); ?></span>
+                <span class="item-detail-value"><?php echo esc_html($item['glazing_patterns']); ?></span>
             </div>
             <?php endif; ?>
 
