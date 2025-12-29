@@ -31,7 +31,7 @@ function format_currency($amount) {
             color: #333;
             max-width: 800px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 10px;
             background: white;
         }
 
@@ -182,8 +182,6 @@ function format_currency($amount) {
         <div class="company-name">Cristal Windows, Doors & Conservatories Ltd</div>
     </div>
 
-    <div class="document-title">QUOTATION</div>
-
     <div class="info-grid">
         <div class="info-section">
             <h3>Client Details</h3>
@@ -259,11 +257,6 @@ function format_currency($amount) {
         <p>Best regards,<br>
         <strong>Steve Cornish</strong><br>
         Cristal Windows, Doors & Conservatories Ltd</p>
-    </div>
-
-    <div class="footer">
-        <p>This quotation is valid for 30 days from the date of issue.<br>
-        Terms and conditions apply. Please see our full terms of business for details.</p>
     </div>
 </body>
 </html>
