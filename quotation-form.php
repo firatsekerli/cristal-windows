@@ -1985,71 +1985,61 @@ class Quotation_Form_Plugin {
      * Generate PDF content from Breakdance template
      */
     private function generate_pdf_content($post_id, $data) {
-        // Try to get Breakdance rendered HTML first
-        $breakdance_template_id = 7532; // Your Breakdance template ID
+        // Set up post data for ACF fields to work
+        global $post;
+        $original_post = $post;
+        $post = get_post($post_id);
+        setup_postdata($post);
 
-        // Get the post URL
-        $post_url = get_permalink($post_id);
+        // Start output buffering to capture all content
+        ob_start();
 
-        if ($post_url) {
-            // Fetch the rendered HTML from the URL
-            $response = wp_remote_get($post_url, array(
-                'timeout' => 30,
-                'sslverify' => false,
-                'headers' => array(
-                    'User-Agent' => 'WordPress PDF Generator'
-                )
-            ));
+        // Output all styles
+        wp_head();
 
-            if (!is_wp_error($response) && wp_remote_retrieve_response_code($response) === 200) {
-                $html = wp_remote_retrieve_body($response);
+        // Get the post content (Breakdance renders through the_content filter)
+        echo '<div class="breakdance-content">';
+        the_content();
+        echo '</div>';
 
-                // Extract the main content (remove header, footer, admin bar, etc.)
-                // Look for the main content area
-                if (preg_match('/<main[^>]*>(.*?)<\/main>/is', $html, $matches)) {
-                    $content = $matches[1];
-                } elseif (preg_match('/<article[^>]*>(.*?)<\/article>/is', $html, $matches)) {
-                    $content = $matches[1];
-                } else {
-                    // Use full body if we can't find main/article
-                    if (preg_match('/<body[^>]*>(.*?)<\/body>/is', $html, $matches)) {
-                        $content = $matches[1];
-                    } else {
-                        $content = $html;
-                    }
-                }
+        $full_html = ob_get_clean();
 
-                // Extract and inline CSS
-                preg_match_all('/<link[^>]*rel=["\']stylesheet["\'][^>]*href=["\'](.*?)["\'][^>]*>/i', $html, $css_links);
-                preg_match_all('/<style[^>]*>(.*?)<\/style>/is', $html, $inline_styles);
+        // Reset post data
+        wp_reset_postdata();
+        $post = $original_post;
 
-                // Build complete HTML with all styles
-                $pdf_html = '<!DOCTYPE html><html><head><meta charset="UTF-8">';
+        // Check if we got content
+        if (!empty($full_html)) {
+            // Extract styles
+            preg_match_all('/<style[^>]*>(.*?)<\/style>/is', $full_html, $inline_styles);
+            preg_match_all('/<link[^>]*rel=["\']stylesheet["\'][^>]*href=["\'](.*?)["\'][^>]*>/i', $full_html, $css_links);
 
-                // Add inline styles
-                foreach ($inline_styles[1] as $style) {
-                    $pdf_html .= '<style>' . $style . '</style>';
-                }
-
-                // Fetch and inline external CSS
-                foreach ($css_links[1] as $css_url) {
-                    if (strpos($css_url, 'http') !== 0) {
-                        $css_url = site_url($css_url);
-                    }
-                    $css_response = wp_remote_get($css_url, array('timeout' => 10, 'sslverify' => false));
-                    if (!is_wp_error($css_response)) {
-                        $css_content = wp_remote_retrieve_body($css_response);
-                        $pdf_html .= '<style>' . $css_content . '</style>';
-                    }
-                }
-
-                $pdf_html .= '</head><body>' . $content . '</body></html>';
-
-                return $pdf_html;
+            // Extract the main content
+            if (preg_match('/<div class="breakdance-content">(.*?)<\/div>/is', $full_html, $content_match)) {
+                $content = $content_match[1];
+            } else {
+                $content = $full_html;
             }
+
+            // Build complete HTML with all styles
+            $pdf_html = '<!DOCTYPE html><html><head><meta charset="UTF-8">';
+
+            // Add all inline styles
+            foreach ($inline_styles[0] as $style_tag) {
+                $pdf_html .= $style_tag;
+            }
+
+            // Add all stylesheet links
+            foreach ($css_links[0] as $link_tag) {
+                $pdf_html .= $link_tag;
+            }
+
+            $pdf_html .= '</head><body>' . $content . '</body></html>';
+
+            return $pdf_html;
         }
 
-        // Fallback to old template if Breakdance fetch fails
+        // Fallback to old template if Breakdance render fails
         ob_start();
         include QUOTATION_FORM_PLUGIN_DIR . 'templates/pdf-template.php';
         return ob_get_clean();
