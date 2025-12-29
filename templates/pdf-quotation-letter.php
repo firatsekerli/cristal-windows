@@ -222,6 +222,7 @@ function format_currency($amount) {
             background-size: 20px 20px;
             background-position: 0 0, 10px 10px;
             opacity: 0.6;
+            z-index: 2;
         }
 
         .dots-pattern-bottom {
@@ -235,6 +236,7 @@ function format_currency($amount) {
             background-size: 25px 25px;
             background-position: 0 0, 12.5px 12.5px;
             opacity: 0.4;
+            z-index: 2;
         }
 
         .header-section {
@@ -242,7 +244,7 @@ function format_currency($amount) {
             padding: 50px 40px;
             text-align: center;
             position: relative;
-            z-index: 10;
+            z-index: 5;
             box-shadow: 0 2px 15px rgba(0,0,0,0.1);
         }
 
@@ -276,6 +278,7 @@ function format_currency($amount) {
             display: table;
             width: 100%;
             table-layout: fixed;
+            z-index: 5;
         }
 
         .title-container {
@@ -283,28 +286,24 @@ function format_currency($amount) {
             vertical-align: middle;
             text-align: center;
             padding: 0 40px;
+            z-index: 10;
         }
 
         .title-panel {
-            background: #1a5490;
+            background: rgba(100, 100, 100, 0.85);
             padding: 60px;
             border-radius: 10px;
-            box-shadow: 0 10px 40px rgba(26, 84, 144, 0.3);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
             text-align: center;
             position: relative;
             overflow: hidden;
             margin: 0 auto;
             max-width: 500px;
+            z-index: 10;
         }
 
         .title-panel::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            display: none;
         }
 
         .project-title {
@@ -345,7 +344,6 @@ function format_currency($amount) {
             left: 0;
             width: 100%;
             height: 100%;
-            opacity: 0.15;
             z-index: 0;
             overflow: hidden;
         }
@@ -370,6 +368,7 @@ function format_currency($amount) {
             display: table;
             box-shadow: 0 -3px 15px rgba(0,0,0,0.1);
             height: 150px;
+            z-index: 5;
         }
 
         .certification-logo {
@@ -460,6 +459,10 @@ function format_currency($amount) {
 <body>
     <!-- COVER PAGE -->
     <div class="cover-page">
+        <div class="background-graphic">
+            <img src="https://cristalwindows.co.uk/wp-content/uploads/2024/07/Black-uPVC-windows-Door-1.jpeg" alt="Background">
+        </div>
+
         <div class="dots-pattern-top"></div>
         <div class="dots-pattern-bottom"></div>
 
@@ -468,10 +471,6 @@ function format_currency($amount) {
         </div>
 
         <div class="main-content">
-            <div class="background-graphic">
-                <img src="https://cristalwindows.co.uk/wp-content/uploads/2024/07/Black-uPVC-windows-Door-1.jpeg" alt="Background">
-            </div>
-
             <div class="title-container">
                 <div class="title-panel">
                     <h1 class="project-title">PROJECT<br>PROPOSAL</h1>
