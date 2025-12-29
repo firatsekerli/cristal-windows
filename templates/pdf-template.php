@@ -179,7 +179,7 @@ body {
 }
 .info-columns h3 {
     font-size: 9pt;
-    color: #000;
+    color: #1e3a8a;
     margin: 0;
     padding: 10px 15px;
     background-color: #F8F9FA;
