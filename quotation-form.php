@@ -1982,9 +1982,74 @@ class Quotation_Form_Plugin {
     }
 
     /**
-     * Generate PDF content
+     * Generate PDF content from Breakdance template
      */
     private function generate_pdf_content($post_id, $data) {
+        // Try to get Breakdance rendered HTML first
+        $breakdance_template_id = 7532; // Your Breakdance template ID
+
+        // Get the post URL
+        $post_url = get_permalink($post_id);
+
+        if ($post_url) {
+            // Fetch the rendered HTML from the URL
+            $response = wp_remote_get($post_url, array(
+                'timeout' => 30,
+                'sslverify' => false,
+                'headers' => array(
+                    'User-Agent' => 'WordPress PDF Generator'
+                )
+            ));
+
+            if (!is_wp_error($response) && wp_remote_retrieve_response_code($response) === 200) {
+                $html = wp_remote_retrieve_body($response);
+
+                // Extract the main content (remove header, footer, admin bar, etc.)
+                // Look for the main content area
+                if (preg_match('/<main[^>]*>(.*?)<\/main>/is', $html, $matches)) {
+                    $content = $matches[1];
+                } elseif (preg_match('/<article[^>]*>(.*?)<\/article>/is', $html, $matches)) {
+                    $content = $matches[1];
+                } else {
+                    // Use full body if we can't find main/article
+                    if (preg_match('/<body[^>]*>(.*?)<\/body>/is', $html, $matches)) {
+                        $content = $matches[1];
+                    } else {
+                        $content = $html;
+                    }
+                }
+
+                // Extract and inline CSS
+                preg_match_all('/<link[^>]*rel=["\']stylesheet["\'][^>]*href=["\'](.*?)["\'][^>]*>/i', $html, $css_links);
+                preg_match_all('/<style[^>]*>(.*?)<\/style>/is', $html, $inline_styles);
+
+                // Build complete HTML with all styles
+                $pdf_html = '<!DOCTYPE html><html><head><meta charset="UTF-8">';
+
+                // Add inline styles
+                foreach ($inline_styles[1] as $style) {
+                    $pdf_html .= '<style>' . $style . '</style>';
+                }
+
+                // Fetch and inline external CSS
+                foreach ($css_links[1] as $css_url) {
+                    if (strpos($css_url, 'http') !== 0) {
+                        $css_url = site_url($css_url);
+                    }
+                    $css_response = wp_remote_get($css_url, array('timeout' => 10, 'sslverify' => false));
+                    if (!is_wp_error($css_response)) {
+                        $css_content = wp_remote_retrieve_body($css_response);
+                        $pdf_html .= '<style>' . $css_content . '</style>';
+                    }
+                }
+
+                $pdf_html .= '</head><body>' . $content . '</body></html>';
+
+                return $pdf_html;
+            }
+        }
+
+        // Fallback to old template if Breakdance fetch fails
         ob_start();
         include QUOTATION_FORM_PLUGIN_DIR . 'templates/pdf-template.php';
         return ob_get_clean();
