@@ -362,6 +362,15 @@
                     "instructions": "Exclude specific finishes for specific product types (optional, for fine-grained control)",
                     "layout": "row",
                     "button_label": "Add Exclusion Rule",
+                    "conditional_logic": [
+                        [
+                            {
+                                "field": "field_colour_category",
+                                "operator": "==",
+                                "value": "Aluminium Special Colours"
+                            }
+                        ]
+                    ],
                     "sub_fields": [
                         {
                             "key": "field_exclusion_product_type",
@@ -827,5 +836,5 @@
     "style": "default",
     "label_placement": "top",
     "instruction_placement": "label",
-    "modified": 1767031146
+    "modified": 1767032371
 }
