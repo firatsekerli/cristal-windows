@@ -425,10 +425,18 @@ function format_currency($amount) {
                 $product_name_parts[] = $brand_name;
             }
             if (!empty($item['material_name']) && $item['material_name'] !== 'N/A') {
-                $product_name_parts[] = $item['material_name'];
+                // Convert material slug to display name
+                $material_display_name = !empty($data['material_lookup'][$item['material_name']])
+                    ? $data['material_lookup'][$item['material_name']]
+                    : $item['material_name'];
+                $product_name_parts[] = $material_display_name;
             }
             if (!empty($item['type_name'])) {
-                $product_name_parts[] = $item['type_name'];
+                // Convert type slug to display name
+                $type_display_name = !empty($data['type_lookup'][$item['type_name']])
+                    ? $data['type_lookup'][$item['type_name']]
+                    : $item['type_name'];
+                $product_name_parts[] = $type_display_name;
             }
             $product_name = implode(' ', $product_name_parts);
     ?>
@@ -451,7 +459,13 @@ function format_currency($amount) {
             <?php if (!empty($item['category'])): ?>
             <div class="item-detail-row">
                 <span class="item-detail-label">Category:</span>
-                <span class="item-detail-value"><?php echo esc_html(ucfirst($item['category'])); ?></span>
+                <span class="item-detail-value"><?php
+                    // Convert category slug to display name
+                    $category_display_name = !empty($data['category_lookup'][$item['category']])
+                        ? $data['category_lookup'][$item['category']]
+                        : ucfirst($item['category']);
+                    echo esc_html($category_display_name);
+                ?></span>
             </div>
             <?php endif; ?>
 

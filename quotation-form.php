@@ -318,11 +318,12 @@ class Quotation_Form_Plugin {
             $categories = get_field('product_categories', 'option');
             if (!empty($categories) && is_array($categories)) {
                 foreach ($categories as $category) {
+                    $slug = isset($category['slug']) ? $category['slug'] : '';
                     $name = isset($category['name']) ? $category['name'] : '';
 
-                    if ($name) {
-                        // Use the name as both key and value for display consistency
-                        $field['choices'][$name] = $name;
+                    if ($slug && $name) {
+                        // Use slug as key, name as display value
+                        $field['choices'][$slug] = $name;
                     }
                 }
             }
@@ -342,11 +343,12 @@ class Quotation_Form_Plugin {
             $types = get_field('product_types', 'option');
             if (!empty($types) && is_array($types)) {
                 foreach ($types as $type) {
+                    $slug = isset($type['slug']) ? $type['slug'] : '';
                     $name = isset($type['name']) ? $type['name'] : '';
 
-                    if ($name) {
-                        // Use the name as both key and value for display consistency
-                        $field['choices'][$name] = $name;
+                    if ($slug && $name) {
+                        // Use slug as key, name as display value
+                        $field['choices'][$slug] = $name;
                     }
                 }
             }
@@ -366,11 +368,12 @@ class Quotation_Form_Plugin {
             $materials = get_field('materials', 'option');
             if (!empty($materials) && is_array($materials)) {
                 foreach ($materials as $material) {
+                    $slug = isset($material['slug']) ? $material['slug'] : '';
                     $name = isset($material['name']) ? $material['name'] : '';
 
-                    if ($name) {
-                        // Use the name as both key and value for display consistency
-                        $field['choices'][$name] = $name;
+                    if ($slug && $name) {
+                        // Use slug as key, name as display value
+                        $field['choices'][$slug] = $name;
                     }
                 }
             }
@@ -1577,9 +1580,9 @@ class Quotation_Form_Plugin {
 
         foreach ($basket_items as $item) {
             $normalized_item = array(
-                'category' => isset($item['category']) ? $this->capitalize_value($item['category']) : '',
-                'type_name' => isset($item['typeName']) ? $this->capitalize_value($item['typeName']) : '',
-                'material_name' => isset($item['materialName']) ? $this->capitalize_value($item['materialName']) : '',
+                'category' => isset($item['category']) ? $item['category'] : '',
+                'type_name' => isset($item['type']) ? $item['type'] : '',
+                'material_name' => isset($item['material']) ? $item['material'] : '',
                 'style_image' => isset($item['styleImage']) ? $item['styleImage'] : '',
                 'style_name' => isset($item['styleName']) ? $this->capitalize_value($item['styleName']) : '',
                 'width' => isset($item['width']) ? $item['width'] : '',
@@ -1935,6 +1938,39 @@ class Quotation_Form_Plugin {
             }
         }
 
+        // Get category information
+        $categories = get_field('product_categories', 'option');
+        $category_lookup = array();
+        if (!empty($categories)) {
+            foreach ($categories as $category) {
+                if (isset($category['slug']) && isset($category['name'])) {
+                    $category_lookup[$category['slug']] = $category['name'];
+                }
+            }
+        }
+
+        // Get type information
+        $types = get_field('product_types', 'option');
+        $type_lookup = array();
+        if (!empty($types)) {
+            foreach ($types as $type) {
+                if (isset($type['slug']) && isset($type['name'])) {
+                    $type_lookup[$type['slug']] = $type['name'];
+                }
+            }
+        }
+
+        // Get material information
+        $materials = get_field('materials', 'option');
+        $material_lookup = array();
+        if (!empty($materials)) {
+            foreach ($materials as $material) {
+                if (isset($material['slug']) && isset($material['name'])) {
+                    $material_lookup[$material['slug']] = $material['name'];
+                }
+            }
+        }
+
         $debug_log[] = "Customer: " . $customer_name;
         $debug_log[] = "Total quote price: £" . $quote_price;
 
@@ -1952,7 +1988,10 @@ class Quotation_Form_Plugin {
             'centralized_brand' => $centralized_brand,
             'brand_lookup' => $brand_lookup,
             'centralized_services' => $centralized_services,
-            'service_lookup' => $service_lookup
+            'service_lookup' => $service_lookup,
+            'category_lookup' => $category_lookup,
+            'type_lookup' => $type_lookup,
+            'material_lookup' => $material_lookup
         );
 
         // Generate PDF file and save it
@@ -2201,6 +2240,39 @@ class Quotation_Form_Plugin {
             }
         }
 
+        // Get category information
+        $categories = get_field('product_categories', 'option');
+        $category_lookup = array();
+        if (!empty($categories)) {
+            foreach ($categories as $category) {
+                if (isset($category['slug']) && isset($category['name'])) {
+                    $category_lookup[$category['slug']] = $category['name'];
+                }
+            }
+        }
+
+        // Get type information
+        $types = get_field('product_types', 'option');
+        $type_lookup = array();
+        if (!empty($types)) {
+            foreach ($types as $type) {
+                if (isset($type['slug']) && isset($type['name'])) {
+                    $type_lookup[$type['slug']] = $type['name'];
+                }
+            }
+        }
+
+        // Get material information
+        $materials = get_field('materials', 'option');
+        $material_lookup = array();
+        if (!empty($materials)) {
+            foreach ($materials as $material) {
+                if (isset($material['slug']) && isset($material['name'])) {
+                    $material_lookup[$material['slug']] = $material['name'];
+                }
+            }
+        }
+
         $data = array(
             'customer_name' => $customer_name,
             'customer_email' => $customer_email,
@@ -2214,7 +2286,10 @@ class Quotation_Form_Plugin {
             'centralized_brand' => $centralized_brand,
             'brand_lookup' => $brand_lookup,
             'centralized_services' => $centralized_services,
-            'service_lookup' => $service_lookup
+            'service_lookup' => $service_lookup,
+            'category_lookup' => $category_lookup,
+            'type_lookup' => $type_lookup,
+            'material_lookup' => $material_lookup
         );
 
         // Generate PDF using wkhtmltopdf (with mPDF fallback)
