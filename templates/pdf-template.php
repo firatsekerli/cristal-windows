@@ -168,7 +168,8 @@ body {
 .info-columns {
     width: 100%;
     margin-bottom: 20px;
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 15px 0;
 }
 .info-columns td {
     vertical-align: top;
@@ -176,30 +177,27 @@ body {
     width: 50%;
     background-color: #F8F9FA;
 }
-.info-columns td:first-child {
-    padding-right: 10px;
-}
 .info-columns h3 {
     font-size: 9pt;
-    color: #333;
+    color: #000;
     margin: 0;
-    padding: 8px 12px;
+    padding: 10px 15px;
     background-color: #F8F9FA;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 2px solid #333;
     font-weight: bold;
     text-transform: uppercase;
 }
 .info-columns .content {
-    padding: 12px;
+    padding: 15px;
 }
 .info-columns p {
-    margin: 4px 0;
+    margin: 5px 0;
     font-size: 8pt;
-    line-height: 1.3;
+    line-height: 1.4;
 }
 .info-columns .label {
     font-weight: bold;
-    color: #555;
+    color: #333;
 }
 </style>
 </head>
