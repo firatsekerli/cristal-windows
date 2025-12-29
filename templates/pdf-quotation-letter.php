@@ -36,14 +36,18 @@ function format_currency($amount) {
 
         .header {
             border-bottom: 3px solid #1a5490;
-            padding-bottom: 20px;
+            padding-bottom: 30px;
             margin-bottom: 30px;
             overflow: hidden;
+            display: table;
+            width: 100%;
         }
 
         .header-logo {
-            float: left;
+            display: table-cell;
+            vertical-align: bottom;
             max-width: 120px;
+            width: 120px;
         }
 
         .header-logo img {
@@ -53,12 +57,12 @@ function format_currency($amount) {
         }
 
         .header-contact {
-            float: right;
+            display: table-cell;
+            vertical-align: bottom;
             text-align: right;
             font-size: 12px;
             color: #333;
             line-height: 1.8;
-            margin-top: 10px;
         }
 
         .header:after {
@@ -253,7 +257,6 @@ function format_currency($amount) {
             <img src="https://cristalwindows.co.uk/wp-content/uploads/2025/02/Cristal-Windows-LOGO-01.png" alt="Cristal Windows Logo">
         </div>
         <div class="header-contact">
-            23 Cedar Drive, Fleet, Hampshire GU51 3HD<br>
             www.cristalwindows.co.uk<br>
             01252 810777 | enquiries@cristalwindows.co.uk
         </div>
