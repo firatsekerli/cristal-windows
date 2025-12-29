@@ -75,7 +75,8 @@ function format_currency($amount) {
         .info-grid {
             width: 100%;
             margin-bottom: 30px;
-            overflow: hidden;
+            display: table;
+            table-layout: fixed;
         }
 
         .info-section {
@@ -83,19 +84,13 @@ function format_currency($amount) {
             padding: 15px;
             border-radius: 5px;
             width: 48%;
-            float: left;
+            display: table-cell;
+            vertical-align: top;
             box-sizing: border-box;
-            min-height: 250px;
         }
 
         .info-section:first-child {
             margin-right: 4%;
-        }
-
-        .info-grid:after {
-            content: "";
-            display: table;
-            clear: both;
         }
 
         .info-section h3 {
