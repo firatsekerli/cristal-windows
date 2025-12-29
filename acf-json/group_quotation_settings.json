@@ -261,10 +261,8 @@
                         "Woodgrain": "Woodgrain",
                         "Aluminium Stock Colours": "Aluminium Stock Colours",
                         "Aluminium Special Colours": "Aluminium Special Colours",
-                        "DoorCo White": "DoorCo White",
                         "DoorCo Standard": "DoorCo Standard",
-                        "DoorCo Premium": "DoorCo Premium",
-                        "DoorCo OakRose": "DoorCo OakRose"
+                        "DoorCo Premium": "DoorCo Premium"
                     },
                     "default_value": "Colour"
                 },
@@ -829,5 +827,5 @@
     "style": "default",
     "label_placement": "top",
     "instruction_placement": "label",
-    "modified": 1767025197
+    "modified": 1767031146
 }
