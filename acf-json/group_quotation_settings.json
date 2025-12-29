@@ -267,23 +267,6 @@
                     "default_value": "Colour"
                 },
                 {
-                    "key": "field_colour_application",
-                    "label": "Colour Application",
-                    "name": "colour_application",
-                    "type": "select",
-                    "instructions": "Select whether this colour is available for external, internal, or both applications",
-                    "choices": {
-                        "External": "External",
-                        "Internal": "Internal"
-                    },
-                    "default_value": [],
-                    "allow_null": 1,
-                    "multiple": 1,
-                    "ui": 1,
-                    "ajax": 0,
-                    "placeholder": "Select application..."
-                },
-                {
                     "key": "field_colour_finish_type",
                     "label": "Finish Type",
                     "name": "finish_type",
@@ -836,5 +819,5 @@
     "style": "default",
     "label_placement": "top",
     "instruction_placement": "label",
-    "modified": 1767032371
+    "modified": 1767032490
 }
