@@ -38,6 +38,33 @@ function format_currency($amount) {
             border-bottom: 3px solid #1a5490;
             padding-bottom: 20px;
             margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .header-logo {
+            float: left;
+            max-width: 120px;
+        }
+
+        .header-logo img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .header-contact {
+            float: right;
+            text-align: right;
+            font-size: 12px;
+            color: #333;
+            line-height: 1.8;
+            margin-top: 10px;
+        }
+
+        .header:after {
+            content: "";
+            display: table;
+            clear: both;
         }
 
         .company-name {
@@ -222,7 +249,14 @@ function format_currency($amount) {
 </head>
 <body>
     <div class="header">
-        <div class="company-name">Cristal Windows, Doors & Conservatories Ltd</div>
+        <div class="header-logo">
+            <img src="https://cristalwindows.co.uk/wp-content/uploads/2025/02/Cristal-Windows-LOGO-01.png" alt="Cristal Windows Logo">
+        </div>
+        <div class="header-contact">
+            23 Cedar Drive, Fleet, Hampshire GU51 3HD<br>
+            www.cristalwindows.co.uk<br>
+            01252 810777 | enquiries@cristalwindows.co.uk
+        </div>
     </div>
 
     <div class="info-grid">
