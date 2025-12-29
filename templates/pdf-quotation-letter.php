@@ -213,7 +213,7 @@ function format_currency($amount) {
 
         .header-section {
             background: white;
-            padding: 50px 40px;
+            padding: 0px 40px;
             text-align: center;
             position: relative;
             z-index: 5;
@@ -225,23 +225,6 @@ function format_currency($amount) {
             height: auto;
             display: block;
             margin: 0 auto;
-        }
-
-        .company-logo {
-            font-size: 42px;
-            font-weight: bold;
-            color: #1a5490;
-            font-style: italic;
-            margin-bottom: 10px;
-            letter-spacing: -1px;
-        }
-
-        .company-tagline {
-            color: #1a5490;
-            font-size: 15px;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            font-weight: 500;
         }
 
         .main-content {
@@ -376,7 +359,6 @@ function format_currency($amount) {
         .page-break {
             page-break-before: always;
             margin-top: 0;
-            padding-top: 40px;
         }
 
         .terms-page {
