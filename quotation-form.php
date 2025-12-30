@@ -2220,6 +2220,13 @@ class Quotation_Form_Plugin {
             $debug_log[] = "Using mPDF for PDF generation...";
             error_log("PDF Generation: Using mPDF for post $post_id");
 
+            // Ensure temp directory exists for mPDF
+            $temp_dir = $quotes_dir . '/tmp';
+            if (!file_exists($temp_dir)) {
+                wp_mkdir_p($temp_dir);
+                $debug_log[] = "✓ Created temp directory: $temp_dir";
+            }
+
             // Configure mPDF
             $config = [
                 'mode' => 'utf-8',
@@ -2230,7 +2237,7 @@ class Quotation_Form_Plugin {
                 'margin_bottom' => 15,
                 'margin_header' => 0,
                 'margin_footer' => 0,
-                'tempDir' => $quotes_dir . '/tmp'
+                'tempDir' => $temp_dir
             ];
 
             $mpdf = new \Mpdf\Mpdf($config);
