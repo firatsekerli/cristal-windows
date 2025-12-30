@@ -1383,6 +1383,72 @@ class Quotation_Form_Plugin {
     }
 
     /**
+     * Sanitize phone number - allow only numbers, spaces, +, -, ( and )
+     */
+    private function sanitize_phone_number($phone) {
+        return preg_replace('/[^0-9\s\+\-\(\)]/', '', $phone);
+    }
+
+    /**
+     * Sanitize and validate UK postcode format
+     */
+    private function sanitize_postcode($postcode) {
+        $postcode = sanitize_text_field($postcode);
+        // Validate UK postcode format
+        if (!preg_match('/^(GIR\s?0AA|[A-Z]{1,2}\d[A-Z\d]?\s?\d[A-Z]{2})$/i', $postcode)) {
+            return '';
+        }
+        return strtoupper($postcode);
+    }
+
+    /**
+     * Sanitize basket items with field-specific sanitization
+     */
+    private function sanitize_basket_items($items) {
+        if (!is_array($items)) {
+            return array();
+        }
+
+        $sanitized = array();
+        foreach ($items as $item) {
+            if (!is_array($item)) {
+                continue;
+            }
+
+            $sanitized[] = array(
+                'category' => sanitize_text_field($item['category'] ?? ''),
+                'type' => sanitize_text_field($item['type'] ?? ''),
+                'typeName' => sanitize_text_field($item['typeName'] ?? ''),
+                'material' => sanitize_text_field($item['material'] ?? ''),
+                'materialName' => sanitize_text_field($item['materialName'] ?? ''),
+                'style' => sanitize_text_field($item['style'] ?? ''),
+                'styleName' => sanitize_text_field($item['styleName'] ?? ''),
+                'styleImage' => esc_url_raw($item['styleImage'] ?? ''),
+                'width' => absint($item['width'] ?? 0),
+                'height' => absint($item['height'] ?? 0),
+                'cill' => sanitize_text_field($item['cill'] ?? ''),
+                'insideColour' => sanitize_text_field($item['insideColour'] ?? ''),
+                'outsideColour' => sanitize_text_field($item['outsideColour'] ?? ''),
+                'insideColourName' => sanitize_text_field($item['insideColourName'] ?? ''),
+                'outsideColourName' => sanitize_text_field($item['outsideColourName'] ?? ''),
+                'insideFinishType' => sanitize_text_field($item['insideFinishType'] ?? ''),
+                'outsideFinishType' => sanitize_text_field($item['outsideFinishType'] ?? ''),
+                'aluminiumColourType' => sanitize_text_field($item['aluminiumColourType'] ?? ''),
+                'glazingType' => sanitize_text_field($item['glazingType'] ?? ''),
+                'glazingTypeName' => sanitize_text_field($item['glazingTypeName'] ?? ''),
+                'glazingPattern' => sanitize_text_field($item['glazingPattern'] ?? ''),
+                'glazingFeatures' => sanitize_text_field($item['glazingFeatures'] ?? ''),
+                'glazingFeaturesName' => sanitize_text_field($item['glazingFeaturesName'] ?? ''),
+                'hardwareColour' => sanitize_text_field($item['hardwareColour'] ?? ''),
+                'hardwareColourName' => sanitize_text_field($item['hardwareColourName'] ?? ''),
+                'location' => sanitize_text_field($item['location'] ?? ''),
+                'attachedFiles' => isset($item['attachedFiles']) && is_array($item['attachedFiles']) ? $item['attachedFiles'] : array()
+            );
+        }
+        return $sanitized;
+    }
+
+    /**
      * Handle AJAX form submission
      */
     public function handle_form_submission() {
@@ -1391,14 +1457,27 @@ class Quotation_Form_Plugin {
         $basket_items = isset($_POST['basket_items']) ? json_decode(stripslashes($_POST['basket_items']), true) : array();
         $customer_data = isset($_POST['customer_data']) ? $_POST['customer_data'] : array();
 
-        // Sanitize customer data
-        $customer_data = array_map('sanitize_text_field', $customer_data);
+        // Sanitize basket items with field-specific sanitization
+        $sanitized_basket_items = $this->sanitize_basket_items($basket_items);
+
+        // Sanitize customer data with field-specific sanitization
+        $sanitized_customer_data = array(
+            'name' => sanitize_text_field($customer_data['name'] ?? ''),
+            'email' => sanitize_email($customer_data['email'] ?? ''),
+            'phone' => $this->sanitize_phone_number($customer_data['phone'] ?? ''),
+            'street' => sanitize_text_field($customer_data['street'] ?? ''),
+            'town' => sanitize_text_field($customer_data['town'] ?? ''),
+            'county' => sanitize_text_field($customer_data['county'] ?? ''),
+            'postcode' => $this->sanitize_postcode($customer_data['postcode'] ?? ''),
+            'preferred_contact' => sanitize_text_field($customer_data['preferred_contact'] ?? 'email'),
+            'additional_notes' => sanitize_textarea_field($customer_data['additional_notes'] ?? '')
+        );
 
         // Save to quotation CPT
-        $post_id = $this->save_to_quotation_cpt($basket_items, $customer_data);
+        $post_id = $this->save_to_quotation_cpt($sanitized_basket_items, $sanitized_customer_data);
 
         // Send email notification
-        $this->send_email_notification($basket_items, $customer_data, $post_id);
+        $this->send_email_notification($sanitized_basket_items, $sanitized_customer_data, $post_id);
 
         wp_send_json_success(array(
             'message' => 'Quotation request submitted successfully!',
