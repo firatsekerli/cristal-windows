@@ -15,10 +15,10 @@
             "name": "product_categories",
             "type": "repeater",
             "instructions": "All categories. Drag rows to reorder.",
-            "layout": "table",
+            "layout": "row",
             "button_label": "Add Category",
             "pagination": 0,
-            "rows_per_page": 40,
+            "rows_per_page": 20,
             "sub_fields": [
                 {
                     "key": "field_category_name",
@@ -57,10 +57,10 @@
             "name": "product_types",
             "type": "repeater",
             "instructions": "All types. Drag rows to reorder.",
-            "layout": "table",
+            "layout": "row",
             "button_label": "Add Type",
             "pagination": 0,
-            "rows_per_page": 40,
+            "rows_per_page": 20,
             "sub_fields": [
                 {
                     "key": "field_type_name",
@@ -112,10 +112,10 @@
             "name": "materials",
             "type": "repeater",
             "instructions": "All materials. Drag rows to reorder.",
-            "layout": "table",
+            "layout": "row",
             "button_label": "Add Material",
             "pagination": 0,
-            "rows_per_page": 40,
+            "rows_per_page": 20,
             "sub_fields": [
                 {
                     "key": "field_material_name",
@@ -168,10 +168,10 @@
             "name": "styles",
             "type": "repeater",
             "instructions": "All styles. Drag rows to reorder.",
-            "layout": "table",
+            "layout": "row",
             "button_label": "Add Style",
             "pagination": 1,
-            "rows_per_page": 40,
+            "rows_per_page": 20,
             "sub_fields": [
                 {
                     "key": "field_style_name",
@@ -241,7 +241,7 @@
             "layout": "row",
             "button_label": "Add Colour",
             "pagination": 1,
-            "rows_per_page": 40,
+            "rows_per_page": 20,
             "sub_fields": [
                 {
                     "key": "field_colour_name",
@@ -403,10 +403,10 @@
             "name": "cill_options",
             "type": "repeater",
             "instructions": "All cill options. Drag rows to reorder.",
-            "layout": "table",
+            "layout": "row",
             "button_label": "Add Cill Option",
             "pagination": 0,
-            "rows_per_page": 40,
+            "rows_per_page": 20,
             "sub_fields": [
                 {
                     "key": "field_cill_label",
@@ -437,10 +437,10 @@
             "name": "glazing_types",
             "type": "repeater",
             "instructions": "All glazing types. Drag rows to reorder.",
-            "layout": "table",
+            "layout": "row",
             "button_label": "Add Glazing Type",
             "pagination": 0,
-            "rows_per_page": 40,
+            "rows_per_page": 20,
             "sub_fields": [
                 {
                     "key": "field_glazing_type_label",
@@ -481,10 +481,10 @@
             "name": "patterns",
             "type": "repeater",
             "instructions": "All glazing patterns. Drag rows to reorder.",
-            "layout": "table",
+            "layout": "row",
             "button_label": "Add Glazing Pattern",
             "pagination": 0,
-            "rows_per_page": 40,
+            "rows_per_page": 20,
             "sub_fields": [
                 {
                     "key": "field_pattern_name",
@@ -540,10 +540,10 @@
             "name": "glazing_features",
             "type": "repeater",
             "instructions": "All glazing features. Drag rows to reorder.",
-            "layout": "table",
+            "layout": "row",
             "button_label": "Add Glazing Feature",
             "pagination": 0,
-            "rows_per_page": 40,
+            "rows_per_page": 20,
             "sub_fields": [
                 {
                     "key": "field_feature_name",
@@ -597,10 +597,10 @@
             "name": "hardware_colours",
             "type": "repeater",
             "instructions": "All hardware colours. Drag rows to reorder.",
-            "layout": "table",
+            "layout": "row",
             "button_label": "Add Hardware Colour",
             "pagination": 0,
-            "rows_per_page": 40,
+            "rows_per_page": 20,
             "sub_fields": [
                 {
                     "key": "field_hardware_colour_label",
@@ -639,9 +639,9 @@
             "name": "openings",
             "type": "repeater",
             "instructions": "Opening configurations (e.g., Open In - Master Right). Only shown for selected product types. Drag rows to reorder.",
-            "layout": "table",
+            "layout": "row",
             "button_label": "Add Opening",
-            "pagination": 1,
+            "pagination": 0,
             "rows_per_page": 20,
             "sub_fields": [
                 {
@@ -699,10 +699,10 @@
             "name": "brands",
             "type": "repeater",
             "instructions": "All product brands. Drag rows to reorder.",
-            "layout": "table",
+            "layout": "row",
             "button_label": "Add Brand",
             "pagination": 0,
-            "rows_per_page": 40,
+            "rows_per_page": 20,
             "sub_fields": [
                 {
                     "key": "field_brand_name",
@@ -749,10 +749,10 @@
             "name": "services",
             "type": "repeater",
             "instructions": "All services offered. Drag rows to reorder.",
-            "layout": "table",
+            "layout": "row",
             "button_label": "Add Service",
             "pagination": 0,
-            "rows_per_page": 40,
+            "rows_per_page": 20,
             "sub_fields": [
                 {
                     "key": "field_service_name",
@@ -819,5 +819,5 @@
     "style": "default",
     "label_placement": "top",
     "instruction_placement": "label",
-    "modified": 1767032490
+    "modified": 1767078370
 }
