@@ -72,39 +72,31 @@ function format_currency($amount) {
             clear: both;
         }
 
+        .info-grid-wrapper {
+            margin-left: -7.5px;
+            margin-right: -7.5px;
+            margin-bottom: 30px;
+        }
+
         .info-grid {
             width: 100%;
-            margin-bottom: 30px;
             display: table;
             table-layout: fixed;
             border-collapse: separate;
-            border-spacing: 0;
+            border-spacing: 15px 0;
         }
 
         .info-section {
             display: table-cell;
             vertical-align: top;
             width: 50%;
-            padding: 0;
-        }
-
-        .info-section:first-child {
-            padding-right: 7.5px;
-        }
-
-        .info-section:last-child {
-            padding-left: 7.5px;
-        }
-
-        .info-section-inner {
             background: #f8f9fa;
             padding: 15px;
             border-radius: 5px;
             box-sizing: border-box;
-            height: 100%;
         }
 
-        .info-section-inner h3 {
+        .info-section h3 {
             color: #1a5490;
             margin-top: 0;
             margin-bottom: 15px;
@@ -114,12 +106,12 @@ function format_currency($amount) {
             padding-bottom: 5px;
         }
 
-        .info-section-inner .info-item {
+        .info-item {
             margin-bottom: 8px;
             font-size: 14px;
         }
 
-        .info-section-inner .info-label {
+        .info-label {
             font-weight: bold;
             color: #555;
         }
@@ -286,7 +278,7 @@ function format_currency($amount) {
             body {
                 padding: 0;
             }
-            .info-section-inner {
+            .info-section {
                 break-inside: avoid;
             }
             .page-break {
@@ -307,9 +299,9 @@ function format_currency($amount) {
         </div>
     </div>
 
-    <div class="info-grid">
-        <div class="info-section">
-            <div class="info-section-inner">
+    <div class="info-grid-wrapper">
+        <div class="info-grid">
+            <div class="info-section">
                 <h3>Client Details</h3>
                 <div class="info-item">
                     <span class="info-label">Name:</span> <?php echo esc_html($data['customer_name']); ?>
@@ -327,10 +319,8 @@ function format_currency($amount) {
                     <span class="info-label">Email:</span> <?php echo esc_html($data['customer_email']); ?>
                 </div>
             </div>
-        </div>
 
-        <div class="info-section">
-            <div class="info-section-inner">
+            <div class="info-section">
                 <h3>Quote Information</h3>
                 <div class="info-item">
                     <span class="info-label">Date:</span> <?php echo get_the_date('j F Y', $post_id); ?>
