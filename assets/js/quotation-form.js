@@ -881,8 +881,9 @@ jQuery(document).ready(function($) {
         selectColour: function(gridId, colourName, isInside, colourCategory, clickedFinishType) {
             const prefix = isInside ? 'inside' : 'outside';
 
-            // Update hidden field
+            // Update hidden fields
             $('#' + prefix + '-colour').val(colourName);
+            $('#' + prefix + '-finish-type').val(clickedFinishType || '');
 
             // Find the colour object - for Aluminium Special Colours, also match finish type
             let colour;
@@ -1527,6 +1528,10 @@ jQuery(document).ready(function($) {
                 cill: $('#cill').val(),
                 insideColour: $('#inside-colour').val(),
                 outsideColour: $('#outside-colour').val(),
+                insideColourName: $('#inside-colour-name').text(),
+                outsideColourName: $('#outside-colour-name').text(),
+                insideFinishType: $('#inside-finish-type').val(),
+                outsideFinishType: $('#outside-finish-type').val(),
                 aluminiumColourType: this.currentItem.aluminiumColourType || '',
                 glazingType: $('#glazing-type').val(),
                 glazingTypeName: $('#glazing-type-name').text(),
@@ -1563,6 +1568,8 @@ jQuery(document).ready(function($) {
             $('#cill').val('');
             $('#inside-colour').val('');
             $('#outside-colour').val('');
+            $('#inside-finish-type').val('');
+            $('#outside-finish-type').val('');
             $('#inside-colour-name').text('None');
             $('#outside-colour-name').text('None');
             $('#glazing-type').val('');
@@ -1654,10 +1661,14 @@ jQuery(document).ready(function($) {
             const glazingFeaturesDisplay = item.glazingFeaturesName || item.glazingFeatures;
             const hardwareColourDisplay = item.hardwareColourName || item.hardwareColour;
 
+            // Use display names with finish types if available, otherwise fall back to colour values
+            const insideColourDisplay = item.insideColourName || item.insideColour;
+            const outsideColourDisplay = item.outsideColourName || item.outsideColour;
+
             const fields = [
                 { label: 'Product', value: (item.materialName || '') + ' ' + item.typeName, field: 'product' },
                 { label: 'Size', value: item.width + 'w x ' + item.height + 'h mm', field: 'size' },
-                { label: 'Colours', value: item.insideColour + ' / ' + item.outsideColour, field: 'colour' },
+                { label: 'Colours', value: insideColourDisplay + ' / ' + outsideColourDisplay, field: 'colour' },
                 { label: 'Glazing Type', value: glazingValue, field: 'glazing' },
                 { label: 'Glazing Feature', value: glazingFeaturesDisplay, field: 'glazingFeatures' },
                 { label: 'Hardware Colour', value: hardwareColourDisplay, field: 'hardware' }
@@ -1740,6 +1751,12 @@ jQuery(document).ready(function($) {
                     outside: item.outsideColour
                 };
 
+                // Store finish types for correct selection
+                this.modalFinishTypes = {
+                    inside: item.insideFinishType || '',
+                    outside: item.outsideFinishType || ''
+                };
+
                 // Store item material and type for filtering
                 this.modalItemMaterial = item.material || '';
                 this.modalItemType = item.type || '';
@@ -1769,23 +1786,22 @@ jQuery(document).ready(function($) {
                 }
 
                 // Create inside colour picker
-                const insideLabel = isAluminium && this.modalAluminiumType === 'stock' ? 'Select Colour' :
-                                   isAluminium && this.modalAluminiumType === 'special' ? 'External' : 'Inside Colour';
+                const insideLabel = isAluminium && this.modalAluminiumType === 'stock' ? 'Select Colour' : 'Inside Colour';
 
                 $content.append('<div class="edit-field-group modal-colour-picker">' +
                     '<label id="modal-inside-colour-label">' + insideLabel + ':</label>' +
-                    '<div class="colour-selection-display">Selected: <strong id="modal-inside-colour-name">' + item.insideColour + '</strong></div>' +
+                    '<div class="colour-selection-display">Selected: <strong id="modal-inside-colour-name">' + (item.insideColourName || item.insideColour) + '</strong></div>' +
                     '<input type="text" id="modal-inside-colour-search" class="modal-colour-search" placeholder="Search colours...">' +
                     '<div id="modal-inside-colour-grid" class="colour-grid modal-colour-grid"></div>' +
                     '</div>');
 
                 // Create outside colour picker (hide for aluminium stock)
-                const outsideLabel = isAluminium && this.modalAluminiumType === 'special' ? 'Internal' : 'Outside Colour';
+                const outsideLabel = 'Outside Colour';
                 const outsideDisplay = isAluminium && this.modalAluminiumType === 'stock' ? 'style="display:none;"' : '';
 
                 $content.append('<div class="edit-field-group modal-colour-picker" id="modal-outside-colour-picker" ' + outsideDisplay + '>' +
                     '<label id="modal-outside-colour-label">' + outsideLabel + ':</label>' +
-                    '<div class="colour-selection-display">Selected: <strong id="modal-outside-colour-name">' + item.outsideColour + '</strong></div>' +
+                    '<div class="colour-selection-display">Selected: <strong id="modal-outside-colour-name">' + (item.outsideColourName || item.outsideColour) + '</strong></div>' +
                     '<input type="text" id="modal-outside-colour-search" class="modal-colour-search" placeholder="Search colours...">' +
                     '<div id="modal-outside-colour-grid" class="colour-grid modal-colour-grid"></div>' +
                     '</div>');
@@ -1809,8 +1825,8 @@ jQuery(document).ready(function($) {
                             $('#modal-inside-colour-label').text('Select Colour');
                             $('#modal-outside-colour-picker').hide();
                         } else {
-                            $('#modal-inside-colour-label').text('External');
-                            $('#modal-outside-colour-label').text('Internal');
+                            $('#modal-inside-colour-label').text('Inside Colour');
+                            $('#modal-outside-colour-label').text('Outside Colour');
                             $('#modal-outside-colour-picker').show();
                         }
 
@@ -1822,8 +1838,8 @@ jQuery(document).ready(function($) {
 
                 // Render colour grids after a brief delay to ensure DOM is ready
                 setTimeout(function() {
-                    self.renderModalColourGrid('modal-inside-colour-grid', item.insideColour, self.modalItemMaterial, self.modalAluminiumType);
-                    self.renderModalColourGrid('modal-outside-colour-grid', item.outsideColour, self.modalItemMaterial, self.modalAluminiumType);
+                    self.renderModalColourGrid('modal-inside-colour-grid', item.insideColour, self.modalItemMaterial, self.modalAluminiumType, self.modalFinishTypes.inside);
+                    self.renderModalColourGrid('modal-outside-colour-grid', item.outsideColour, self.modalItemMaterial, self.modalAluminiumType, self.modalFinishTypes.outside);
                 }, 10);
 
                 // Add search functionality
@@ -1921,6 +1937,10 @@ jQuery(document).ready(function($) {
                 } else if (field === 'colour') {
                     item.insideColour = self.modalSelectedColors.inside;
                     item.outsideColour = self.modalSelectedColors.outside;
+                    item.insideColourName = $('#modal-inside-colour-name').text();
+                    item.outsideColourName = $('#modal-outside-colour-name').text();
+                    item.insideFinishType = self.modalFinishTypes.inside;
+                    item.outsideFinishType = self.modalFinishTypes.outside;
                 } else if (field === 'glazing') {
                     item.glazingType = self.modalSelectedGlazingType;
                     item.glazingTypeName = $('#modal-glazing-type-name').text();
@@ -1939,7 +1959,7 @@ jQuery(document).ready(function($) {
             });
         },
 
-        renderModalColourGrid: function(gridId, selectedColour, material, aluminiumType) {
+        renderModalColourGrid: function(gridId, selectedColour, material, aluminiumType, selectedFinishType) {
             const self = this;
             const $grid = $('#' + gridId);
             const isInside = gridId.includes('inside');
@@ -2006,7 +2026,7 @@ jQuery(document).ready(function($) {
 
                     const $colourItems = $('<div class="colour-items"></div>');
                     finishTypes[finishType].forEach(colour => {
-                        this.renderModalColourItem($colourItems, colour, selectedColour, gridId, isInside, finishType);
+                        this.renderModalColourItem($colourItems, colour, selectedColour, gridId, isInside, finishType, selectedFinishType);
                     });
 
                     $finishGroup.append($colourItems);
@@ -2038,7 +2058,7 @@ jQuery(document).ready(function($) {
             }
         },
 
-        renderModalColourItem: function($container, colour, selectedColour, gridId, isInside, finishType) {
+        renderModalColourItem: function($container, colour, selectedColour, gridId, isInside, finishType, selectedFinishType) {
             const self = this;
             const $colourSwatch = $('<div class="colour-swatch" data-colour="' + colour.name + '" data-category="' + colour.category + '" data-hex="' + colour.hex + '"></div>');
 
@@ -2064,9 +2084,17 @@ jQuery(document).ready(function($) {
             const $colourItem = $('<div class="colour-item"></div>');
             $colourItem.append($colourSwatch).append($colourLabel);
 
-            // Mark selected colour
+            // Mark selected colour - for aluminium special, also match finish type
             if (colour.name === selectedColour) {
-                $colourItem.addClass('selected');
+                if (finishType && selectedFinishType) {
+                    // For aluminium special colours, match both name and finish type
+                    if (finishType === selectedFinishType) {
+                        $colourItem.addClass('selected');
+                    }
+                } else {
+                    // For regular colours, just match name
+                    $colourItem.addClass('selected');
+                }
             }
 
             $colourItem.on('click', function() {
@@ -2085,8 +2113,10 @@ jQuery(document).ready(function($) {
             // Update the modalSelectedColors object
             if (isInside) {
                 this.modalSelectedColors.inside = colourName;
+                this.modalFinishTypes.inside = clickedFinishType || '';
             } else {
                 this.modalSelectedColors.outside = colourName;
+                this.modalFinishTypes.outside = clickedFinishType || '';
             }
 
             // Find the colour object - for Aluminium Special Colours, also match finish type
