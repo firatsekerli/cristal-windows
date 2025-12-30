@@ -1751,21 +1751,22 @@ class Quotation_Form_Plugin {
 
         foreach ($basket_items as $index => $item) {
             $message .= "--- Item " . ($index + 1) . " ---\n";
-            $message .= "Category: " . ucfirst($item['category']) . "\n";
-            $message .= "Type: " . $item['typeName'] . "\n";
+            $message .= "Category: " . ucfirst($item['category'] ?? '') . "\n";
+            $message .= "Type: " . ($item['typeName'] ?? $item['type'] ?? '') . "\n";
 
-            if (isset($item['materialName']) && $item['materialName'] !== 'N/A') {
-                $message .= "Material: " . $item['materialName'] . "\n";
+            $material = $item['materialName'] ?? $item['material'] ?? '';
+            if (!empty($material) && $material !== 'N/A') {
+                $message .= "Material: " . $material . "\n";
             }
 
-            $message .= "Style: " . $item['styleName'] . "\n";
-            $message .= "Dimensions: " . $item['width'] . "mm (W) x " . $item['height'] . "mm (H)\n";
-            $message .= "Cill: " . $item['cill'] . "\n";
-            $message .= "Inside Colour: " . (isset($item['insideColourName']) ? $item['insideColourName'] : $item['insideColour']) . "\n";
-            $message .= "Outside Colour: " . (isset($item['outsideColourName']) ? $item['outsideColourName'] : $item['outsideColour']) . "\n";
-            $message .= "Glazing Type: " . ucfirst($item['glazingType']) . "\n";
-            $message .= "Glazing Feature: " . ucfirst($item['glazingFeatures']) . "\n";
-            $message .= "Hardware Colour: " . ucfirst($item['hardwareColour']) . "\n";
+            $message .= "Style: " . ($item['styleName'] ?? $item['style'] ?? '') . "\n";
+            $message .= "Dimensions: " . ($item['width'] ?? 0) . "mm (W) x " . ($item['height'] ?? 0) . "mm (H)\n";
+            $message .= "Cill: " . ($item['cill'] ?? '') . "\n";
+            $message .= "Inside Colour: " . ($item['insideColourName'] ?? $item['insideColour'] ?? '') . "\n";
+            $message .= "Outside Colour: " . ($item['outsideColourName'] ?? $item['outsideColour'] ?? '') . "\n";
+            $message .= "Glazing Type: " . ucfirst($item['glazingTypeName'] ?? $item['glazingType'] ?? '') . "\n";
+            $message .= "Glazing Feature: " . ucfirst($item['glazingFeaturesName'] ?? $item['glazingFeatures'] ?? '') . "\n";
+            $message .= "Hardware Colour: " . ucfirst($item['hardwareColourName'] ?? $item['hardwareColour'] ?? '') . "\n";
 
             if (!empty($item['location'])) {
                 $message .= "Location: " . $item['location'] . "\n";
@@ -1801,21 +1802,22 @@ class Quotation_Form_Plugin {
             // Add detailed item information
             foreach ($basket_items as $index => $item) {
                 $customer_message .= "--- Item " . ($index + 1) . " ---\n";
-                $customer_message .= "Category: " . ucfirst($item['category']) . "\n";
-                $customer_message .= "Type: " . $item['typeName'] . "\n";
+                $customer_message .= "Category: " . ucfirst($item['category'] ?? '') . "\n";
+                $customer_message .= "Type: " . ($item['typeName'] ?? $item['type'] ?? '') . "\n";
 
-                if (isset($item['materialName']) && $item['materialName'] !== 'N/A') {
-                    $customer_message .= "Material: " . $item['materialName'] . "\n";
+                $material = $item['materialName'] ?? $item['material'] ?? '';
+                if (!empty($material) && $material !== 'N/A') {
+                    $customer_message .= "Material: " . $material . "\n";
                 }
 
-                $customer_message .= "Style: " . $item['styleName'] . "\n";
-                $customer_message .= "Dimensions: " . $item['width'] . "mm (W) x " . $item['height'] . "mm (H)\n";
-                $customer_message .= "Cill: " . $item['cill'] . "\n";
-                $customer_message .= "Inside Colour: " . $item['insideColour'] . "\n";
-                $customer_message .= "Outside Colour: " . $item['outsideColour'] . "\n";
-                $customer_message .= "Glazing Type: " . ucfirst($item['glazingType']) . "\n";
-                $customer_message .= "Glazing Feature: " . ucfirst($item['glazingFeatures']) . "\n";
-                $customer_message .= "Hardware Colour: " . ucfirst($item['hardwareColour']) . "\n";
+                $customer_message .= "Style: " . ($item['styleName'] ?? $item['style'] ?? '') . "\n";
+                $customer_message .= "Dimensions: " . ($item['width'] ?? 0) . "mm (W) x " . ($item['height'] ?? 0) . "mm (H)\n";
+                $customer_message .= "Cill: " . ($item['cill'] ?? '') . "\n";
+                $customer_message .= "Inside Colour: " . ($item['insideColourName'] ?? $item['insideColour'] ?? '') . "\n";
+                $customer_message .= "Outside Colour: " . ($item['outsideColourName'] ?? $item['outsideColour'] ?? '') . "\n";
+                $customer_message .= "Glazing Type: " . ucfirst($item['glazingTypeName'] ?? $item['glazingType'] ?? '') . "\n";
+                $customer_message .= "Glazing Feature: " . ucfirst($item['glazingFeaturesName'] ?? $item['glazingFeatures'] ?? '') . "\n";
+                $customer_message .= "Hardware Colour: " . ucfirst($item['hardwareColourName'] ?? $item['hardwareColour'] ?? '') . "\n";
 
                 if (!empty($item['location'])) {
                     $customer_message .= "Location: " . $item['location'] . "\n";
