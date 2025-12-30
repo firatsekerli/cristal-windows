@@ -2287,6 +2287,11 @@ class Quotation_Form_Plugin {
             wp_die('Invalid quotation');
         }
 
+        // Verify user has permission to view/edit this quotation
+        if (!current_user_can('edit_post', $post_id)) {
+            wp_die('You do not have permission to download this quotation PDF.');
+        }
+
         // Get data
         $customer_name = get_field('customer_name', $post_id);
         $customer_email = get_field('customer_email', $post_id);
