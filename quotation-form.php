@@ -754,7 +754,9 @@ class Quotation_Form_Plugin {
             });
 
             // Auto-generate slug from name - works for all repeaters
-            acf.addAction('ready_field/name=name', function($field) {
+            acf.addAction('ready_field/name=name', function(field) {
+                // Ensure field is a jQuery object
+                var $field = $(field);
                 var $nameInput = $field.find('input[type="text"]');
                 var $row = $nameInput.closest('.acf-row');
 
