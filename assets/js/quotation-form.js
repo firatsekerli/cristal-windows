@@ -899,11 +899,13 @@ jQuery(document).ready(function($) {
             let colour;
             if (colourCategory === 'Aluminium Special Colours' && clickedFinishType) {
                 // Match by name, category AND finish type to get the correct variant
-                colour = this.colours.find(c =>
-                    c.name === colourName &&
-                    c.category === colourCategory &&
-                    c.finish_type === clickedFinishType
-                );
+                colour = this.colours.find(c => {
+                    const ft = c.finish_type;
+                    const matchesFinish = Array.isArray(ft) ? ft.includes(clickedFinishType) : ft === clickedFinishType;
+                    return c.name === colourName &&
+                           c.category === colourCategory &&
+                           matchesFinish;
+                });
             } else if (colourCategory) {
                 // Match by name and category
                 colour = this.colours.find(c => c.name === colourName && c.category === colourCategory);
@@ -2074,11 +2076,13 @@ jQuery(document).ready(function($) {
             let colour;
             if (colourCategory === 'Aluminium Special Colours' && clickedFinishType) {
                 // Match by name, category AND finish type to get the correct variant
-                colour = this.colours.find(c =>
-                    c.name === colourName &&
-                    c.category === colourCategory &&
-                    c.finish_type === clickedFinishType
-                );
+                colour = this.colours.find(c => {
+                    const ft = c.finish_type;
+                    const matchesFinish = Array.isArray(ft) ? ft.includes(clickedFinishType) : ft === clickedFinishType;
+                    return c.name === colourName &&
+                           c.category === colourCategory &&
+                           matchesFinish;
+                });
             } else if (colourCategory) {
                 // Match by name and category
                 colour = this.colours.find(c => c.name === colourName && c.category === colourCategory);
