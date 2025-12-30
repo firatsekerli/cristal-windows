@@ -2722,12 +2722,18 @@ add_action('plugins_loaded', 'quotation_form_init');
  */
 register_activation_hook(__FILE__, 'quotation_form_activate');
 function quotation_form_activate() {
-    // Create upload directory for form images if needed
+    // Create upload directory for quotation PDFs and images if needed
     $upload_dir = wp_upload_dir();
-    $quotation_form_dir = $upload_dir['basedir'] . '/quotation-form';
+    $quotation_form_dir = $upload_dir['basedir'] . '/quotes';
 
     if (!file_exists($quotation_form_dir)) {
         wp_mkdir_p($quotation_form_dir);
+    }
+
+    // Create temp directory for file uploads
+    $tmp_dir = $quotation_form_dir . '/tmp';
+    if (!file_exists($tmp_dir)) {
+        wp_mkdir_p($tmp_dir);
     }
 
     // Flush rewrite rules
