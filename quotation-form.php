@@ -1588,8 +1588,8 @@ class Quotation_Form_Plugin {
                 'width' => isset($item['width']) ? $item['width'] : '',
                 'height' => isset($item['height']) ? $item['height'] : '',
                 'cill' => isset($item['cill']) ? $this->capitalize_value($item['cill']) : '',
-                'inside_colour' => isset($item['insideColour']) ? $this->capitalize_value($item['insideColour']) : '',
-                'outside_colour' => isset($item['outsideColour']) ? $this->capitalize_value($item['outsideColour']) : '',
+                'inside_colour' => isset($item['insideColourName']) ? $item['insideColourName'] : (isset($item['insideColour']) ? $this->capitalize_value($item['insideColour']) : ''),
+                'outside_colour' => isset($item['outsideColourName']) ? $item['outsideColourName'] : (isset($item['outsideColour']) ? $this->capitalize_value($item['outsideColour']) : ''),
                 'glazing_type' => isset($item['glazingType']) ? $this->capitalize_value($item['glazingType']) : '',
                 'glazing_features' => isset($item['glazingFeatures']) ? $this->capitalize_value($item['glazingFeatures']) : '',
                 'glazing_patterns' => isset($item['glazingPattern']) ? $this->capitalize_value($item['glazingPattern']) : '',
@@ -1677,8 +1677,8 @@ class Quotation_Form_Plugin {
             $message .= "Style: " . $item['styleName'] . "\n";
             $message .= "Dimensions: " . $item['width'] . "mm (W) x " . $item['height'] . "mm (H)\n";
             $message .= "Cill: " . $item['cill'] . "\n";
-            $message .= "Inside Colour: " . $item['insideColour'] . "\n";
-            $message .= "Outside Colour: " . $item['outsideColour'] . "\n";
+            $message .= "Inside Colour: " . (isset($item['insideColourName']) ? $item['insideColourName'] : $item['insideColour']) . "\n";
+            $message .= "Outside Colour: " . (isset($item['outsideColourName']) ? $item['outsideColourName'] : $item['outsideColour']) . "\n";
             $message .= "Glazing Type: " . ucfirst($item['glazingType']) . "\n";
             $message .= "Glazing Feature: " . ucfirst($item['glazingFeatures']) . "\n";
             $message .= "Hardware Colour: " . ucfirst($item['hardwareColour']) . "\n";

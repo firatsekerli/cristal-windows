@@ -418,6 +418,7 @@ jQuery(document).ready(function($) {
             $('#add-more-items-btn').on('click', function() {
                 self.currentItem = {};
                 self.resetConfigurationForm(); // Clear all form state including uploadedFiles
+                $('.image-card').removeClass('selected'); // Clear category/type/material/style selections
                 self.navigateToStep(1);
                 self.navigateToSubStep('1a');
             });
