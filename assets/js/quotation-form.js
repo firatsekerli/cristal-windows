@@ -209,18 +209,6 @@ jQuery(document).ready(function($) {
 
             // Real-time validation
             $(input).on('input blur', validatePostcode);
-
-            // Prevent form submission if invalid
-            $('#quotation-form').on('submit', function(e) {
-                const errorMsg = self.postcodeValidation.validate(input.value);
-                if (errorMsg) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    input.setCustomValidity(errorMsg);
-                    input.reportValidity();
-                    return false;
-                }
-            });
         },
 
         setupFileUpload: function() {
@@ -2462,6 +2450,16 @@ jQuery(document).ready(function($) {
 
             if (!customerName || !customerEmail || !customerPhone) {
                 alert('Please fill in all required fields (Name, Email, Phone)');
+                return;
+            }
+
+            // Validate postcode
+            const postcodeInput = $('#customer-postcode')[0];
+            const postcodeValue = $('#customer-postcode').val();
+            const postcodeErrorMsg = this.postcodeValidation.validate(postcodeValue);
+            if (postcodeErrorMsg) {
+                postcodeInput.setCustomValidity(postcodeErrorMsg);
+                postcodeInput.reportValidity();
                 return;
             }
 
