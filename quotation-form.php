@@ -626,12 +626,12 @@ class Quotation_Form_Plugin {
         </style>
         <script type="text/javascript">
         // Wait for jQuery to be ready
-        (function() {
+        (function waitForJQuery() {
             // Check if jQuery is loaded
             if (typeof jQuery === 'undefined') {
                 console.error('jQuery is not loaded yet, waiting...');
                 // Try again in 100ms
-                setTimeout(arguments.callee, 100);
+                setTimeout(waitForJQuery, 100);
                 return;
             }
 
