@@ -234,7 +234,7 @@ function format_currency($amount) {
             width: auto;
             height: auto;
             display: block;
-            margin: 0 auto;
+            margin: 0;
             border: 1px solid #e0e0e0;
             border-radius: 5px;
         }
