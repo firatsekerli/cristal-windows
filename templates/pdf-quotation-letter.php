@@ -25,16 +25,6 @@ function format_currency($amount) {
             margin: 0;
         }
 
-        @page cover {
-            margin: 0;
-            background: url('https://cristalwindows.co.uk/wp-content/uploads/2025/05/insulated-tiled-conservatory-roof-conversions_02.jpg') no-repeat center center;
-            background-size: cover;
-        }
-
-        @page content {
-            margin: 20mm;
-        }
-
         body {
             font-family: 'Arial', 'Helvetica', sans-serif;
             line-height: 1.6;
@@ -45,16 +35,18 @@ function format_currency($amount) {
         }
 
         .cover-page {
-            page: cover;
-            width: 100%;
-            height: 100vh;
+            width: 210mm;
+            height: 297mm;
             margin: 0;
             padding: 0;
+            background: url('https://cristalwindows.co.uk/wp-content/uploads/2025/05/insulated-tiled-conservatory-roof-conversions_02.jpg') no-repeat center center;
+            background-size: cover;
+            page-break-after: always;
+            position: relative;
         }
 
         .quotation-content {
-            page: content;
-            padding: 10px;
+            margin: 20mm;
         }
 
         .header {
