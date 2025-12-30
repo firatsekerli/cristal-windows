@@ -1512,6 +1512,7 @@ jQuery(document).ready(function($) {
                 cill: $('#cill').val(),
                 insideColour: $('#inside-colour').val(),
                 outsideColour: $('#outside-colour').val(),
+                aluminiumColourType: this.currentItem.aluminiumColourType || '',
                 glazingType: $('#glazing-type').val(),
                 glazingTypeName: $('#glazing-type-name').text(),
                 glazingPattern: $('#glazing-pattern').val(),
