@@ -530,8 +530,8 @@ class Quotation_Form_Plugin {
                 }
             }
 
-            // Pass to JavaScript
-            wp_localize_script('jquery', 'quotationSettings', array(
+            // Pass to JavaScript - localize to acf-input handle for reliable timing
+            wp_localize_script('acf-input', 'quotationSettings', array(
                 'styles' => $styles
             ));
         }
