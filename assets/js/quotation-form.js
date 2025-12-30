@@ -2480,7 +2480,12 @@ jQuery(document).ready(function($) {
                 $itemSummary.append('<p><strong>Product:</strong> ' + item.typeName + ' ' + (item.materialName || '') + '</p>');
                 $itemSummary.append('<p><strong>Size:</strong> ' + item.width + 'w x ' + item.height + 'h mm</p>');
                 $itemSummary.append('<p><strong>Style:</strong> ' + item.styleName + '</p>');
-                $itemSummary.append('<p><strong>Colours:</strong> ' + item.insideColour + ' / ' + item.outsideColour + '</p>');
+
+                // Use display names with finish types if available, otherwise fall back to colour values
+                const insideColourDisplay = item.insideColourName || item.insideColour;
+                const outsideColourDisplay = item.outsideColourName || item.outsideColour;
+                $itemSummary.append('<p><strong>Colours:</strong> ' + insideColourDisplay + ' / ' + outsideColourDisplay + '</p>');
+
                 if (item.location) {
                     $itemSummary.append('<p><strong>Location:</strong> ' + item.location + '</p>');
                 }
