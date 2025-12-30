@@ -562,7 +562,7 @@ jQuery(document).ready(function($) {
          * Check if materials are available for a given product type
          */
         checkMaterialsAvailable: function(productType) {
-            const config = quotationFormAjax.config || {};
+            const config = (typeof quotationFormAjax !== 'undefined' && quotationFormAjax.config) ? quotationFormAjax.config : {};
             const materials = config.materials || [];
 
             console.log('Checking materials for type:', productType);
@@ -2456,11 +2456,11 @@ jQuery(document).ready(function($) {
 
             // Submit via AJAX
             $.ajax({
-                url: quotationFormAjax.ajaxurl,
+                url: (typeof quotationFormAjax !== 'undefined' && quotationFormAjax.ajaxurl) ? quotationFormAjax.ajaxurl : '/wp-admin/admin-ajax.php',
                 type: 'POST',
                 data: {
                     action: 'submit_quotation_form',
-                    nonce: quotationFormAjax.nonce,
+                    nonce: (typeof quotationFormAjax !== 'undefined' && quotationFormAjax.nonce) ? quotationFormAjax.nonce : '',
                     basket_items: JSON.stringify(self.basket),
                     customer_data: customerData
                 },
