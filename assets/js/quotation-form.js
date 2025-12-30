@@ -1259,14 +1259,27 @@ jQuery(document).ready(function($) {
                 self.selectGlazingType(glazingType, glazingTypeName, patterns);
             });
 
-            // Auto-select first glazing type (Low E Double) on page load
+            // Auto-select first glazing type on page load
+            this.autoSelectFirstGlazingType();
+        },
+
+        autoSelectFirstGlazingType: function() {
             const $firstGlazingType = $('.glazing-type-card').first();
+
+            console.log('Auto-selecting first glazing type...');
+            console.log('Found glazing type cards:', $('.glazing-type-card').length);
+
             if ($firstGlazingType.length) {
                 const glazingType = $firstGlazingType.data('glazing-type');
                 const glazingTypeName = $firstGlazingType.find('.glazing-type-label').text();
                 const patterns = $firstGlazingType.data('patterns');
 
-                self.selectGlazingType(glazingType, glazingTypeName, patterns);
+                console.log('Auto-selecting glazing type:', glazingType, glazingTypeName);
+                console.log('Patterns:', patterns);
+
+                this.selectGlazingType(glazingType, glazingTypeName, patterns);
+            } else {
+                console.warn('No glazing type cards found for auto-select');
             }
         },
 
@@ -1566,6 +1579,9 @@ jQuery(document).ready(function($) {
             $('.glazing-type-card').removeClass('selected');
             $('.glazing-pattern-card').removeClass('selected');
             $('.glazing-feature-item').removeClass('selected');
+
+            // Re-auto-select first glazing type to maintain consistent UX and prevent layout shifts
+            this.autoSelectFirstGlazingType();
         },
 
         showBasketReview: function() {
