@@ -934,9 +934,20 @@ jQuery(document).ready(function($) {
 
             // Update visual selection
             $('#' + gridId + ' .colour-item').removeClass('selected');
-            $('#' + gridId + ' .colour-item').filter(function() {
-                return $(this).find('.colour-swatch').data('colour') === colourName;
-            }).addClass('selected');
+            if (colourCategory === 'Aluminium Special Colours' && clickedFinishType) {
+                // For aluminium special colours, match by name, finish type AND category
+                $('#' + gridId + ' .colour-item').filter(function() {
+                    const $swatch = $(this).find('.colour-swatch');
+                    return $swatch.data('colour') === colourName &&
+                           $swatch.data('finish-type') === clickedFinishType &&
+                           $swatch.data('category') === colourCategory;
+                }).addClass('selected');
+            } else {
+                // For other colours, match by name only
+                $('#' + gridId + ' .colour-item').filter(function() {
+                    return $(this).find('.colour-swatch').data('colour') === colourName;
+                }).addClass('selected');
+            }
         },
 
         filterColours: function(gridId, searchTerm) {
@@ -2102,9 +2113,20 @@ jQuery(document).ready(function($) {
 
             // Update visual selection
             $('#' + gridId + ' .colour-item').removeClass('selected');
-            $('#' + gridId + ' .colour-item').filter(function() {
-                return $(this).find('.colour-swatch').data('colour') === colourName;
-            }).addClass('selected');
+            if (colourCategory === 'Aluminium Special Colours' && clickedFinishType) {
+                // For aluminium special colours, match by name, finish type AND category
+                $('#' + gridId + ' .colour-item').filter(function() {
+                    const $swatch = $(this).find('.colour-swatch');
+                    return $swatch.data('colour') === colourName &&
+                           $swatch.data('finish-type') === clickedFinishType &&
+                           $swatch.data('category') === colourCategory;
+                }).addClass('selected');
+            } else {
+                // For other colours, match by name only
+                $('#' + gridId + ' .colour-item').filter(function() {
+                    return $(this).find('.colour-swatch').data('colour') === colourName;
+                }).addClass('selected');
+            }
         },
 
         renderModalGlazingFeaturesGrid: function(gridId, selectedFeature) {
