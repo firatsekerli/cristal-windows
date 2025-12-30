@@ -2089,7 +2089,7 @@ class Quotation_Form_Plugin {
 
                 // Build wkhtmltopdf command
                 $command = sprintf(
-                    '%s --page-size A4 --margin-top 15mm --margin-right 15mm --margin-bottom 15mm --margin-left 15mm --encoding UTF-8 --enable-local-file-access --quiet %s %s 2>&1',
+                    '%s --page-size A4 --margin-top 0 --margin-right 0 --margin-bottom 0 --margin-left 0 --encoding UTF-8 --enable-local-file-access --print-media-type --quiet %s %s 2>&1',
                     escapeshellarg($wkhtmltopdf_binary),
                     escapeshellarg($temp_html),
                     escapeshellarg($file_path)
@@ -2323,7 +2323,7 @@ class Quotation_Form_Plugin {
 
                 // Build command
                 $command = sprintf(
-                    '%s --page-size A4 --margin-top 15mm --margin-right 15mm --margin-bottom 15mm --margin-left 15mm --encoding UTF-8 --enable-local-file-access --quiet %s %s 2>&1',
+                    '%s --page-size A4 --margin-top 0 --margin-right 0 --margin-bottom 0 --margin-left 0 --encoding UTF-8 --enable-local-file-access --print-media-type --quiet %s %s 2>&1',
                     escapeshellarg($wkhtmltopdf_binary),
                     escapeshellarg($temp_html),
                     escapeshellarg($temp_pdf)
