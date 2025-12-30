@@ -64,63 +64,68 @@ class Quotation_Form_Plugin {
      * Initialize hooks
      */
     private function init_hooks() {
-        // Note: quotation CPT is registered via ACF Pro UI
-        add_action('acf/init', array($this, 'register_acf_options_page'));
-        add_filter('acf/settings/save_json', array($this, 'acf_json_save_point'));
-        add_filter('acf/settings/load_json', array($this, 'acf_json_load_point'));
+        // WordPress core hooks (always registered)
         add_action('wp_ajax_submit_quotation_form', array($this, 'handle_form_submission'));
         add_action('wp_ajax_nopriv_submit_quotation_form', array($this, 'handle_form_submission'));
         add_action('wp_ajax_download_quote_pdf', array($this, 'handle_pdf_download'));
         add_action('wp_ajax_nopriv_download_quote_pdf', array($this, 'handle_pdf_download'));
         add_shortcode('quotation_form', array($this, 'render_form_shortcode'));
 
-        // Populate select field choices dynamically
-        add_filter('acf/load_field/key=field_type_category', array($this, 'populate_category_choices'));
-        add_filter('acf/load_field/key=field_material_available_types', array($this, 'populate_type_choices'));
-        add_filter('acf/load_field/key=field_style_types', array($this, 'populate_type_choices'));
-        add_filter('acf/load_field/key=field_style_materials', array($this, 'populate_material_choices'));
-        add_filter('acf/load_field/key=field_pattern_available_glazing_types', array($this, 'populate_glazing_type_choices'));
-        add_filter('acf/load_field/key=field_brand_available_types', array($this, 'populate_type_choices'));
-        add_filter('acf/load_field/key=field_colour_available_materials', array($this, 'populate_material_choices'));
-        add_filter('acf/load_field/key=field_exclusion_product_type', array($this, 'populate_type_choices'));
-        add_filter('acf/load_field/key=field_opening_available_types', array($this, 'populate_type_choices'));
-        add_filter('acf/load_field/key=field_panel_available_types', array($this, 'populate_type_choices'));
-        add_filter('acf/load_field/key=field_panel_available_materials', array($this, 'populate_material_choices'));
-        add_filter('acf/load_field/key=field_item_brand', array($this, 'populate_brand_choices'));
-        add_filter('acf/load_field/key=field_centralized_brand', array($this, 'populate_brand_choices'));
-        add_filter('acf/load_field/key=field_item_services', array($this, 'populate_service_choices'));
-        add_filter('acf/load_field/key=field_centralized_services', array($this, 'populate_service_choices'));
+        // ACF-dependent hooks (only register if ACF is active)
+        if (function_exists('acf_add_options_page')) {
+            // Note: quotation CPT is registered via ACF Pro UI
+            add_action('acf/init', array($this, 'register_acf_options_page'));
+            add_filter('acf/settings/save_json', array($this, 'acf_json_save_point'));
+            add_filter('acf/settings/load_json', array($this, 'acf_json_load_point'));
 
-        // Populate basket item dropdowns dynamically from settings
-        add_filter('acf/load_field/key=field_item_category', array($this, 'populate_basket_item_category_choices'));
-        add_filter('acf/load_field/key=field_item_type', array($this, 'populate_basket_item_type_choices'));
-        add_filter('acf/load_field/key=field_item_material', array($this, 'populate_basket_item_material_choices'));
-        add_filter('acf/load_field/key=field_item_cill', array($this, 'populate_basket_item_cill_choices'));
-        add_filter('acf/load_field/key=field_item_glazing_type', array($this, 'populate_basket_item_glazing_type_choices'));
-        add_filter('acf/load_field/key=field_item_glazing_patterns', array($this, 'populate_basket_item_glazing_pattern_choices'));
-        add_filter('acf/load_field/key=field_item_glazing_features', array($this, 'populate_basket_item_glazing_feature_choices'));
-        add_filter('acf/load_field/key=field_item_hardware_colour', array($this, 'populate_basket_item_hardware_colour_choices'));
+            // Populate select field choices dynamically
+            add_filter('acf/load_field/key=field_type_category', array($this, 'populate_category_choices'));
+            add_filter('acf/load_field/key=field_material_available_types', array($this, 'populate_type_choices'));
+            add_filter('acf/load_field/key=field_style_types', array($this, 'populate_type_choices'));
+            add_filter('acf/load_field/key=field_style_materials', array($this, 'populate_material_choices'));
+            add_filter('acf/load_field/key=field_pattern_available_glazing_types', array($this, 'populate_glazing_type_choices'));
+            add_filter('acf/load_field/key=field_brand_available_types', array($this, 'populate_type_choices'));
+            add_filter('acf/load_field/key=field_colour_available_materials', array($this, 'populate_material_choices'));
+            add_filter('acf/load_field/key=field_exclusion_product_type', array($this, 'populate_type_choices'));
+            add_filter('acf/load_field/key=field_opening_available_types', array($this, 'populate_type_choices'));
+            add_filter('acf/load_field/key=field_panel_available_types', array($this, 'populate_type_choices'));
+            add_filter('acf/load_field/key=field_panel_available_materials', array($this, 'populate_material_choices'));
+            add_filter('acf/load_field/key=field_item_brand', array($this, 'populate_brand_choices'));
+            add_filter('acf/load_field/key=field_centralized_brand', array($this, 'populate_brand_choices'));
+            add_filter('acf/load_field/key=field_item_services', array($this, 'populate_service_choices'));
+            add_filter('acf/load_field/key=field_centralized_services', array($this, 'populate_service_choices'));
 
-        // Add admin scripts for auto-slug generation
-        add_action('acf/input/admin_enqueue_scripts', array($this, 'enqueue_admin_scripts'));
+            // Populate basket item dropdowns dynamically from settings
+            add_filter('acf/load_field/key=field_item_category', array($this, 'populate_basket_item_category_choices'));
+            add_filter('acf/load_field/key=field_item_type', array($this, 'populate_basket_item_type_choices'));
+            add_filter('acf/load_field/key=field_item_material', array($this, 'populate_basket_item_material_choices'));
+            add_filter('acf/load_field/key=field_item_cill', array($this, 'populate_basket_item_cill_choices'));
+            add_filter('acf/load_field/key=field_item_glazing_type', array($this, 'populate_basket_item_glazing_type_choices'));
+            add_filter('acf/load_field/key=field_item_glazing_patterns', array($this, 'populate_basket_item_glazing_pattern_choices'));
+            add_filter('acf/load_field/key=field_item_glazing_features', array($this, 'populate_basket_item_glazing_feature_choices'));
+            add_filter('acf/load_field/key=field_item_hardware_colour', array($this, 'populate_basket_item_hardware_colour_choices'));
 
-        // Localize settings data for admin JavaScript
-        add_action('admin_enqueue_scripts', array($this, 'enqueue_settings_data'));
+            // Add admin scripts for auto-slug generation
+            add_action('acf/input/admin_enqueue_scripts', array($this, 'enqueue_admin_scripts'));
 
-        // Auto-calculate quote price when quotation is saved
-        add_action('acf/save_post', array($this, 'auto_calculate_quote_price'), 20);
+            // Localize settings data for admin JavaScript
+            add_action('admin_enqueue_scripts', array($this, 'enqueue_settings_data'));
 
-        // Generate PDF when quotation is saved
-        add_action('acf/save_post', array($this, 'generate_quote_pdf'), 25);
+            // Auto-calculate quote price when quotation is saved
+            add_action('acf/save_post', array($this, 'auto_calculate_quote_price'), 20);
 
-        // Add custom admin columns
-        add_filter('manage_quotation_posts_columns', array($this, 'add_quotation_columns'));
-        add_action('manage_quotation_posts_custom_column', array($this, 'populate_quotation_columns'), 10, 2);
-        add_filter('manage_edit-quotation_sortable_columns', array($this, 'sortable_quotation_columns'));
+            // Generate PDF when quotation is saved
+            add_action('acf/save_post', array($this, 'generate_quote_pdf'), 25);
 
-        // Add manual PDF generation button in admin
-        add_action('admin_notices', array($this, 'show_pdf_generation_notices'));
-        add_action('admin_post_generate_quote_pdf', array($this, 'handle_manual_pdf_generation'));
+            // Add custom admin columns
+            add_filter('manage_quotation_posts_columns', array($this, 'add_quotation_columns'));
+            add_action('manage_quotation_posts_custom_column', array($this, 'populate_quotation_columns'), 10, 2);
+            add_filter('manage_edit-quotation_sortable_columns', array($this, 'sortable_quotation_columns'));
+
+            // Add manual PDF generation button in admin
+            add_action('admin_notices', array($this, 'show_pdf_generation_notices'));
+            add_action('admin_post_generate_quote_pdf', array($this, 'handle_manual_pdf_generation'));
+        }
     }
 
     /**
