@@ -83,7 +83,7 @@ function format_currency($amount) {
             display: table;
             table-layout: fixed;
             border-collapse: separate;
-            border-spacing: 15px 0;
+            border-spacing: 10px 0;
         }
 
         .info-section {
@@ -135,7 +135,7 @@ function format_currency($amount) {
             background: linear-gradient(135deg, #1a5490 0%, #2a6ab0 100%);
             color: white;
             padding: 25px;
-            border-radius: 8px;
+            border-radius: 5px;
             margin: 30px 0;
             text-align: center;
         }
@@ -147,9 +147,9 @@ function format_currency($amount) {
         }
 
         .price-breakdown {
-            font-size: 14px;
+            font-size: 16px;
             margin-top: 10px;
-            opacity: 0.95;
+            opacity: 1;
         }
 
         .terms-section {
@@ -157,6 +157,7 @@ function format_currency($amount) {
             border-left: 4px solid #ffc107;
             padding: 15px;
             margin: 20px 0;
+            border-radius: 5px;
         }
 
         .terms-section h3 {
@@ -223,7 +224,7 @@ function format_currency($amount) {
         }
 
         .item-image {
-            text-align: center;
+            text-align: left;
             margin: 30px 0;
         }
 
@@ -243,7 +244,7 @@ function format_currency($amount) {
             font-weight: bold;
             color: #1a5490;
             margin: 20px 0 15px 0;
-            text-align: center;
+            text-align: left;
         }
 
         .item-details-list {
