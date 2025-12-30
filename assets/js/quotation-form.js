@@ -417,6 +417,7 @@ jQuery(document).ready(function($) {
             // Basket: Add more items
             $('#add-more-items-btn').on('click', function() {
                 self.currentItem = {};
+                self.resetConfigurationForm(); // Clear all form state including uploadedFiles
                 self.navigateToStep(1);
                 self.navigateToSubStep('1a');
             });
