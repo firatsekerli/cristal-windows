@@ -82,24 +82,28 @@ function format_currency($amount) {
         }
 
         .info-section {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 5px;
             display: table-cell;
             vertical-align: top;
-            box-sizing: border-box;
             width: 50%;
+            padding: 0;
         }
 
         .info-section:first-child {
-            padding-right: 22.5px;
+            padding-right: 7.5px;
         }
 
         .info-section:last-child {
-            padding-left: 22.5px;
+            padding-left: 7.5px;
         }
 
-        .info-section h3 {
+        .info-section-inner {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .info-section-inner h3 {
             color: #1a5490;
             margin-top: 0;
             margin-bottom: 15px;
@@ -109,12 +113,12 @@ function format_currency($amount) {
             padding-bottom: 5px;
         }
 
-        .info-item {
+        .info-section-inner .info-item {
             margin-bottom: 8px;
             font-size: 14px;
         }
 
-        .info-label {
+        .info-section-inner .info-label {
             font-weight: bold;
             color: #555;
         }
@@ -281,7 +285,7 @@ function format_currency($amount) {
             body {
                 padding: 0;
             }
-            .info-section {
+            .info-section-inner {
                 break-inside: avoid;
             }
             .page-break {
@@ -304,43 +308,47 @@ function format_currency($amount) {
 
     <div class="info-grid">
         <div class="info-section">
-            <h3>Client Details</h3>
-            <div class="info-item">
-                <span class="info-label">Name:</span> <?php echo esc_html($data['customer_name']); ?>
-            </div>
-            <div class="info-item">
-                <span class="info-label">Address:</span><br>
-                <?php echo esc_html($data['customer_street']); ?><br>
-                <?php echo esc_html($data['customer_town']); ?><?php echo !empty($data['customer_county']) ? ', ' . esc_html($data['customer_county']) : ''; ?><br>
-                <?php echo esc_html($data['customer_postcode']); ?>
-            </div>
-            <div class="info-item">
-                <span class="info-label">Phone:</span> <?php echo esc_html($data['customer_phone']); ?>
-            </div>
-            <div class="info-item">
-                <span class="info-label">Email:</span> <?php echo esc_html($data['customer_email']); ?>
+            <div class="info-section-inner">
+                <h3>Client Details</h3>
+                <div class="info-item">
+                    <span class="info-label">Name:</span> <?php echo esc_html($data['customer_name']); ?>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Address:</span><br>
+                    <?php echo esc_html($data['customer_street']); ?><br>
+                    <?php echo esc_html($data['customer_town']); ?><?php echo !empty($data['customer_county']) ? ', ' . esc_html($data['customer_county']) : ''; ?><br>
+                    <?php echo esc_html($data['customer_postcode']); ?>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Phone:</span> <?php echo esc_html($data['customer_phone']); ?>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Email:</span> <?php echo esc_html($data['customer_email']); ?>
+                </div>
             </div>
         </div>
 
         <div class="info-section">
-            <h3>Quote Information</h3>
-            <div class="info-item">
-                <span class="info-label">Date:</span> <?php echo get_the_date('j F Y', $post_id); ?>
-            </div>
-            <div class="info-item">
-                <span class="info-label">Quote Reference:</span> Q-<?php echo get_the_date('Y-m-d', $post_id); ?>-<?php echo str_pad($post_id, 3, '0', STR_PAD_LEFT); ?>
-            </div>
-            <div class="info-item">
-                <span class="info-label">Prepared by:</span> Steve Cornish
-            </div>
-            <div class="info-item">
-                <span class="info-label">Email:</span> sales@cristalwindows.co.uk
-            </div>
-            <div class="info-item">
-                <span class="info-label">Lead Time:</span> 4-6 weeks on standard range products
-            </div>
-            <div class="info-item">
-                <span class="info-label">Guarantee:</span> 10 years Parts & Labour
+            <div class="info-section-inner">
+                <h3>Quote Information</h3>
+                <div class="info-item">
+                    <span class="info-label">Date:</span> <?php echo get_the_date('j F Y', $post_id); ?>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Quote Reference:</span> Q-<?php echo get_the_date('Y-m-d', $post_id); ?>-<?php echo str_pad($post_id, 3, '0', STR_PAD_LEFT); ?>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Prepared by:</span> Steve Cornish
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Email:</span> sales@cristalwindows.co.uk
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Lead Time:</span> 4-6 weeks on standard range products
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Guarantee:</span> 10 years Parts & Labour
+                </div>
             </div>
         </div>
     </div>
