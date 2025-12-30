@@ -635,9 +635,17 @@ class Quotation_Form_Plugin {
                 return;
             }
 
-            // jQuery is loaded, proceed
-            (function($) {
-                console.log('jQuery loaded, initializing view image buttons script');
+            // jQuery is loaded, now wait for ACF
+            (function waitForACF() {
+                if (typeof acf === 'undefined') {
+                    console.log('ACF is not loaded yet, waiting...');
+                    setTimeout(waitForACF, 100);
+                    return;
+                }
+
+                // Both jQuery and ACF are loaded, proceed
+                (function($) {
+                    console.log('jQuery and ACF loaded, initializing scripts');
 
                 // Helper function to generate slug
                 function generateSlug(text) {
@@ -892,35 +900,35 @@ class Quotation_Form_Plugin {
             });
 
             // Run when ACF is ready
-            if (typeof acf !== 'undefined') {
-                console.log('ACF detected, adding action handlers');
+            console.log('ACF detected, adding action handlers');
 
-                acf.addAction('ready', function() {
-                    console.log('ACF ready event');
-                    addViewImageButtons();
-                    displayStyleImages();
-                });
+            acf.addAction('ready', function() {
+                console.log('ACF ready event');
+                addViewImageButtons();
+                displayStyleImages();
+            });
 
-                acf.addAction('load', function() {
-                    console.log('ACF load event');
-                    addViewImageButtons();
-                    displayStyleImages();
-                });
+            acf.addAction('load', function() {
+                console.log('ACF load event');
+                addViewImageButtons();
+                displayStyleImages();
+            });
 
-                // Handle repeater row additions
-                acf.addAction('append', function($el) {
-                    console.log('ACF append event');
-                    setTimeout(addViewImageButtons, 100);
-                    setTimeout(displayStyleImages, 100);
-                });
+            // Handle repeater row additions
+            acf.addAction('append', function($el) {
+                console.log('ACF append event');
+                setTimeout(addViewImageButtons, 100);
+                setTimeout(displayStyleImages, 100);
+            });
 
-                // Handle when images are added/changed
-                acf.addAction('change', function($el) {
-                    setTimeout(addViewImageButtons, 100);
-                });
-            }
+            // Handle when images are added/changed
+            acf.addAction('change', function($el) {
+                setTimeout(addViewImageButtons, 100);
+            });
 
             })(jQuery); // End of jQuery wrapper
+
+            })(); // End of ACF check wrapper
 
         })(); // End of jQuery check wrapper
         </script>
