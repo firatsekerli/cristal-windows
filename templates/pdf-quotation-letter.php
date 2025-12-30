@@ -77,9 +77,8 @@ function format_currency($amount) {
             margin-bottom: 30px;
             display: table;
             table-layout: fixed;
-            border-spacing: 15px 0;
-            margin-left: -15px;
-            margin-right: -15px;
+            border-collapse: separate;
+            border-spacing: 0;
         }
 
         .info-section {
@@ -89,6 +88,15 @@ function format_currency($amount) {
             display: table-cell;
             vertical-align: top;
             box-sizing: border-box;
+            width: 50%;
+        }
+
+        .info-section:first-child {
+            padding-right: 22.5px;
+        }
+
+        .info-section:last-child {
+            padding-left: 22.5px;
         }
 
         .info-section h3 {
