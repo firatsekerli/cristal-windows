@@ -22,7 +22,7 @@ function format_currency($amount) {
     <style>
         @page {
             size: A4;
-            margin: 0;
+            margin: 20mm;
         }
 
         body {
@@ -30,23 +30,8 @@ function format_currency($amount) {
             line-height: 1.6;
             color: #333;
             margin: 0;
-            padding: 0;
+            padding: 10px;
             background: white;
-        }
-
-        .cover-page {
-            width: 210mm;
-            height: 297mm;
-            margin: 0;
-            padding: 0;
-            background: url('https://cristalwindows.co.uk/wp-content/uploads/2025/05/insulated-tiled-conservatory-roof-conversions_02.jpg') no-repeat center center;
-            background-size: cover;
-            page-break-after: always;
-            position: relative;
-        }
-
-        .quotation-content {
-            margin: 20mm;
         }
 
         .header {
@@ -304,13 +289,8 @@ function format_currency($amount) {
     </style>
 </head>
 <body>
-    <!-- COVER PAGE -->
-    <div class="cover-page">
-    </div>
-
-    <!-- QUOTATION CONTENT -->
-    <div class="quotation-content">
-        <div class="header">
+    <!-- QUOTATION PAGE -->
+    <div class="header">
         <div class="header-logo">
             <img src="https://cristalwindows.co.uk/wp-content/uploads/2025/02/Cristal-Windows-LOGO-01.png" alt="Cristal Windows Logo">
         </div>
@@ -586,6 +566,5 @@ function format_currency($amount) {
             Registered in England No. 5829993 | Registered address as above | VAT Registration No. 890 4307 21
         </div>
     </div>
-    </div><!-- End quotation-content -->
 </body>
 </html>
