@@ -1573,9 +1573,10 @@ jQuery(document).ready(function($) {
             $('#glazing-features-name').text('Not Required');
             $('#hardware-colour').val('');
             $('#hardware-colour-name').text('None');
-            $('#frame-images').val('');
+            // Clear file upload state (data → UI → input for consistency)
             this.uploadedFiles = [];
             $('#file-preview').empty();
+            $('#frame-images').val('');
             $('.colour-item').removeClass('selected');
             $('.glazing-type-card').removeClass('selected');
             $('.glazing-pattern-card').removeClass('selected');
