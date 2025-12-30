@@ -101,6 +101,7 @@ function format_currency($amount) {
             padding: 15px;
             border-radius: 5px;
             box-sizing: border-box;
+            height: 100%;
         }
 
         .info-section-inner h3 {
