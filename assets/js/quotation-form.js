@@ -341,6 +341,7 @@ jQuery(document).ready(function($) {
                 } else {
                     // No materials available, skip to Step 2 (Style)
                     self.currentItem.material = 'N/A';
+                    self.currentItem.materialName = 'N/A';
                     self.navigateToStep(2);
                 }
             });
