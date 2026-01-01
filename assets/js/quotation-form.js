@@ -2520,31 +2520,31 @@ jQuery(document).ready(function($) {
         submitForm: function() {
             const self = this;
 
-            // Validate customer details
-            const customerName = $('#customer-name').val();
-            const customerEmail = $('#customer-email').val();
-            const customerPhone = $('#customer-phone').val();
+            // Get form element
+            const form = $('#quotation-form')[0];
 
-            if (!customerName || !customerEmail || !customerPhone) {
-                alert('Please fill in all required fields (Name, Email, Phone)');
-                return;
-            }
-
-            // Validate postcode
+            // Validate postcode first (custom validation)
             const postcodeInput = $('#customer-postcode')[0];
             const postcodeValue = $('#customer-postcode').val();
             const postcodeErrorMsg = this.postcodeValidation.validate(postcodeValue);
+
             if (postcodeErrorMsg) {
                 postcodeInput.setCustomValidity(postcodeErrorMsg);
-                postcodeInput.reportValidity();
+            } else {
+                postcodeInput.setCustomValidity(''); // Clear custom error if valid
+            }
+
+            // Use native HTML5 form validation (checks all required fields)
+            if (!form.checkValidity()) {
+                form.reportValidity(); // Shows browser's native validation messages
                 return;
             }
 
             // Prepare data
             const customerData = {
-                name: customerName,
-                email: customerEmail,
-                phone: customerPhone,
+                name: $('#customer-name').val(),
+                email: $('#customer-email').val(),
+                phone: $('#customer-phone').val(),
                 street: $('#customer-street').val(),
                 town: $('#customer-town').val(),
                 county: $('#customer-county').val(),
