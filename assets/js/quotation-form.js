@@ -1257,7 +1257,12 @@ jQuery(document).ready(function($) {
             $('.glazing-type-card').on('click', function() {
                 const glazingType = $(this).data('glazing-type');
                 const glazingTypeName = $(this).find('.glazing-type-label').text();
-                const patterns = $(this).data('patterns');
+                let patterns = $(this).data('patterns');
+
+                // Normalize patterns - ensure it's an array, not a string
+                if (typeof patterns === 'string') {
+                    try { patterns = JSON.parse(patterns); } catch(e) { patterns = []; }
+                }
 
                 self.selectGlazingType(glazingType, glazingTypeName, patterns);
             });
@@ -1275,7 +1280,12 @@ jQuery(document).ready(function($) {
             if ($firstGlazingType.length) {
                 const glazingType = $firstGlazingType.data('glazing-type');
                 const glazingTypeName = $firstGlazingType.find('.glazing-type-label').text();
-                const patterns = $firstGlazingType.data('patterns');
+                let patterns = $firstGlazingType.data('patterns');
+
+                // Normalize patterns - ensure it's an array, not a string
+                if (typeof patterns === 'string') {
+                    try { patterns = JSON.parse(patterns); } catch(e) { patterns = []; }
+                }
 
                 console.log('Auto-selecting glazing type:', glazingType, glazingTypeName);
                 console.log('Patterns:', patterns);
@@ -2338,7 +2348,13 @@ jQuery(document).ready(function($) {
                 $card.on('click', function() {
                     const type = $(this).data('glazing-type');
                     const typeName = $(this).find('.glazing-type-label').text();
-                    const patternsData = $(this).data('patterns');
+                    let patternsData = $(this).data('patterns');
+
+                    // Normalize patterns - ensure it's an array, not a string
+                    if (typeof patternsData === 'string') {
+                        try { patternsData = JSON.parse(patternsData); } catch(e) { patternsData = []; }
+                    }
+
                     self.selectModalGlazingType(type, typeName, patternsData, selectedPattern);
                 });
 
@@ -2355,7 +2371,13 @@ jQuery(document).ready(function($) {
                     // Set initial display to just the type name
                     $('#modal-glazing-type-name').text(typeName);
 
-                    const patterns = $selectedCard.data('patterns');
+                    let patterns = $selectedCard.data('patterns');
+
+                    // Normalize patterns - ensure it's an array, not a string
+                    if (typeof patterns === 'string') {
+                        try { patterns = JSON.parse(patterns); } catch(e) { patterns = []; }
+                    }
+
                     if (patterns && patterns.length > 0) {
                         self.renderModalGlazingPatternGrid(patterns, selectedPattern);
                         $('#modal-glazing-pattern-group').show();
