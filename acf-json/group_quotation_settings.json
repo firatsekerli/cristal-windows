@@ -222,56 +222,56 @@
                     "ui": 1,
                     "ajax": 0,
                     "placeholder": "Select materials..."
+                },
+                {
+                    "key": "field_style_min_width",
+                    "label": "Min Width (mm)",
+                    "name": "min_width",
+                    "type": "number",
+                    "instructions": "Minimum allowed width for this style",
+                    "default_value": 200,
+                    "placeholder": "200",
+                    "min": 1,
+                    "max": "",
+                    "step": 1
+                },
+                {
+                    "key": "field_style_max_width",
+                    "label": "Max Width (mm)",
+                    "name": "max_width",
+                    "type": "number",
+                    "instructions": "Maximum allowed width for this style",
+                    "default_value": 4000,
+                    "placeholder": "4000",
+                    "min": 1,
+                    "max": "",
+                    "step": 1
+                },
+                {
+                    "key": "field_style_min_height",
+                    "label": "Min Height (mm)",
+                    "name": "min_height",
+                    "type": "number",
+                    "instructions": "Minimum allowed height for this style",
+                    "default_value": 200,
+                    "placeholder": "200",
+                    "min": 1,
+                    "max": "",
+                    "step": 1
+                },
+                {
+                    "key": "field_style_max_height",
+                    "label": "Max Height (mm)",
+                    "name": "max_height",
+                    "type": "number",
+                    "instructions": "Maximum allowed height for this style",
+                    "default_value": 3200,
+                    "placeholder": "3200",
+                    "min": 1,
+                    "max": "",
+                    "step": 1
                 }
             ]
-        },
-        {
-            "key": "field_min_width",
-            "label": "Min Width (mm)",
-            "name": "min_width",
-            "type": "number",
-            "instructions": "Minimum allowed width in millimeters",
-            "default_value": 200,
-            "placeholder": "200",
-            "min": 1,
-            "max": "",
-            "step": 1
-        },
-        {
-            "key": "field_max_width",
-            "label": "Max Width (mm)",
-            "name": "max_width",
-            "type": "number",
-            "instructions": "Maximum allowed width in millimeters",
-            "default_value": 4000,
-            "placeholder": "4000",
-            "min": 1,
-            "max": "",
-            "step": 1
-        },
-        {
-            "key": "field_min_height",
-            "label": "Min Height (mm)",
-            "name": "min_height",
-            "type": "number",
-            "instructions": "Minimum allowed height in millimeters",
-            "default_value": 200,
-            "placeholder": "200",
-            "min": 1,
-            "max": "",
-            "step": 1
-        },
-        {
-            "key": "field_max_height",
-            "label": "Max Height (mm)",
-            "name": "max_height",
-            "type": "number",
-            "instructions": "Maximum allowed height in millimeters",
-            "default_value": 3200,
-            "placeholder": "3200",
-            "min": 1,
-            "max": "",
-            "step": 1
         },
         {
             "key": "field_tab_colours",
@@ -867,5 +867,5 @@
     "style": "default",
     "label_placement": "top",
     "instruction_placement": "label",
-    "modified": 1768743801
+    "modified": 1768744074
 }

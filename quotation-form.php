@@ -1013,12 +1013,6 @@ class Quotation_Form_Plugin {
         $panels = $this->get_acf_field_or_default('panels', 'option');
         $panels = $this->process_panel_data($panels);
 
-        // Get dimension limits (with fallback defaults)
-        $min_width = function_exists('get_field') && get_field('min_width', 'option') ? get_field('min_width', 'option') : 200;
-        $max_width = function_exists('get_field') && get_field('max_width', 'option') ? get_field('max_width', 'option') : 4000;
-        $min_height = function_exists('get_field') && get_field('min_height', 'option') ? get_field('min_height', 'option') : 200;
-        $max_height = function_exists('get_field') && get_field('max_height', 'option') ? get_field('max_height', 'option') : 3200;
-
         $config = array(
             'categories' => $this->get_acf_field_or_default('product_categories', 'option'),
             'productTypes' => $product_types,
@@ -1026,17 +1020,13 @@ class Quotation_Form_Plugin {
             'doorTypes' => $types_by_category['doors'],
             'bayTypes' => $types_by_category['bay-windows'],
             'materials' => $materials,
-            'styles' => $styles,
+            'styles' => $styles, // Includes min/max width/height per style
             'colours' => $colours,
             'glazingFeatures' => $glazing_features,
             'hardwareColours' => $hardware_colours,
             'cillOptions' => $cill_options,
             'openings' => $openings,
             'panels' => $panels,
-            'minWidth' => $min_width,
-            'maxWidth' => $max_width,
-            'minHeight' => $min_height,
-            'maxHeight' => $max_height,
             'useAcfData' => function_exists('get_field') && get_field('product_categories', 'option') ? true : false
         );
 
@@ -1397,11 +1387,11 @@ class Quotation_Form_Plugin {
         // Enqueue assets when shortcode is called
         $this->enqueue_form_assets();
 
-        // Get dimension limits for template (with fallback defaults)
-        $min_width = function_exists('get_field') && get_field('min_width', 'option') ? get_field('min_width', 'option') : 200;
-        $max_width = function_exists('get_field') && get_field('max_width', 'option') ? get_field('max_width', 'option') : 4000;
-        $min_height = function_exists('get_field') && get_field('min_height', 'option') ? get_field('min_height', 'option') : 200;
-        $max_height = function_exists('get_field') && get_field('max_height', 'option') ? get_field('max_height', 'option') : 3200;
+        // Set default dimension limits for template (will be updated by JS based on selected style)
+        $min_width = 200;
+        $max_width = 4000;
+        $min_height = 200;
+        $max_height = 3200;
 
         ob_start();
         include QUOTATION_FORM_PLUGIN_DIR . 'templates/form-template.php';

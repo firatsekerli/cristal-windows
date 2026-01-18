@@ -389,6 +389,9 @@ jQuery(document).ready(function($) {
                 self.currentItem.styleImage = $(this).find('img').attr('src');
                 self.selectCard($(this));
 
+                // Update dimension limits based on selected style
+                self.updateDimensionLimits(style);
+
                 // Check if current product type has openings
                 setTimeout(function() {
                     if (self.hasOpeningsForCurrentType()) {
@@ -1466,6 +1469,41 @@ jQuery(document).ready(function($) {
                     $(this).hide();
                 }
             });
+        },
+
+        updateDimensionLimits: function(styleSlug) {
+            // Get config
+            const config = (typeof quotationFormAjax !== 'undefined' && quotationFormAjax.config) ? quotationFormAjax.config : {};
+            const styles = config.styles || [];
+
+            // Find the selected style
+            const selectedStyle = styles.find(s => s.slug === styleSlug);
+
+            // Default limits (fallback if style not found or no limits defined)
+            let minWidth = 200;
+            let maxWidth = 4000;
+            let minHeight = 200;
+            let maxHeight = 3200;
+
+            // Use style-specific limits if available
+            if (selectedStyle) {
+                minWidth = selectedStyle.min_width || minWidth;
+                maxWidth = selectedStyle.max_width || maxWidth;
+                minHeight = selectedStyle.min_height || minHeight;
+                maxHeight = selectedStyle.max_height || maxHeight;
+            }
+
+            // Update width input
+            const $widthInput = $('#width');
+            $widthInput.attr('min', minWidth);
+            $widthInput.attr('max', maxWidth);
+            $widthInput.next('.field-hint').text('Min: ' + minWidth + 'mm - Max: ' + maxWidth + 'mm');
+
+            // Update height input
+            const $heightInput = $('#height');
+            $heightInput.attr('min', minHeight);
+            $heightInput.attr('max', maxHeight);
+            $heightInput.next('.field-hint').text('Min: ' + minHeight + 'mm - Max: ' + maxHeight + 'mm');
         },
 
         updateConfigurationPreview: function() {
