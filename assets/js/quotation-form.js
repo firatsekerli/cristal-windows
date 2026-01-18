@@ -1515,21 +1515,31 @@ jQuery(document).ready(function($) {
         },
 
         validateConfiguration: function() {
-            const width = parseInt($('#width').val());
-            const height = parseInt($('#height').val());
+            const $widthInput = $('#width');
+            const $heightInput = $('#height');
+
+            const width = parseInt($widthInput.val());
+            const height = parseInt($heightInput.val());
+
+            // Get dynamic min/max values from input attributes (set by updateDimensionLimits)
+            const minWidth = parseInt($widthInput.attr('min')) || 200;
+            const maxWidth = parseInt($widthInput.attr('max')) || 4000;
+            const minHeight = parseInt($heightInput.attr('min')) || 200;
+            const maxHeight = parseInt($heightInput.attr('max')) || 3200;
+
             const cill = $('#cill').val();
             const insideColour = $('#inside-colour').val();
             const outsideColour = $('#outside-colour').val();
             const glazingType = $('#glazing-type').val();
             const hardwareColour = $('#hardware-colour').val();
 
-            if (!width || width < 200 || width > 4000) {
-                alert('Please enter a valid width (200-4000mm)');
+            if (!width || width < minWidth || width > maxWidth) {
+                alert('Please enter a valid width (' + minWidth + '-' + maxWidth + 'mm)');
                 return false;
             }
 
-            if (!height || height < 200 || height > 3200) {
-                alert('Please enter a valid height (200-3200mm)');
+            if (!height || height < minHeight || height > maxHeight) {
+                alert('Please enter a valid height (' + minHeight + '-' + maxHeight + 'mm)');
                 return false;
             }
 
