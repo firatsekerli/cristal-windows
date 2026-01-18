@@ -315,14 +315,14 @@ if (!$use_acf) {
 
                     <div class="form-group">
                         <label for="width">Width (mm)</label>
-                        <input type="number" id="width" name="width" min="200" max="4000">
-                        <span class="field-hint">Min: 200mm - Max: 4000mm</span>
+                        <input type="number" id="width" name="width" min="<?php echo esc_attr($min_width); ?>" max="<?php echo esc_attr($max_width); ?>">
+                        <span class="field-hint">Min: <?php echo esc_html($min_width); ?>mm - Max: <?php echo esc_html($max_width); ?>mm</span>
                     </div>
 
                     <div class="form-group">
                         <label for="height">Height (mm)</label>
-                        <input type="number" id="height" name="height" min="200" max="3200">
-                        <span class="field-hint">Min: 200mm - Max: 3200mm</span>
+                        <input type="number" id="height" name="height" min="<?php echo esc_attr($min_height); ?>" max="<?php echo esc_attr($max_height); ?>">
+                        <span class="field-hint">Min: <?php echo esc_html($min_height); ?>mm - Max: <?php echo esc_html($max_height); ?>mm</span>
                     </div>
 
                     <div class="form-group">
