@@ -280,6 +280,7 @@ jQuery(document).ready(function($) {
         },
 
         init: function() {
+            this.glazingTypeHidden = false; // Initialize glazing type visibility state
             this.debugColours(); // Debug colour data
             this.loadState(); // Restore saved state if available
             this.bindEvents();
@@ -391,6 +392,10 @@ jQuery(document).ready(function($) {
 
                 // Update dimension limits based on selected style
                 self.updateDimensionLimits(style);
+
+                // Check if glazing type should be hidden for this style
+                const hideGlazingType = $(this).data('hide-glazing-type') === '1' || $(this).data('hide-glazing-type') === 1;
+                self.toggleGlazingTypeVisibility(hideGlazingType);
 
                 // Check if current product type has openings
                 setTimeout(function() {
@@ -1506,6 +1511,30 @@ jQuery(document).ready(function($) {
             $heightInput.next('.field-hint').text('Min: ' + minHeight + 'mm - Max: ' + maxHeight + 'mm');
         },
 
+        toggleGlazingTypeVisibility: function(shouldHide) {
+            const $glazingTypeGroup = $('.form-group').filter(function() {
+                return $(this).find('label').first().text().trim() === 'Glazing Type';
+            });
+
+            if (shouldHide) {
+                // Hide the glazing type section
+                $glazingTypeGroup.hide();
+                // Clear any selected glazing type
+                $('#glazing-type').val('');
+                $('#glazing-type-name').text('None');
+                $('.glazing-type-card').removeClass('selected');
+                // Mark that glazing type is hidden
+                this.glazingTypeHidden = true;
+            } else {
+                // Show the glazing type section
+                $glazingTypeGroup.show();
+                // Re-auto-select first glazing type
+                this.autoSelectFirstGlazingType();
+                // Mark that glazing type is visible
+                this.glazingTypeHidden = false;
+            }
+        },
+
         updateConfigurationPreview: function() {
             $('#style-preview').attr('src', this.currentItem.styleImage);
             $('#preview-category').text(this.capitalizeValue(this.currentItem.category) || '');
@@ -1558,7 +1587,8 @@ jQuery(document).ready(function($) {
                 return false;
             }
 
-            if (!glazingType) {
+            // Only validate glazing type if it's not hidden
+            if (!this.glazingTypeHidden && !glazingType) {
                 alert('Please select a glazing type');
                 return false;
             }
@@ -1593,8 +1623,6 @@ jQuery(document).ready(function($) {
                 insideFinishType: $('#inside-finish-type').val(),
                 outsideFinishType: $('#outside-finish-type').val(),
                 aluminiumColourType: this.currentItem.aluminiumColourType || '',
-                glazingType: $('#glazing-type').val(),
-                glazingTypeName: $('#glazing-type-name').text(),
                 glazingPattern: $('#glazing-pattern').val(),
                 glazingFeatures: $('#glazing-features').val(),
                 glazingFeaturesName: $('#glazing-features-name').text(),
@@ -1603,6 +1631,12 @@ jQuery(document).ready(function($) {
                 location: '', // Can be set later
                 attachedFiles: this.uploadedFiles.length > 0 ? [...this.uploadedFiles] : [] // Copy uploaded files
             };
+
+            // Only include glazing type if it's not hidden for this style
+            if (!this.glazingTypeHidden) {
+                item.glazingType = $('#glazing-type').val();
+                item.glazingTypeName = $('#glazing-type-name').text();
+            }
 
             if (this.editingItemId) {
                 // Update existing item
@@ -1710,13 +1744,6 @@ jQuery(document).ready(function($) {
 
             const $table = $('<table class="item-summary"></table>');
 
-            // For glazing display: if we have glazingTypeName, use it (already includes pattern)
-            // Otherwise combine glazingType with pattern
-            const glazingValue = item.glazingTypeName ||
-                (item.glazingPattern
-                    ? item.glazingType + ' - ' + item.glazingPattern
-                    : item.glazingType);
-
             // Use display names for Glazing Features and Hardware Colour
             const glazingFeaturesDisplay = item.glazingFeaturesName || item.glazingFeatures;
             const hardwareColourDisplay = item.hardwareColourName || item.hardwareColour;
@@ -1728,11 +1755,20 @@ jQuery(document).ready(function($) {
             const fields = [
                 { label: 'Product', value: (item.materialName || '') + ' ' + item.typeName, field: 'product' },
                 { label: 'Size', value: item.width + 'w x ' + item.height + 'h mm', field: 'size' },
-                { label: 'Colours', value: insideColourDisplay + ' / ' + outsideColourDisplay, field: 'colour' },
-                { label: 'Glazing Type', value: glazingValue, field: 'glazing' },
-                { label: 'Glazing Feature', value: glazingFeaturesDisplay, field: 'glazingFeatures' },
-                { label: 'Hardware Colour', value: hardwareColourDisplay, field: 'hardware' }
+                { label: 'Colours', value: insideColourDisplay + ' / ' + outsideColourDisplay, field: 'colour' }
             ];
+
+            // Only show Glazing Type if it exists (some styles hide this field)
+            if (item.glazingType || item.glazingTypeName) {
+                const glazingValue = item.glazingTypeName ||
+                    (item.glazingPattern
+                        ? item.glazingType + ' - ' + item.glazingPattern
+                        : item.glazingType);
+                fields.push({ label: 'Glazing Type', value: glazingValue, field: 'glazing' });
+            }
+
+            fields.push({ label: 'Glazing Feature', value: glazingFeaturesDisplay, field: 'glazingFeatures' });
+            fields.push({ label: 'Hardware Colour', value: hardwareColourDisplay, field: 'hardware' });
 
             fields.forEach(field => {
                 const $row = $('<tr></tr>');
