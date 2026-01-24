@@ -875,6 +875,9 @@
 .btn-home {
     padding: 8px 20px;
     font-size: 14px;
+    background-color: #FFC407;
+    color: #1E3A8A;
+    text-decoration: none;
 }
 
 .basket-count {
