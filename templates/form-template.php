@@ -264,8 +264,15 @@ if (!$use_acf) {
                         $available_materials = isset($style['available_materials']) ? $style['available_materials'] : array();
 
                         // Styles that should hide Glazing Type and Glazing Features
+                        // Check if slug matches or contains any of these style numbers
                         $hide_glazing_styles = array('5001', '5004', '5015', '5025', '5030', '5033', '5401');
-                        $hide_glazing = in_array($slug, $hide_glazing_styles) ? '1' : '0';
+                        $hide_glazing = '0';
+                        foreach ($hide_glazing_styles as $style_num) {
+                            if ($slug === $style_num || strpos($slug, $style_num) !== false) {
+                                $hide_glazing = '1';
+                                break;
+                            }
+                        }
                     ?>
                     <div class="image-card style-card"
                          data-style="<?php echo esc_attr($slug); ?>"
