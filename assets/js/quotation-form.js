@@ -1463,7 +1463,9 @@ jQuery(document).ready(function($) {
             // Update visual selection
             $('#' + gridId + ' .glazing-feature-item').removeClass('selected');
             $('#' + gridId + ' .glazing-feature-item').filter(function() {
-                return $(this).find('.glazing-feature-swatch').data('feature') === featureValue;
+                // Check both swatch data-feature and item data-feature (for "Not Required")
+                return $(this).find('.glazing-feature-swatch').data('feature') === featureValue ||
+                       $(this).data('feature') === featureValue;
             }).addClass('selected');
         },
 
@@ -2411,7 +2413,9 @@ jQuery(document).ready(function($) {
             // Update visual selection
             $('#' + gridId + ' .glazing-feature-item').removeClass('selected');
             $('#' + gridId + ' .glazing-feature-item').filter(function() {
-                return $(this).find('.glazing-feature-swatch').data('feature') === featureValue;
+                // Check both swatch data-feature and item data-feature (for "Not Required")
+                return $(this).find('.glazing-feature-swatch').data('feature') === featureValue ||
+                       $(this).data('feature') === featureValue;
             }).addClass('selected');
         },
 
