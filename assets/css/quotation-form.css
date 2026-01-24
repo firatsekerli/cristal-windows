@@ -178,7 +178,7 @@
 .progress-step[data-step="basket"] .step-number svg {
     width: 20px;
     height: 20px;
-    margin-top: 10px;
+    margin-top: 15px;
 }
 
 /* When basket is active */
