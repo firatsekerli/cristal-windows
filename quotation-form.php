@@ -125,6 +125,9 @@ class Quotation_Form_Plugin {
             // Add manual PDF generation button in admin
             add_action('admin_notices', array($this, 'show_pdf_generation_notices'));
             add_action('admin_post_generate_quote_pdf', array($this, 'handle_manual_pdf_generation'));
+
+            // Handle quote status changes
+            add_action('acf/save_post', array($this, 'handle_quote_status_change'), 20);
         }
     }
 
@@ -1847,6 +1850,166 @@ class Quotation_Form_Plugin {
 
             wp_mail($customer_email, $customer_subject, $customer_message);
         }
+    }
+
+    /**
+     * Handle quote status changes and send appropriate emails
+     */
+    public function handle_quote_status_change($post_id) {
+        // Only run for quotation post type
+        if (get_post_type($post_id) !== 'quotation') {
+            return;
+        }
+
+        // Avoid infinite loops and autosaves
+        if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+            return;
+        }
+
+        // Check if this is a REST request (avoid running on Gutenberg saves)
+        if (defined('REST_REQUEST') && REST_REQUEST) {
+            return;
+        }
+
+        // Get old and new status
+        $old_status = get_post_meta($post_id, '_previous_quote_status', true);
+        $new_status = get_field('quote_status', $post_id);
+
+        // If status hasn't changed, do nothing
+        if ($old_status === $new_status) {
+            return;
+        }
+
+        // Update the stored previous status
+        update_post_meta($post_id, '_previous_quote_status', $new_status);
+
+        // Get customer data
+        $customer_email = get_field('customer_email', $post_id);
+        $customer_name = get_field('customer_name', $post_id);
+
+        if (!$customer_email) {
+            return; // Can't send email without customer email
+        }
+
+        // Auto-fill Quote Sent Date when status changes to "quoted"
+        if ($new_status === 'quoted' && !get_field('quote_sent_date', $post_id)) {
+            update_field('quote_sent_date', date('Y-m-d'), $post_id);
+        }
+
+        // Send email based on new status
+        switch ($new_status) {
+            case 'in_progress':
+                $this->send_status_email_in_progress($post_id, $customer_email, $customer_name);
+                break;
+
+            case 'quoted':
+                $this->send_status_email_quote_sent($post_id, $customer_email, $customer_name);
+                break;
+
+            case 'accepted':
+                $this->send_status_email_accepted($post_id, $customer_email, $customer_name);
+                break;
+
+            case 'rejected':
+                $this->send_status_email_rejected($post_id, $customer_email, $customer_name);
+                break;
+
+            case 'completed':
+                $this->send_status_email_completed($post_id, $customer_email, $customer_name);
+                break;
+        }
+    }
+
+    /**
+     * Send email when status changes to "In Progress"
+     */
+    private function send_status_email_in_progress($post_id, $customer_email, $customer_name) {
+        $subject = 'Your Quotation Request is In Progress';
+        $message = "Dear " . $customer_name . ",\n\n";
+        $message .= "Thank you for your patience. We're pleased to inform you that your quotation request is now in progress.\n\n";
+        $message .= "Our team is currently working on preparing your quote and will have it ready for you shortly.\n\n";
+        $message .= "We'll notify you as soon as your quote is ready.\n\n";
+        $message .= "Best regards,\n";
+        $message .= get_bloginfo('name');
+
+        wp_mail($customer_email, $subject, $message);
+    }
+
+    /**
+     * Send email when status changes to "Quote Sent" with PDF attachment
+     */
+    private function send_status_email_quote_sent($post_id, $customer_email, $customer_name) {
+        $subject = 'Your Quotation is Ready';
+        $message = "Dear " . $customer_name . ",\n\n";
+        $message .= "We're pleased to send you the quotation you requested.\n\n";
+        $message .= "Please find your detailed quote attached to this email. We've carefully prepared pricing for all the items you specified.\n\n";
+        $message .= "If you have any questions about the quote or would like to discuss any aspect of your project, please don't hesitate to contact us.\n\n";
+        $message .= "We look forward to working with you!\n\n";
+        $message .= "Best regards,\n";
+        $message .= get_bloginfo('name');
+
+        // Get PDF URL and convert to file path
+        $pdf_url = get_field('quote_pdf_url', $post_id);
+        $attachments = array();
+
+        if ($pdf_url) {
+            // Convert URL to file path
+            $upload_dir = wp_upload_dir();
+            $pdf_path = str_replace($upload_dir['baseurl'], $upload_dir['basedir'], $pdf_url);
+
+            if (file_exists($pdf_path)) {
+                $attachments[] = $pdf_path;
+            }
+        }
+
+        wp_mail($customer_email, $subject, $message, array(), $attachments);
+    }
+
+    /**
+     * Send email when status changes to "Accepted"
+     */
+    private function send_status_email_accepted($post_id, $customer_email, $customer_name) {
+        $subject = 'Quotation Accepted - Thank You!';
+        $message = "Dear " . $customer_name . ",\n\n";
+        $message .= "Thank you for accepting our quotation!\n\n";
+        $message .= "We're delighted to be working with you on your project. Our team will be in touch shortly to discuss the next steps and arrange installation.\n\n";
+        $message .= "If you have any questions in the meantime, please feel free to contact us.\n\n";
+        $message .= "Best regards,\n";
+        $message .= get_bloginfo('name');
+
+        wp_mail($customer_email, $subject, $message);
+    }
+
+    /**
+     * Send email when status changes to "Rejected"
+     */
+    private function send_status_email_rejected($post_id, $customer_email, $customer_name) {
+        $subject = 'Thank You for Considering Us';
+        $message = "Dear " . $customer_name . ",\n\n";
+        $message .= "Thank you for considering " . get_bloginfo('name') . " for your project.\n\n";
+        $message .= "We understand that our quotation wasn't quite what you were looking for on this occasion.\n\n";
+        $message .= "If you have any feedback about our quote or if circumstances change in the future, we'd love to hear from you.\n\n";
+        $message .= "We wish you all the best with your project.\n\n";
+        $message .= "Best regards,\n";
+        $message .= get_bloginfo('name');
+
+        wp_mail($customer_email, $subject, $message);
+    }
+
+    /**
+     * Send email when status changes to "Completed"
+     */
+    private function send_status_email_completed($post_id, $customer_email, $customer_name) {
+        $subject = 'Project Completed - Thank You!';
+        $message = "Dear " . $customer_name . ",\n\n";
+        $message .= "We're delighted to confirm that your project has been completed!\n\n";
+        $message .= "It's been a pleasure working with you. We hope you're thrilled with the results.\n\n";
+        $message .= "If you have any questions or concerns, or if there's anything else we can help you with, please don't hesitate to get in touch.\n\n";
+        $message .= "Thank you for choosing " . get_bloginfo('name') . ".\n\n";
+        $message .= "Best regards,\n";
+        $message .= get_bloginfo('name');
+
+        wp_mail($customer_email, $subject, $message);
     }
 
     /**
