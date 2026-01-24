@@ -1828,12 +1828,18 @@ jQuery(document).ready(function($) {
                 const $row = $('<tr></tr>');
                 $row.append('<td><strong>' + field.label + ':</strong></td>');
 
-                const $valueCell = $('<td class="editable-field" data-field="' + field.field + '">' + field.value + '</td>');
-                $valueCell.on('click', function() {
-                    self.editItemField(item.id, field.field);
-                });
+                // Product field is not editable, so don't add click handler
+                if (field.field === 'product') {
+                    const $valueCell = $('<td>' + field.value + '</td>');
+                    $row.append($valueCell);
+                } else {
+                    const $valueCell = $('<td class="editable-field" data-field="' + field.field + '">' + field.value + '</td>');
+                    $valueCell.on('click', function() {
+                        self.editItemField(item.id, field.field);
+                    });
+                    $row.append($valueCell);
+                }
 
-                $row.append($valueCell);
                 $table.append($row);
             });
 
