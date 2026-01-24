@@ -281,6 +281,7 @@ jQuery(document).ready(function($) {
 
         init: function() {
             this.glazingTypeHidden = false; // Initialize glazing type visibility state
+            this.glazingFeaturesHidden = false; // Initialize glazing features visibility state
             this.debugColours(); // Debug colour data
             this.loadState(); // Restore saved state if available
             this.bindEvents();
@@ -393,9 +394,10 @@ jQuery(document).ready(function($) {
                 // Update dimension limits based on selected style
                 self.updateDimensionLimits(style);
 
-                // Check if glazing type should be hidden for this style
-                const hideGlazingType = $(this).data('hide-glazing-type') === '1' || $(this).data('hide-glazing-type') === 1;
-                self.toggleGlazingTypeVisibility(hideGlazingType);
+                // Check if glazing options should be hidden for this style
+                const hideGlazing = $(this).data('hide-glazing') === '1' || $(this).data('hide-glazing') === 1;
+                self.toggleGlazingTypeVisibility(hideGlazing);
+                self.toggleGlazingFeaturesVisibility(hideGlazing);
 
                 // Check if current product type has openings
                 setTimeout(function() {
@@ -1535,6 +1537,31 @@ jQuery(document).ready(function($) {
             }
         },
 
+        toggleGlazingFeaturesVisibility: function(shouldHide) {
+            const $glazingFeaturesGroup = $('.form-group').filter(function() {
+                return $(this).find('label').first().text().trim() === 'Glazing Features';
+            });
+
+            if (shouldHide) {
+                // Hide the glazing features section
+                $glazingFeaturesGroup.hide();
+                // Clear any selected glazing features
+                $('#glazing-features').val('');
+                $('#glazing-features-name').text('Not Required');
+                $('.glazing-feature-item').removeClass('selected');
+                // Mark that glazing features is hidden
+                this.glazingFeaturesHidden = true;
+            } else {
+                // Show the glazing features section
+                $glazingFeaturesGroup.show();
+                // Reset to default "Not Required" selection
+                $('#glazing-features').val('not-required');
+                $('#glazing-features-name').text('Not Required');
+                // Mark that glazing features is visible
+                this.glazingFeaturesHidden = false;
+            }
+        },
+
         updateConfigurationPreview: function() {
             $('#style-preview').attr('src', this.currentItem.styleImage);
             $('#preview-category').text(this.capitalizeValue(this.currentItem.category) || '');
@@ -1624,8 +1651,6 @@ jQuery(document).ready(function($) {
                 outsideFinishType: $('#outside-finish-type').val(),
                 aluminiumColourType: this.currentItem.aluminiumColourType || '',
                 glazingPattern: $('#glazing-pattern').val(),
-                glazingFeatures: $('#glazing-features').val(),
-                glazingFeaturesName: $('#glazing-features-name').text(),
                 hardwareColour: $('#hardware-colour').val(),
                 hardwareColourName: $('#hardware-colour-name').text(),
                 location: '', // Can be set later
@@ -1636,6 +1661,12 @@ jQuery(document).ready(function($) {
             if (!this.glazingTypeHidden) {
                 item.glazingType = $('#glazing-type').val();
                 item.glazingTypeName = $('#glazing-type-name').text();
+            }
+
+            // Only include glazing features if it's not hidden for this style
+            if (!this.glazingFeaturesHidden) {
+                item.glazingFeatures = $('#glazing-features').val();
+                item.glazingFeaturesName = $('#glazing-features-name').text();
             }
 
             if (this.editingItemId) {
@@ -1767,7 +1798,11 @@ jQuery(document).ready(function($) {
                 fields.push({ label: 'Glazing Type', value: glazingValue, field: 'glazing' });
             }
 
-            fields.push({ label: 'Glazing Feature', value: glazingFeaturesDisplay, field: 'glazingFeatures' });
+            // Only show Glazing Features if it exists (some styles hide this field)
+            if (item.glazingFeatures || item.glazingFeaturesName) {
+                fields.push({ label: 'Glazing Feature', value: glazingFeaturesDisplay, field: 'glazingFeatures' });
+            }
+
             fields.push({ label: 'Hardware Colour', value: hardwareColourDisplay, field: 'hardware' });
 
             fields.forEach(field => {

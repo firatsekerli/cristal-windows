@@ -263,7 +263,7 @@ if (!$use_acf) {
                         $available_types = isset($style['available_types']) ? $style['available_types'] : array();
                         $available_materials = isset($style['available_materials']) ? $style['available_materials'] : array();
 
-                        // Styles that should hide Glazing Type
+                        // Styles that should hide Glazing Type and Glazing Features
                         $hide_glazing_styles = array('5001', '5004', '5015', '5025', '5030', '5033', '5401');
                         $hide_glazing = in_array($slug, $hide_glazing_styles) ? '1' : '0';
                     ?>
@@ -271,7 +271,7 @@ if (!$use_acf) {
                          data-style="<?php echo esc_attr($slug); ?>"
                          data-available-types="<?php echo esc_attr(json_encode($available_types)); ?>"
                          data-available-materials="<?php echo esc_attr(json_encode($available_materials)); ?>"
-                         data-hide-glazing-type="<?php echo esc_attr($hide_glazing); ?>">
+                         data-hide-glazing="<?php echo esc_attr($hide_glazing); ?>">
                         <div class="card-image">
                             <?php if ($image_url): ?>
                                 <img src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($name); ?>" loading="lazy">
