@@ -488,6 +488,15 @@ jQuery(document).ready(function($) {
                 }
 
                 const stepNum = parseInt(step);
+
+                // Don't allow navigation to Product, Style, or Configuration steps (1, 2, 3)
+                // when in Review step (4) or Basket - these steps would be empty
+                if (self.currentStep === 4 || self.currentStep === 'basket') {
+                    if (stepNum <= 3) {
+                        return; // Prevent navigation
+                    }
+                }
+
                 if (stepNum < self.currentStep) {
                     self.navigateToStep(stepNum);
                 }
