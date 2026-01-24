@@ -539,6 +539,13 @@ function format_currency($amount) {
                 <span class="item-detail-value"><?php echo esc_html(ucfirst($item['hardware_colour'])); ?></span>
             </div>
             <?php endif; ?>
+
+            <?php if (!empty($item['opening'])): ?>
+            <div class="item-detail-row">
+                <span class="item-detail-label">Opening:</span>
+                <span class="item-detail-value"><?php echo esc_html($item['opening']); ?></span>
+            </div>
+            <?php endif; ?>
         </div>
     </div>
     <?php

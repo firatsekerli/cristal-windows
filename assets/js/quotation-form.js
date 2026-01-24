@@ -1568,6 +1568,14 @@ jQuery(document).ready(function($) {
             $('#preview-type').text(this.currentItem.typeName || '');
             $('#preview-material').text(this.currentItem.materialName || 'N/A');
             $('#preview-style').text(this.capitalizeValue(this.currentItem.styleName) || '');
+
+            // Show Opening row only if opening is selected
+            if (this.currentItem.openingName) {
+                $('#preview-opening').text(this.currentItem.openingName);
+                $('#preview-opening-row').show();
+            } else {
+                $('#preview-opening-row').hide();
+            }
         },
 
         validateConfiguration: function() {
@@ -1667,6 +1675,12 @@ jQuery(document).ready(function($) {
             if (!this.glazingFeaturesHidden) {
                 item.glazingFeatures = $('#glazing-features').val();
                 item.glazingFeaturesName = $('#glazing-features-name').text();
+            }
+
+            // Include opening if selected (for products that have opening options)
+            if (this.currentItem.opening) {
+                item.opening = this.currentItem.opening;
+                item.openingName = this.currentItem.openingName;
             }
 
             if (this.editingItemId) {
@@ -1804,6 +1818,11 @@ jQuery(document).ready(function($) {
             }
 
             fields.push({ label: 'Hardware Colour', value: hardwareColourDisplay, field: 'hardware' });
+
+            // Only show Opening if it exists (only for products that have opening options)
+            if (item.opening || item.openingName) {
+                fields.push({ label: 'Opening', value: item.openingName || item.opening, field: 'opening' });
+            }
 
             fields.forEach(field => {
                 const $row = $('<tr></tr>');

@@ -413,6 +413,12 @@ foreach ($data['basket_items'] as $item):
         </div>
         <?php endif; ?>
 
+        <?php if (!empty($item['opening'])): ?>
+        <div class="item-detail">
+            <strong>Opening:</strong> <?php echo esc_html($item['opening']); ?>
+        </div>
+        <?php endif; ?>
+
         <?php if (!empty($item['location'])): ?>
         <div class="item-detail">
             <strong>Location:</strong> <?php echo esc_html($item['location']); ?>

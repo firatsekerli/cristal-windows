@@ -318,6 +318,7 @@ if (!$use_acf) {
                         <p><strong>Type:</strong> <span id="preview-type"></span></p>
                         <p><strong>Material:</strong> <span id="preview-material"></span></p>
                         <p><strong>Style:</strong> <span id="preview-style"></span></p>
+                        <p id="preview-opening-row" style="display: none;"><strong>Opening:</strong> <span id="preview-opening"></span></p>
                     </div>
                 </div>
 

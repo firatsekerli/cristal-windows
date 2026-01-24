@@ -1460,6 +1460,8 @@ class Quotation_Form_Plugin {
                 'glazingFeaturesName' => sanitize_text_field($item['glazingFeaturesName'] ?? ''),
                 'hardwareColour' => sanitize_text_field($item['hardwareColour'] ?? ''),
                 'hardwareColourName' => sanitize_text_field($item['hardwareColourName'] ?? ''),
+                'opening' => sanitize_text_field($item['opening'] ?? ''),
+                'openingName' => sanitize_text_field($item['openingName'] ?? ''),
                 'location' => sanitize_text_field($item['location'] ?? ''),
                 'attachedFiles' => isset($item['attachedFiles']) && is_array($item['attachedFiles']) ? $item['attachedFiles'] : array()
             );
@@ -1697,6 +1699,7 @@ class Quotation_Form_Plugin {
                 'glazing_features' => isset($item['glazingFeatures']) ? $this->capitalize_value($item['glazingFeatures']) : '',
                 'glazing_patterns' => isset($item['glazingPattern']) ? $this->capitalize_value($item['glazingPattern']) : '',
                 'hardware_colour' => isset($item['hardwareColour']) ? $this->capitalize_value($item['hardwareColour']) : '',
+                'opening' => isset($item['openingName']) ? $item['openingName'] : (isset($item['opening']) ? $this->capitalize_value($item['opening']) : ''),
                 'location' => isset($item['location']) ? $this->capitalize_value($item['location']) : '',
             );
 
