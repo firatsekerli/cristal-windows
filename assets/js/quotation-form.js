@@ -2082,6 +2082,22 @@ jQuery(document).ready(function($) {
                 setTimeout(function() {
                     self.renderModalHardwareColourGrid('modal-hardware-colour-grid', item.hardwareColour);
                 }, 10);
+            } else if (field === 'opening') {
+                // Store modal selected opening
+                this.modalSelectedOpening = item.opening;
+                this.modalSelectedOpeningName = item.openingName;
+
+                // Create opening picker
+                $content.append('<div class="edit-field-group modal-opening-picker">' +
+                    '<label>Opening:</label>' +
+                    '<div class="opening-selection-display">Selected: <strong id="modal-opening-name">' + (item.openingName || 'None') + '</strong></div>' +
+                    '<div id="modal-opening-grid" class="opening-grid modal-opening-grid"></div>' +
+                    '</div>');
+
+                // Render opening grid after a brief delay to ensure DOM is ready
+                setTimeout(function() {
+                    self.renderModalOpeningGrid('modal-opening-grid', item);
+                }, 10);
             }
 
             $modal.show();
@@ -2109,6 +2125,9 @@ jQuery(document).ready(function($) {
                 } else if (field === 'hardware') {
                     item.hardwareColour = self.modalSelectedHardwareColour;
                     item.hardwareColourName = $('#modal-hardware-colour-name').text();
+                } else if (field === 'opening') {
+                    item.opening = self.modalSelectedOpening;
+                    item.openingName = self.modalSelectedOpeningName;
                 }
 
                 $modal.hide();
@@ -2471,6 +2490,61 @@ jQuery(document).ready(function($) {
             $('#modal-hardware-colour-grid .colour-item').removeClass('selected');
             $('#modal-hardware-colour-grid .colour-item').filter(function() {
                 return $(this).find('.colour-swatch').data('colour') === colourValue;
+            }).addClass('selected');
+        },
+
+        renderModalOpeningGrid: function(gridId, item) {
+            const self = this;
+            const $grid = $('#' + gridId);
+
+            $grid.empty();
+
+            // Filter openings for the item's product type
+            const currentTypeSlug = (item.type || '').toLowerCase();
+            const availableOpenings = this.openings.filter(opening => {
+                if (!opening.available_types || opening.available_types.length === 0) {
+                    return false;
+                }
+                return opening.available_types.some(type => type.toLowerCase() === currentTypeSlug);
+            });
+
+            // Create opening cards
+            availableOpenings.forEach(opening => {
+                const imageUrl = opening.image && opening.image.url ? opening.image.url : '';
+                const slug = opening.slug || '';
+                const name = opening.name || '';
+
+                const $card = $('<div class="image-card opening-card" data-opening="' + slug + '"></div>');
+                if (imageUrl) {
+                    $card.append('<img src="' + imageUrl + '" alt="' + name + '">');
+                }
+                $card.append('<h3 class="opening-card-title">' + name + '</h3>');
+
+                // Mark selected
+                if (slug === item.opening) {
+                    $card.addClass('selected');
+                }
+
+                $card.on('click', function() {
+                    self.selectModalOpening(slug, name);
+                });
+
+                $grid.append($card);
+            });
+        },
+
+        selectModalOpening: function(openingValue, openingName) {
+            // Update the modal selected opening values
+            this.modalSelectedOpening = openingValue;
+            this.modalSelectedOpeningName = openingName;
+
+            // Update display
+            $('#modal-opening-name').text(openingName);
+
+            // Update visual selection
+            $('#modal-opening-grid .opening-card').removeClass('selected');
+            $('#modal-opening-grid .opening-card').filter(function() {
+                return $(this).data('opening') === openingValue;
             }).addClass('selected');
         },
 
