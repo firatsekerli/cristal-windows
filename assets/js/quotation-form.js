@@ -2295,6 +2295,13 @@ jQuery(document).ready(function($) {
             if (isInside) {
                 this.modalSelectedColors.inside = colourName;
                 this.modalFinishTypes.inside = clickedFinishType || '';
+
+                // For Aluminium Stock Colours, also set outside colour to match inside
+                if (this.modalAluminiumType === 'stock') {
+                    this.modalSelectedColors.outside = colourName;
+                    this.modalFinishTypes.outside = clickedFinishType || '';
+                    $('#modal-outside-colour-name').text(colourName);
+                }
             } else {
                 this.modalSelectedColors.outside = colourName;
                 this.modalFinishTypes.outside = clickedFinishType || '';
