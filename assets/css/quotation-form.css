@@ -873,11 +873,11 @@
 }
 
 .btn-home {
-    padding: 8px 20px;
-    font-size: 14px;
-    background-color: #FFC407;
-    color: #1E3A8A;
-    text-decoration: none;
+    padding: 8px 20px !important;
+    font-size: 14px !important;
+    background-color: #FFC407 !important;
+    color: #1E3A8A !important;
+    text-decoration: none !important;
 }
 
 .basket-count {
@@ -995,7 +995,6 @@
     font-size: 13px;
     color: #888;
     font-style: italic;
-    border-top: 1px solid var(--border-color);
 }
 
 .item-attached-files {
@@ -1398,7 +1397,6 @@
 
 .modal-opening-grid .opening-card.selected {
     border-color: var(--primary-color);
-    background: rgba(0, 102, 204, 0.05);
     box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
 }
 
