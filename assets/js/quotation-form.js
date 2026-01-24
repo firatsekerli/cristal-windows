@@ -1847,6 +1847,10 @@ jQuery(document).ready(function($) {
 
             $details.append($table);
 
+            // Add helper text
+            const $helperText = $('<p class="basket-edit-hint">Click on any option above to make changes</p>');
+            $details.append($helperText);
+
             // Display attached file if any
             if (item.attachedFiles && item.attachedFiles.length > 0) {
                 const $filesSection = $('<div class="item-attached-files"></div>');
