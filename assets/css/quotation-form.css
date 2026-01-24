@@ -860,8 +860,20 @@
 /* ====================================
    Basket Review
    ==================================== */
-.basket-review h2 {
+.basket-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 10px;
+}
+
+.basket-header h2 {
+    margin-bottom: 0;
+}
+
+.btn-home {
+    padding: 8px 20px;
+    font-size: 14px;
 }
 
 .basket-count {
