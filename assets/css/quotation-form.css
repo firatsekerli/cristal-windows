@@ -1356,6 +1356,72 @@
     overflow-y: auto;
 }
 
+/* Modal Opening Picker */
+.modal-opening-picker {
+    margin-bottom: 25px;
+}
+
+.modal-opening-picker label {
+    font-size: 16px !important;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.modal-opening-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 15px;
+    background: #fafafa;
+    margin-top: 10px;
+}
+
+.modal-opening-grid .opening-card {
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    padding: 15px;
+    text-align: center;
+    cursor: pointer;
+    background: #fff;
+    transition: all 0.2s ease;
+}
+
+.modal-opening-grid .opening-card:hover {
+    border-color: var(--primary-color);
+    box-shadow: 0 2px 8px rgba(0, 102, 204, 0.15);
+}
+
+.modal-opening-grid .opening-card.selected {
+    border-color: var(--primary-color);
+    background: rgba(0, 102, 204, 0.05);
+    box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+}
+
+.modal-opening-grid .opening-card img {
+    max-width: 100%;
+    max-height: 120px;
+    object-fit: contain;
+    margin-bottom: 10px;
+}
+
+.modal-opening-grid .opening-card-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin: 0;
+}
+
+.opening-selection-display {
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+.opening-selection-display strong {
+    color: var(--primary-color);
+}
+
 /* ====================================
    Responsive Design
    ==================================== */
