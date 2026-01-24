@@ -511,7 +511,7 @@ if (!$use_acf) {
         <div class="form-step basket-review active" data-step="basket">
             <div class="basket-header">
                 <h2 class="quotation-heading">Your Basket</h2>
-                <a href="<?php echo esc_url(home_url('/')); ?>" class="btn btn-secondary btn-home">Home</a>
+                <a href="<?php echo esc_url(home_url('/')); ?>" class="btn btn-secondary btn-home" target="_blank">Home</a>
             </div>
             <p class="basket-count">Your basket contains <strong id="basket-item-count">0</strong> item(s)</p>
 
