@@ -685,15 +685,15 @@ jQuery(document).ready(function($) {
         navigateToStep: function(step) {
             this.currentStep = step;
 
-            // Clean up opening selection when leaving step 2
+            // Clean up opening selection UI when leaving step 2
+            // Only remove UI elements, but keep the opening data when moving forward to configuration
             if (this.currentStep !== 2 && $('.opening-grid').length > 0) {
                 $('.opening-grid').remove();
                 $('.opening-back-btn').parent().remove();
                 $('.style-grid').show();
                 $('.form-step[data-step="2"] h2').text('Select Configuration Style');
-                delete this.currentItem.opening;
-                delete this.currentItem.openingName;
-                delete this.currentItem.openingImage;
+                // Don't delete opening data here - it's needed for the configuration preview
+                // Opening data is only cleared when going back via hideOpeningSelection()
             }
 
             // Handle basket vs regular steps
