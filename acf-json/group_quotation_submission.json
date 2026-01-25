@@ -261,7 +261,14 @@
                     "key": "field_item_opening",
                     "label": "Opening",
                     "name": "opening",
-                    "type": "text"
+                    "type": "select",
+                    "choices": [],
+                    "default_value": false,
+                    "allow_null": 1,
+                    "multiple": 0,
+                    "ui": 1,
+                    "return_format": "value",
+                    "ajax": 0
                 },
                 {
                     "key": "field_item_replacement",
@@ -474,5 +481,5 @@
     "style": "default",
     "label_placement": "top",
     "instruction_placement": "label",
-    "modified": 1769370114
+    "modified": 1769370524
 }

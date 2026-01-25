@@ -104,6 +104,7 @@ class Quotation_Form_Plugin {
             add_filter('acf/load_field/key=field_item_glazing_patterns', array($this, 'populate_basket_item_glazing_pattern_choices'));
             add_filter('acf/load_field/key=field_item_glazing_features', array($this, 'populate_basket_item_glazing_feature_choices'));
             add_filter('acf/load_field/key=field_item_hardware_colour', array($this, 'populate_basket_item_hardware_colour_choices'));
+            add_filter('acf/load_field/key=field_item_opening', array($this, 'populate_basket_item_opening_choices'));
 
             // Add admin scripts for auto-slug generation
             add_action('acf/input/admin_enqueue_scripts', array($this, 'enqueue_admin_scripts'));
@@ -502,6 +503,30 @@ class Quotation_Form_Plugin {
                     if ($label) {
                         // Use the label as both key and value for display consistency
                         $field['choices'][$label] = $label;
+                    }
+                }
+            }
+        }
+
+        return $field;
+    }
+
+    /**
+     * Populate basket item opening dropdown with values from settings
+     */
+    public function populate_basket_item_opening_choices($field) {
+        $field['choices'] = array();
+
+        // Get openings from settings
+        if (function_exists('get_field')) {
+            $openings = get_field('openings', 'option');
+            if (!empty($openings) && is_array($openings)) {
+                foreach ($openings as $opening) {
+                    $name = isset($opening['name']) ? $opening['name'] : '';
+
+                    if ($name) {
+                        // Use the name as both key and value for display consistency
+                        $field['choices'][$name] = $name;
                     }
                 }
             }
