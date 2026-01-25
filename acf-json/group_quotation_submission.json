@@ -177,6 +177,23 @@
                     "ajax": 0
                 },
                 {
+                    "key": "field_item_side_panels",
+                    "label": "Number of Side Panels",
+                    "name": "side_panels",
+                    "type": "select",
+                    "choices": {
+                        "": "Not Applicable",
+                        "1": "1",
+                        "2": "2"
+                    },
+                    "default_value": "",
+                    "allow_null": 1,
+                    "multiple": 0,
+                    "ui": 1,
+                    "return_format": "value",
+                    "ajax": 0
+                },
+                {
                     "key": "field_item_inside_colour",
                     "label": "Inside Colour",
                     "name": "inside_colour",
@@ -443,5 +460,5 @@
     "style": "default",
     "label_placement": "top",
     "instruction_placement": "label",
-    "modified": 1766584025
+    "modified": 1769368444
 }
