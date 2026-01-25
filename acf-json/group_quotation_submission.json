@@ -264,6 +264,14 @@
                     "type": "text"
                 },
                 {
+                    "key": "field_item_replacement",
+                    "label": "Replacement",
+                    "name": "replacement",
+                    "type": "true_false",
+                    "default_value": 0,
+                    "ui": 1
+                },
+                {
                     "key": "field_item_location",
                     "label": "Location",
                     "name": "location",
@@ -466,5 +474,5 @@
     "style": "default",
     "label_placement": "top",
     "instruction_placement": "label",
-    "modified": 1769368602
+    "modified": 1769370114
 }

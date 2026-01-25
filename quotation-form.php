@@ -1859,6 +1859,11 @@ class Quotation_Form_Plugin {
                 $message .= "Opening: " . ($item['openingName'] ?? $item['opening'] ?? '') . "\n";
             }
 
+            // Add Replacement if checked (Bay Windows)
+            if (!empty($item['replacement'])) {
+                $message .= "Replacement: Yes\n";
+            }
+
             if (!empty($item['location'])) {
                 $message .= "Location: " . $item['location'] . "\n";
             }
@@ -1933,6 +1938,11 @@ class Quotation_Form_Plugin {
                 // Add Opening if present (French Doors, Glazed Doors, Composite Doors)
                 if (!empty($item['openingName']) || !empty($item['opening'])) {
                     $customer_message .= "Opening: " . ($item['openingName'] ?? $item['opening'] ?? '') . "\n";
+                }
+
+                // Add Replacement if checked (Bay Windows)
+                if (!empty($item['replacement'])) {
+                    $customer_message .= "Replacement: Yes\n";
                 }
 
                 if (!empty($item['location'])) {
