@@ -790,6 +790,28 @@ class Quotation_Form_Plugin {
                 $(document).on('change', '[data-name="style_name"] input, [data-name="style_name"] select', function() {
                     hideGlazingFieldsForStyles();
                 });
+
+                // Hide side_panels field for non-Composite Doors in admin
+                function hideSidePanelsForNonCompositeDoors() {
+                    $('.acf-field[data-name="basket_items"] .acf-row:not(.acf-clone)').each(function() {
+                        var $row = $(this);
+                        var typeName = ($row.find('[data-name="type_name"] input, [data-name="type_name"] select').val() || '').toLowerCase();
+
+                        if (typeName.indexOf('composite') !== -1) {
+                            $row.find('[data-name="side_panels"]').show();
+                        } else {
+                            $row.find('[data-name="side_panels"]').hide();
+                        }
+                    });
+                }
+
+                // Run on page load
+                hideSidePanelsForNonCompositeDoors();
+
+                // Also run when type field changes
+                $(document).on('change', '[data-name="type_name"] input, [data-name="type_name"] select', function() {
+                    hideSidePanelsForNonCompositeDoors();
+                });
             });
 
             // Auto-generate slug from name - works for all repeaters
@@ -1830,8 +1852,9 @@ class Quotation_Form_Plugin {
             $message .= "Dimensions: " . ($item['width'] ?? 0) . "mm (W) x " . ($item['height'] ?? 0) . "mm (H)\n";
             $message .= "Cill: " . ($item['cillName'] ?? $item['cill'] ?? '') . "\n";
 
-            // Add Side Panels if present (Composite Doors)
-            if (!empty($item['sidePanels'])) {
+            // Add Side Panels if present (Composite Doors only)
+            $typeName = strtolower($item['typeName'] ?? $item['type'] ?? '');
+            if (!empty($item['sidePanels']) && strpos($typeName, 'composite') !== false) {
                 $message .= "Number of Side Panels: " . $item['sidePanels'] . "\n";
             }
 
@@ -1911,8 +1934,9 @@ class Quotation_Form_Plugin {
                 $customer_message .= "Dimensions: " . ($item['width'] ?? 0) . "mm (W) x " . ($item['height'] ?? 0) . "mm (H)\n";
                 $customer_message .= "Cill: " . ($item['cillName'] ?? $item['cill'] ?? '') . "\n";
 
-                // Add Side Panels if present (Composite Doors)
-                if (!empty($item['sidePanels'])) {
+                // Add Side Panels if present (Composite Doors only)
+                $typeName = strtolower($item['typeName'] ?? $item['type'] ?? '');
+                if (!empty($item['sidePanels']) && strpos($typeName, 'composite') !== false) {
                     $customer_message .= "Number of Side Panels: " . $item['sidePanels'] . "\n";
                 }
 

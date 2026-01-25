@@ -394,7 +394,11 @@ foreach ($data['basket_items'] as $item):
         </div>
         <?php endif; ?>
 
-        <?php if (!empty($item['side_panels'])): ?>
+        <?php
+        // Only show Side Panels for Composite Doors
+        $type_name_lower = strtolower($item['type_name'] ?? '');
+        if (!empty($item['side_panels']) && strpos($type_name_lower, 'composite') !== false):
+        ?>
         <div class="item-detail">
             <strong>Number of Side Panels:</strong> <?php echo esc_html($item['side_panels']); ?>
         </div>
