@@ -448,23 +448,31 @@
 
 /* Checkbox label styling */
 .checkbox-label {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     cursor: pointer;
     font-weight: 600;
     font-size: 14px;
+    line-height: 1;
 }
 
 .checkbox-label input[type="checkbox"] {
     width: 18px;
     height: 18px;
+    margin: 0;
+    padding: 0;
+    flex-shrink: 0;
     cursor: pointer;
     accent-color: var(--primary-color);
 }
 
+.checkbox-label span {
+    line-height: 18px;
+}
+
 .replacement-checkbox-group .field-hint {
-    margin-left: 28px;
+    margin-left: 26px;
 }
 
 .file-preview {
