@@ -361,6 +361,16 @@ if (!$use_acf) {
                         </select>
                     </div>
 
+                    <!-- Number of Side Panels (only shown for Composite Doors) -->
+                    <div class="form-group side-panels-selection" style="display: none;">
+                        <label for="side-panels">Number of Side Panels</label>
+                        <select id="side-panels" name="side_panels">
+                            <option value="">Select Number of Side Panels</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                        </select>
+                    </div>
+
                     <!-- Aluminium Colour Type Selection (only shown when aluminium material selected) -->
                     <div class="form-group aluminium-colour-type-selection" style="display: none;">
                         <label>Select Colour Type</label>

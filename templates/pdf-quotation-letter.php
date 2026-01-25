@@ -498,6 +498,13 @@ function format_currency($amount) {
             </div>
             <?php endif; ?>
 
+            <?php if (!empty($item['side_panels'])): ?>
+            <div class="item-detail-row">
+                <span class="item-detail-label">Number of Side Panels:</span>
+                <span class="item-detail-value"><?php echo esc_html($item['side_panels']); ?></span>
+            </div>
+            <?php endif; ?>
+
             <?php if (!empty($item['inside_colour'])): ?>
             <div class="item-detail-row">
                 <span class="item-detail-label">Inside Colour:</span>

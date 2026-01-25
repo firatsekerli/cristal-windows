@@ -1587,6 +1587,15 @@ jQuery(document).ready(function($) {
             } else {
                 $('#preview-opening-row').hide();
             }
+
+            // Show/hide Side Panels field for Composite Doors
+            const typeName = (this.currentItem.typeName || '').toLowerCase();
+            if (typeName.includes('composite door')) {
+                $('.side-panels-selection').show();
+            } else {
+                $('.side-panels-selection').hide();
+                $('#side-panels').val(''); // Reset value when hidden
+            }
         },
 
         validateConfiguration: function() {
@@ -1662,6 +1671,7 @@ jQuery(document).ready(function($) {
                 width: $('#width').val(),
                 height: $('#height').val(),
                 cill: $('#cill').val(),
+                sidePanels: $('#side-panels').val() || '',
                 insideColour: $('#inside-colour').val(),
                 outsideColour: $('#outside-colour').val(),
                 insideColourName: $('#inside-colour-name').text(),
@@ -1833,6 +1843,11 @@ jQuery(document).ready(function($) {
             // Only show Opening if it exists (only for products that have opening options)
             if (item.opening || item.openingName) {
                 fields.push({ label: 'Opening', value: item.openingName || item.opening, field: 'opening' });
+            }
+
+            // Only show Side Panels if it exists (only for Composite Doors)
+            if (item.sidePanels) {
+                fields.push({ label: 'Side Panels', value: item.sidePanels, field: 'sidePanels' });
             }
 
             fields.forEach(field => {
@@ -2606,7 +2621,7 @@ jQuery(document).ready(function($) {
 
             // If there's a selected type with patterns, show the pattern grid
             if (selectedType) {
-                const $selectedCard = $('.glazing-type-card[data-glazing-type="' + selectedType + '"]');
+                const $selectedCard = $('#' + gridId + ' .glazing-type-card[data-glazing-type="' + selectedType + '"]');
                 if ($selectedCard.length > 0) {
                     const typeName = $selectedCard.find('.glazing-type-label').text().trim();
                     self.modalSelectedGlazingTypeName = typeName;
