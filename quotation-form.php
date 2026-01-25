@@ -1828,6 +1828,12 @@ class Quotation_Form_Plugin {
             $message .= "Style: " . $style_name . "\n";
             $message .= "Dimensions: " . ($item['width'] ?? 0) . "mm (W) x " . ($item['height'] ?? 0) . "mm (H)\n";
             $message .= "Cill: " . ($item['cill'] ?? '') . "\n";
+
+            // Add Side Panels if present (Composite Doors)
+            if (!empty($item['sidePanels'])) {
+                $message .= "Number of Side Panels: " . $item['sidePanels'] . "\n";
+            }
+
             $message .= "Inside Colour: " . ($item['insideColourName'] ?? $item['insideColour'] ?? '') . "\n";
             $message .= "Outside Colour: " . ($item['outsideColourName'] ?? $item['outsideColour'] ?? '') . "\n";
 
@@ -1893,6 +1899,12 @@ class Quotation_Form_Plugin {
                 $customer_message .= "Style: " . $style_name . "\n";
                 $customer_message .= "Dimensions: " . ($item['width'] ?? 0) . "mm (W) x " . ($item['height'] ?? 0) . "mm (H)\n";
                 $customer_message .= "Cill: " . ($item['cill'] ?? '') . "\n";
+
+                // Add Side Panels if present (Composite Doors)
+                if (!empty($item['sidePanels'])) {
+                    $customer_message .= "Number of Side Panels: " . $item['sidePanels'] . "\n";
+                }
+
                 $customer_message .= "Inside Colour: " . ($item['insideColourName'] ?? $item['insideColour'] ?? '') . "\n";
                 $customer_message .= "Outside Colour: " . ($item['outsideColourName'] ?? $item['outsideColour'] ?? '') . "\n";
 
