@@ -1478,7 +1478,7 @@
 /* Mobile */
 @media (max-width: 768px) {
     .quotation-form-container {
-        padding: 10px;
+        padding: 0px;
     }
 
     .multi-step-form {
@@ -1486,7 +1486,7 @@
     }
 
     .progress-indicator {
-        padding: 0 10px;
+        padding: 0;
         margin-bottom: 30px;
     }
 
@@ -1581,6 +1581,24 @@
     .modal-glazing-pattern-grid {
         grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
     }
+    .quotation-subheading {
+       font-size: 16px !important;
+   }
+   .category-grid .image-card .card-image {
+       height: 175px;
+   }
+   .material-grid .image-card .card-image {
+       height: 175px;
+   }
+   .progress-step[data-step="basket"] .step-number svg {
+       margin-top: 10px;
+   }
+   .aluminium-type-grid {
+       grid-template-columns: repeat(1, 1fr);
+   }
+   .aluminium-type-card h4 {
+       font-size: 16px !important;
+   }
 }
 
 /* Small Mobile */
