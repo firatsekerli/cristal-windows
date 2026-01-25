@@ -569,7 +569,10 @@ function format_currency($amount) {
             </div>
             <?php endif; ?>
 
-            <?php if (!empty($item['replacement'])): ?>
+            <?php
+            // Only show Replacement for Bay Windows
+            if (!empty($item['replacement']) && strpos($type_name_lower, 'bay window') !== false):
+            ?>
             <div class="item-detail-row">
                 <span class="item-detail-label">Replacement:</span>
                 <span class="item-detail-value">Yes</span>

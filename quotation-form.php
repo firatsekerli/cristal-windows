@@ -837,6 +837,28 @@ class Quotation_Form_Plugin {
                 $(document).on('change', '[data-name="type_name"] input, [data-name="type_name"] select', function() {
                     hideSidePanelsForNonCompositeDoors();
                 });
+
+                // Hide replacement field for non-Bay Windows in admin
+                function hideReplacementForNonBayWindows() {
+                    $('.acf-field[data-name="basket_items"] .acf-row:not(.acf-clone)').each(function() {
+                        var $row = $(this);
+                        var typeName = ($row.find('[data-name="type_name"] input, [data-name="type_name"] select').val() || '').toLowerCase();
+
+                        if (typeName.indexOf('bay window') !== -1) {
+                            $row.find('[data-name="replacement"]').show();
+                        } else {
+                            $row.find('[data-name="replacement"]').hide();
+                        }
+                    });
+                }
+
+                // Run on page load
+                hideReplacementForNonBayWindows();
+
+                // Also run when type field changes
+                $(document).on('change', '[data-name="type_name"] input, [data-name="type_name"] select', function() {
+                    hideReplacementForNonBayWindows();
+                });
             });
 
             // Auto-generate slug from name - works for all repeaters
@@ -1907,8 +1929,8 @@ class Quotation_Form_Plugin {
                 $message .= "Opening: " . ($item['openingName'] ?? $item['opening'] ?? '') . "\n";
             }
 
-            // Add Replacement if checked (Bay Windows)
-            if (!empty($item['replacement'])) {
+            // Add Replacement if checked (Bay Windows only)
+            if (!empty($item['replacement']) && strpos($typeName, 'bay window') !== false) {
                 $message .= "Replacement: Yes\n";
             }
 
@@ -1989,8 +2011,8 @@ class Quotation_Form_Plugin {
                     $customer_message .= "Opening: " . ($item['openingName'] ?? $item['opening'] ?? '') . "\n";
                 }
 
-                // Add Replacement if checked (Bay Windows)
-                if (!empty($item['replacement'])) {
+                // Add Replacement if checked (Bay Windows only)
+                if (!empty($item['replacement']) && strpos($typeName, 'bay window') !== false) {
                     $customer_message .= "Replacement: Yes\n";
                 }
 
