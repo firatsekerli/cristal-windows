@@ -1622,7 +1622,8 @@ jQuery(document).ready(function($) {
             }
 
             // Show/hide Replacement checkbox for Bay Windows
-            if (this.currentItem.category === 'bay-windows') {
+            // Check typeName since Bay Windows may have category "Windows" in ACF
+            if (typeName.includes('bay window')) {
                 $('.replacement-checkbox-group').show();
             } else {
                 $('.replacement-checkbox-group').hide();
@@ -1744,7 +1745,8 @@ jQuery(document).ready(function($) {
             }
 
             // Include replacement for Bay Windows
-            if (this.currentItem.category === 'bay-windows') {
+            const itemTypeName = (this.currentItem.typeName || '').toLowerCase();
+            if (itemTypeName.includes('bay window')) {
                 item.replacement = $('#replacement-checkbox').is(':checked');
             }
 
