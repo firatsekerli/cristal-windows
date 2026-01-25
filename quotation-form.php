@@ -1775,6 +1775,9 @@ class Quotation_Form_Plugin {
 
         $message .= "\n\n=== ITEMS (" . count($basket_items) . ") ===\n\n";
 
+        // Styles that should hide glazing fields
+        $hide_glazing_styles = array('5001', '5004', '5015', '5025', '5030', '5033', '5401');
+
         foreach ($basket_items as $index => $item) {
             $message .= "--- Item " . ($index + 1) . " ---\n";
             $message .= "Category: " . ucfirst($item['category'] ?? '') . "\n";
@@ -1785,13 +1788,27 @@ class Quotation_Form_Plugin {
                 $message .= "Material: " . $material . "\n";
             }
 
-            $message .= "Style: " . ($item['styleName'] ?? $item['style'] ?? '') . "\n";
+            $style_name = $item['styleName'] ?? $item['style'] ?? '';
+            $message .= "Style: " . $style_name . "\n";
             $message .= "Dimensions: " . ($item['width'] ?? 0) . "mm (W) x " . ($item['height'] ?? 0) . "mm (H)\n";
             $message .= "Cill: " . ($item['cill'] ?? '') . "\n";
             $message .= "Inside Colour: " . ($item['insideColourName'] ?? $item['insideColour'] ?? '') . "\n";
             $message .= "Outside Colour: " . ($item['outsideColourName'] ?? $item['outsideColour'] ?? '') . "\n";
-            $message .= "Glazing Type: " . ucfirst($item['glazingTypeName'] ?? $item['glazingType'] ?? '') . "\n";
-            $message .= "Glazing Feature: " . ucfirst($item['glazingFeaturesName'] ?? $item['glazingFeatures'] ?? '') . "\n";
+
+            // Check if glazing should be hidden for this style
+            $hide_glazing = false;
+            foreach ($hide_glazing_styles as $style_num) {
+                if (strpos($style_name, $style_num) !== false) {
+                    $hide_glazing = true;
+                    break;
+                }
+            }
+
+            if (!$hide_glazing) {
+                $message .= "Glazing Type: " . ucfirst($item['glazingTypeName'] ?? $item['glazingType'] ?? '') . "\n";
+                $message .= "Glazing Feature: " . ucfirst($item['glazingFeaturesName'] ?? $item['glazingFeatures'] ?? '') . "\n";
+            }
+
             $message .= "Hardware Colour: " . ucfirst($item['hardwareColourName'] ?? $item['hardwareColour'] ?? '') . "\n";
 
             if (!empty($item['location'])) {
@@ -1836,13 +1853,27 @@ class Quotation_Form_Plugin {
                     $customer_message .= "Material: " . $material . "\n";
                 }
 
-                $customer_message .= "Style: " . ($item['styleName'] ?? $item['style'] ?? '') . "\n";
+                $style_name = $item['styleName'] ?? $item['style'] ?? '';
+                $customer_message .= "Style: " . $style_name . "\n";
                 $customer_message .= "Dimensions: " . ($item['width'] ?? 0) . "mm (W) x " . ($item['height'] ?? 0) . "mm (H)\n";
                 $customer_message .= "Cill: " . ($item['cill'] ?? '') . "\n";
                 $customer_message .= "Inside Colour: " . ($item['insideColourName'] ?? $item['insideColour'] ?? '') . "\n";
                 $customer_message .= "Outside Colour: " . ($item['outsideColourName'] ?? $item['outsideColour'] ?? '') . "\n";
-                $customer_message .= "Glazing Type: " . ucfirst($item['glazingTypeName'] ?? $item['glazingType'] ?? '') . "\n";
-                $customer_message .= "Glazing Feature: " . ucfirst($item['glazingFeaturesName'] ?? $item['glazingFeatures'] ?? '') . "\n";
+
+                // Check if glazing should be hidden for this style
+                $hide_glazing = false;
+                foreach ($hide_glazing_styles as $style_num) {
+                    if (strpos($style_name, $style_num) !== false) {
+                        $hide_glazing = true;
+                        break;
+                    }
+                }
+
+                if (!$hide_glazing) {
+                    $customer_message .= "Glazing Type: " . ucfirst($item['glazingTypeName'] ?? $item['glazingType'] ?? '') . "\n";
+                    $customer_message .= "Glazing Feature: " . ucfirst($item['glazingFeaturesName'] ?? $item['glazingFeatures'] ?? '') . "\n";
+                }
+
                 $customer_message .= "Hardware Colour: " . ucfirst($item['hardwareColourName'] ?? $item['hardwareColour'] ?? '') . "\n";
 
                 if (!empty($item['location'])) {

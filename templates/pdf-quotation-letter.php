@@ -416,6 +416,17 @@ function format_currency($amount) {
                 }
             }
 
+            // Check if glazing fields should be hidden for this style
+            $hide_glazing_styles = array('5001', '5004', '5015', '5025', '5030', '5033', '5401');
+            $style_name = isset($item['style_name']) ? $item['style_name'] : '';
+            $hide_glazing = false;
+            foreach ($hide_glazing_styles as $style_num) {
+                if (strpos($style_name, $style_num) !== false) {
+                    $hide_glazing = true;
+                    break;
+                }
+            }
+
             // Build technical detail string
             $tech_details = array();
             $tech_details[] = $item_number;
@@ -519,21 +530,21 @@ function format_currency($amount) {
             </div>
             <?php endif; ?>
 
-            <?php if (!empty($item['glazing_type'])): ?>
+            <?php if (!empty($item['glazing_type']) && !$hide_glazing): ?>
             <div class="item-detail-row">
                 <span class="item-detail-label">Glazing Type:</span>
                 <span class="item-detail-value"><?php echo esc_html(ucfirst($item['glazing_type'])); ?></span>
             </div>
             <?php endif; ?>
 
-            <?php if (!empty($item['glazing_patterns'])): ?>
+            <?php if (!empty($item['glazing_patterns']) && !$hide_glazing): ?>
             <div class="item-detail-row">
                 <span class="item-detail-label">Glazing Pattern:</span>
                 <span class="item-detail-value"><?php echo esc_html($item['glazing_patterns']); ?></span>
             </div>
             <?php endif; ?>
 
-            <?php if (!empty($item['glazing_features'])): ?>
+            <?php if (!empty($item['glazing_features']) && !$hide_glazing): ?>
             <div class="item-detail-row">
                 <span class="item-detail-label">Glazing Features:</span>
                 <span class="item-detail-value"><?php echo esc_html(ucfirst($item['glazing_features'])); ?></span>
