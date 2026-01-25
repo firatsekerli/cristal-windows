@@ -1711,6 +1711,7 @@ jQuery(document).ready(function($) {
                 width: $('#width').val(),
                 height: $('#height').val(),
                 cill: $('#cill').val(),
+                cillName: $('#cill option:selected').text(),
                 sidePanels: $('#side-panels').val() || '',
                 insideColour: $('#inside-colour').val(),
                 outsideColour: $('#outside-colour').val(),
@@ -2185,6 +2186,7 @@ jQuery(document).ready(function($) {
                     item.width = $('#edit-width').val();
                     item.height = $('#edit-height').val();
                     item.cill = $('#edit-cill').val();
+                    item.cillName = $('#edit-cill option:selected').text();
                 } else if (field === 'colour') {
                     item.insideColour = self.modalSelectedColors.inside;
                     item.outsideColour = self.modalSelectedColors.outside;

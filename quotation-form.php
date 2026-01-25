@@ -1482,6 +1482,7 @@ class Quotation_Form_Plugin {
                 'width' => absint($item['width'] ?? 0),
                 'height' => absint($item['height'] ?? 0),
                 'cill' => sanitize_text_field($item['cill'] ?? ''),
+                'cillName' => sanitize_text_field($item['cillName'] ?? ''),
                 'sidePanels' => sanitize_text_field($item['sidePanels'] ?? ''),
                 'insideColour' => sanitize_text_field($item['insideColour'] ?? ''),
                 'outsideColour' => sanitize_text_field($item['outsideColour'] ?? ''),
@@ -1730,7 +1731,7 @@ class Quotation_Form_Plugin {
                 'style_name' => isset($item['styleName']) ? $this->capitalize_value($item['styleName']) : '',
                 'width' => isset($item['width']) ? $item['width'] : '',
                 'height' => isset($item['height']) ? $item['height'] : '',
-                'cill' => isset($item['cill']) ? $this->capitalize_value($item['cill']) : '',
+                'cill' => isset($item['cillName']) && !empty($item['cillName']) && $item['cillName'] !== 'Select Cill' ? $item['cillName'] : (isset($item['cill']) ? $this->capitalize_value($item['cill']) : ''),
                 'side_panels' => isset($item['sidePanels']) ? $item['sidePanels'] : '',
                 'inside_colour' => isset($item['insideColourName']) ? $item['insideColourName'] : (isset($item['insideColour']) ? $this->capitalize_value($item['insideColour']) : ''),
                 'outside_colour' => isset($item['outsideColourName']) ? $item['outsideColourName'] : (isset($item['outsideColour']) ? $this->capitalize_value($item['outsideColour']) : ''),
@@ -1827,7 +1828,7 @@ class Quotation_Form_Plugin {
             $style_name = $item['styleName'] ?? $item['style'] ?? '';
             $message .= "Style: " . $style_name . "\n";
             $message .= "Dimensions: " . ($item['width'] ?? 0) . "mm (W) x " . ($item['height'] ?? 0) . "mm (H)\n";
-            $message .= "Cill: " . ($item['cill'] ?? '') . "\n";
+            $message .= "Cill: " . ($item['cillName'] ?? $item['cill'] ?? '') . "\n";
 
             // Add Side Panels if present (Composite Doors)
             if (!empty($item['sidePanels'])) {
@@ -1903,7 +1904,7 @@ class Quotation_Form_Plugin {
                 $style_name = $item['styleName'] ?? $item['style'] ?? '';
                 $customer_message .= "Style: " . $style_name . "\n";
                 $customer_message .= "Dimensions: " . ($item['width'] ?? 0) . "mm (W) x " . ($item['height'] ?? 0) . "mm (H)\n";
-                $customer_message .= "Cill: " . ($item['cill'] ?? '') . "\n";
+                $customer_message .= "Cill: " . ($item['cillName'] ?? $item['cill'] ?? '') . "\n";
 
                 // Add Side Panels if present (Composite Doors)
                 if (!empty($item['sidePanels'])) {
