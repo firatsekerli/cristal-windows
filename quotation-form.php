@@ -1866,7 +1866,7 @@ class Quotation_Form_Plugin {
             $message .= "\n";
         }
 
-        $message .= "\n---\nThis email was sent from the quotation form on " . get_bloginfo('name') . "\n";
+        $message .= "\n---\nThis email was sent from the quotation form on " . html_entity_decode(get_bloginfo('name')) . "\n";
         $message .= "Submitted: " . current_time('mysql') . "\n";
 
         // Add link to view quotation in admin (if post_id provided)
@@ -1943,7 +1943,7 @@ class Quotation_Form_Plugin {
             }
 
             $customer_message .= "Best regards,\n";
-            $customer_message .= get_bloginfo('name') . " & Doors";
+            $customer_message .= html_entity_decode(get_bloginfo('name'));
 
             wp_mail($customer_email, $customer_subject, $customer_message);
         }
@@ -2027,7 +2027,7 @@ class Quotation_Form_Plugin {
         $message .= "Our team is currently working on preparing your quote and will have it ready for you shortly.\n\n";
         $message .= "We'll notify you as soon as your quote is ready.\n\n";
         $message .= "Best regards,\n";
-        $message .= get_bloginfo('name');
+        $message .= html_entity_decode(get_bloginfo('name'));
 
         wp_mail($customer_email, $subject, $message);
     }
@@ -2043,7 +2043,7 @@ class Quotation_Form_Plugin {
         $message .= "If you have any questions about the quote or would like to discuss any aspect of your project, please don't hesitate to contact us.\n\n";
         $message .= "We look forward to working with you!\n\n";
         $message .= "Best regards,\n";
-        $message .= get_bloginfo('name');
+        $message .= html_entity_decode(get_bloginfo('name'));
 
         // Get PDF URL and convert to file path
         $pdf_url = get_field('quote_pdf_url', $post_id);
@@ -2072,7 +2072,7 @@ class Quotation_Form_Plugin {
         $message .= "We're delighted to be working with you on your project. Our team will be in touch shortly to discuss the next steps and arrange installation.\n\n";
         $message .= "If you have any questions in the meantime, please feel free to contact us.\n\n";
         $message .= "Best regards,\n";
-        $message .= get_bloginfo('name');
+        $message .= html_entity_decode(get_bloginfo('name'));
 
         wp_mail($customer_email, $subject, $message);
     }
@@ -2083,12 +2083,12 @@ class Quotation_Form_Plugin {
     private function send_status_email_rejected($post_id, $customer_email, $customer_name) {
         $subject = 'Thank You for Considering Us';
         $message = "Dear " . $customer_name . ",\n\n";
-        $message .= "Thank you for considering " . get_bloginfo('name') . " for your project.\n\n";
+        $message .= "Thank you for considering " . html_entity_decode(get_bloginfo('name')) . " for your project.\n\n";
         $message .= "We understand that our quotation wasn't quite what you were looking for on this occasion.\n\n";
         $message .= "If you have any feedback about our quote or if circumstances change in the future, we'd love to hear from you.\n\n";
         $message .= "We wish you all the best with your project.\n\n";
         $message .= "Best regards,\n";
-        $message .= get_bloginfo('name');
+        $message .= html_entity_decode(get_bloginfo('name'));
 
         wp_mail($customer_email, $subject, $message);
     }
@@ -2102,9 +2102,9 @@ class Quotation_Form_Plugin {
         $message .= "We're delighted to confirm that your project has been completed!\n\n";
         $message .= "It's been a pleasure working with you. We hope you're thrilled with the results.\n\n";
         $message .= "If you have any questions or concerns, or if there's anything else we can help you with, please don't hesitate to get in touch.\n\n";
-        $message .= "Thank you for choosing " . get_bloginfo('name') . ".\n\n";
+        $message .= "Thank you for choosing " . html_entity_decode(get_bloginfo('name')) . ".\n\n";
         $message .= "Best regards,\n";
-        $message .= get_bloginfo('name');
+        $message .= html_entity_decode(get_bloginfo('name'));
 
         wp_mail($customer_email, $subject, $message);
     }
