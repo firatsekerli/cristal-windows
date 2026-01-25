@@ -1853,6 +1853,11 @@ class Quotation_Form_Plugin {
 
             $message .= "Hardware Colour: " . ucfirst($item['hardwareColourName'] ?? $item['hardwareColour'] ?? '') . "\n";
 
+            // Add Opening if present (French Doors, Glazed Doors, Composite Doors)
+            if (!empty($item['openingName']) || !empty($item['opening'])) {
+                $message .= "Opening: " . ($item['openingName'] ?? $item['opening'] ?? '') . "\n";
+            }
+
             if (!empty($item['location'])) {
                 $message .= "Location: " . $item['location'] . "\n";
             }
@@ -1923,6 +1928,11 @@ class Quotation_Form_Plugin {
                 }
 
                 $customer_message .= "Hardware Colour: " . ucfirst($item['hardwareColourName'] ?? $item['hardwareColour'] ?? '') . "\n";
+
+                // Add Opening if present (French Doors, Glazed Doors, Composite Doors)
+                if (!empty($item['openingName']) || !empty($item['opening'])) {
+                    $customer_message .= "Opening: " . ($item['openingName'] ?? $item['opening'] ?? '') . "\n";
+                }
 
                 if (!empty($item['location'])) {
                     $customer_message .= "Location: " . $item['location'] . "\n";

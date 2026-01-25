@@ -258,6 +258,12 @@
                     "ajax": 0
                 },
                 {
+                    "key": "field_item_opening",
+                    "label": "Opening",
+                    "name": "opening",
+                    "type": "text"
+                },
+                {
                     "key": "field_item_location",
                     "label": "Location",
                     "name": "location",
@@ -460,5 +466,5 @@
     "style": "default",
     "label_placement": "top",
     "instruction_placement": "label",
-    "modified": 1769368444
+    "modified": 1769368602
 }
