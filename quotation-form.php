@@ -859,6 +859,29 @@ class Quotation_Form_Plugin {
                 $(document).on('change', '[data-name="type_name"] input, [data-name="type_name"] select', function() {
                     hideReplacementForNonBayWindows();
                 });
+
+                // Hide opening field for non-applicable door types in admin
+                function hideOpeningForNonApplicableTypes() {
+                    $('.acf-field[data-name="basket_items"] .acf-row:not(.acf-clone)').each(function() {
+                        var $row = $(this);
+                        var typeName = ($row.find('[data-name="type_name"] input, [data-name="type_name"] select').val() || '').toLowerCase();
+
+                        // Show Opening only for French Doors, Glazed Doors, and Composite Doors
+                        if (typeName.indexOf('french') !== -1 || typeName.indexOf('glazed') !== -1 || typeName.indexOf('composite') !== -1) {
+                            $row.find('[data-name="opening"]').show();
+                        } else {
+                            $row.find('[data-name="opening"]').hide();
+                        }
+                    });
+                }
+
+                // Run on page load
+                hideOpeningForNonApplicableTypes();
+
+                // Also run when type field changes
+                $(document).on('change', '[data-name="type_name"] input, [data-name="type_name"] select', function() {
+                    hideOpeningForNonApplicableTypes();
+                });
             });
 
             // Auto-generate slug from name - works for all repeaters
@@ -1924,8 +1947,9 @@ class Quotation_Form_Plugin {
 
             $message .= "Hardware Colour: " . ucfirst($item['hardwareColourName'] ?? $item['hardwareColour'] ?? '') . "\n";
 
-            // Add Opening if present (French Doors, Glazed Doors, Composite Doors)
-            if (!empty($item['openingName']) || !empty($item['opening'])) {
+            // Add Opening if present (French Doors, Glazed Doors, Composite Doors only)
+            $show_opening = strpos($typeName, 'french') !== false || strpos($typeName, 'glazed') !== false || strpos($typeName, 'composite') !== false;
+            if ($show_opening && (!empty($item['openingName']) || !empty($item['opening']))) {
                 $message .= "Opening: " . ($item['openingName'] ?? $item['opening'] ?? '') . "\n";
             }
 
@@ -2006,8 +2030,9 @@ class Quotation_Form_Plugin {
 
                 $customer_message .= "Hardware Colour: " . ucfirst($item['hardwareColourName'] ?? $item['hardwareColour'] ?? '') . "\n";
 
-                // Add Opening if present (French Doors, Glazed Doors, Composite Doors)
-                if (!empty($item['openingName']) || !empty($item['opening'])) {
+                // Add Opening if present (French Doors, Glazed Doors, Composite Doors only)
+                $show_opening = strpos($typeName, 'french') !== false || strpos($typeName, 'glazed') !== false || strpos($typeName, 'composite') !== false;
+                if ($show_opening && (!empty($item['openingName']) || !empty($item['opening']))) {
                     $customer_message .= "Opening: " . ($item['openingName'] ?? $item['opening'] ?? '') . "\n";
                 }
 

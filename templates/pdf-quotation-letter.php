@@ -562,7 +562,11 @@ function format_currency($amount) {
             </div>
             <?php endif; ?>
 
-            <?php if (!empty($item['opening'])): ?>
+            <?php
+            // Only show Opening for French Doors, Glazed Doors, and Composite Doors
+            $show_opening = strpos($type_name_lower, 'french') !== false || strpos($type_name_lower, 'glazed') !== false || strpos($type_name_lower, 'composite') !== false;
+            if ($show_opening && !empty($item['opening'])):
+            ?>
             <div class="item-detail-row">
                 <span class="item-detail-label">Opening:</span>
                 <span class="item-detail-value"><?php echo esc_html($item['opening']); ?></span>

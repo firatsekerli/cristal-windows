@@ -440,7 +440,11 @@ foreach ($data['basket_items'] as $item):
         </div>
         <?php endif; ?>
 
-        <?php if (!empty($item['opening'])): ?>
+        <?php
+        // Only show Opening for French Doors, Glazed Doors, and Composite Doors
+        $show_opening = strpos($type_name_lower, 'french') !== false || strpos($type_name_lower, 'glazed') !== false || strpos($type_name_lower, 'composite') !== false;
+        if ($show_opening && !empty($item['opening'])):
+        ?>
         <div class="item-detail">
             <strong>Opening:</strong> <?php echo esc_html($item['opening']); ?>
         </div>
