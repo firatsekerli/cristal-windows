@@ -587,6 +587,7 @@
     font-size: 12px;
     text-align: center;
     color: var(--text-dark);
+    line-height: 1.4;
 }
 
 .colour-selection-display {
