@@ -754,6 +754,42 @@ class Quotation_Form_Plugin {
                         }
                     });
                 }
+
+                // Hide glazing fields for certain styles in admin
+                function hideGlazingFieldsForStyles() {
+                    var hideGlazingStyles = ['5001', '5004', '5015', '5025', '5030', '5033', '5401'];
+
+                    $('.acf-field[data-name="basket_items"] .acf-row:not(.acf-clone)').each(function() {
+                        var $row = $(this);
+                        var styleName = $row.find('[data-name="style_name"] input, [data-name="style_name"] select').val() || '';
+
+                        var shouldHide = false;
+                        for (var i = 0; i < hideGlazingStyles.length; i++) {
+                            if (styleName.indexOf(hideGlazingStyles[i]) !== -1) {
+                                shouldHide = true;
+                                break;
+                            }
+                        }
+
+                        if (shouldHide) {
+                            $row.find('[data-name="glazing_type"]').hide();
+                            $row.find('[data-name="glazing_patterns"]').hide();
+                            $row.find('[data-name="glazing_features"]').hide();
+                        } else {
+                            $row.find('[data-name="glazing_type"]').show();
+                            $row.find('[data-name="glazing_patterns"]').show();
+                            $row.find('[data-name="glazing_features"]').show();
+                        }
+                    });
+                }
+
+                // Run on page load
+                hideGlazingFieldsForStyles();
+
+                // Also run when style field changes
+                $(document).on('change', '[data-name="style_name"] input, [data-name="style_name"] select', function() {
+                    hideGlazingFieldsForStyles();
+                });
             });
 
             // Auto-generate slug from name - works for all repeaters
