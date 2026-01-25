@@ -108,6 +108,20 @@ jQuery(document).ready(function($) {
             return text;
         },
 
+        // Update image field required state based on replacement checkbox
+        updateImageRequiredState: function(isRequired) {
+            const $imageLabel = $('label[for="frame-images"]');
+            const $optionalText = $('#image-optional-text');
+
+            if (isRequired) {
+                $optionalText.text('(Required)').css('color', '#c0392b');
+                this.imageRequired = true;
+            } else {
+                $optionalText.text('(Optional)').css('color', '');
+                this.imageRequired = false;
+            }
+        },
+
         saveState: function() {
             const state = {
                 currentStep: this.currentStep,
@@ -279,6 +293,14 @@ jQuery(document).ready(function($) {
             }
         },
 
+        setupReplacementCheckbox: function() {
+            const self = this;
+            $('#replacement-checkbox').on('change', function() {
+                const isChecked = $(this).is(':checked');
+                self.updateImageRequiredState(isChecked);
+            });
+        },
+
         init: function() {
             this.glazingTypeHidden = false; // Initialize glazing type visibility state
             this.glazingFeaturesHidden = false; // Initialize glazing features visibility state
@@ -291,6 +313,8 @@ jQuery(document).ready(function($) {
             this.initializeHardwareColourPicker();
             this.setupPostcodeValidation(); // Setup postcode validation
             this.setupFileUpload(); // Setup file upload handling
+            this.setupReplacementCheckbox(); // Setup replacement checkbox handling
+            this.imageRequired = false; // Initialize image required state
 
             // Render basket first (updates count before showing)
             if (this.basket.length > 0) {
@@ -1596,6 +1620,15 @@ jQuery(document).ready(function($) {
                 $('.side-panels-selection').hide();
                 $('#side-panels').val(''); // Reset value when hidden
             }
+
+            // Show/hide Replacement checkbox for Bay Windows
+            if (this.currentItem.category === 'bay-windows') {
+                $('.replacement-checkbox-group').show();
+            } else {
+                $('.replacement-checkbox-group').hide();
+                $('#replacement-checkbox').prop('checked', false);
+                this.updateImageRequiredState(false);
+            }
         },
 
         validateConfiguration: function() {
@@ -1653,6 +1686,12 @@ jQuery(document).ready(function($) {
                 return false;
             }
 
+            // Validate image upload if replacement is checked (Bay Windows)
+            if (this.imageRequired && this.uploadedFiles.length === 0) {
+                alert('Please upload an image when Replacement is selected');
+                return false;
+            }
+
             return true;
         },
 
@@ -1704,6 +1743,11 @@ jQuery(document).ready(function($) {
                 item.openingName = this.currentItem.openingName;
             }
 
+            // Include replacement for Bay Windows
+            if (this.currentItem.category === 'bay-windows') {
+                item.replacement = $('#replacement-checkbox').is(':checked');
+            }
+
             if (this.editingItemId) {
                 // Update existing item
                 const index = this.basket.findIndex(i => i.id === this.editingItemId);
@@ -1744,6 +1788,9 @@ jQuery(document).ready(function($) {
             this.uploadedFiles = [];
             $('#file-preview').empty();
             $('#frame-images').val('');
+            // Reset replacement checkbox
+            $('#replacement-checkbox').prop('checked', false);
+            this.updateImageRequiredState(false);
             $('.colour-item').removeClass('selected');
             $('.glazing-type-card').removeClass('selected');
             $('.glazing-pattern-card').removeClass('selected');

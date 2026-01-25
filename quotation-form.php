@@ -1463,6 +1463,7 @@ class Quotation_Form_Plugin {
                 'hardwareColourName' => sanitize_text_field($item['hardwareColourName'] ?? ''),
                 'opening' => sanitize_text_field($item['opening'] ?? ''),
                 'openingName' => sanitize_text_field($item['openingName'] ?? ''),
+                'replacement' => isset($item['replacement']) ? (bool) $item['replacement'] : false,
                 'location' => sanitize_text_field($item['location'] ?? ''),
                 'attachedFiles' => isset($item['attachedFiles']) && is_array($item['attachedFiles']) ? $item['attachedFiles'] : array()
             );
@@ -1702,6 +1703,7 @@ class Quotation_Form_Plugin {
                 'glazing_patterns' => isset($item['glazingPattern']) ? $this->capitalize_value($item['glazingPattern']) : '',
                 'hardware_colour' => isset($item['hardwareColour']) ? $this->capitalize_value($item['hardwareColour']) : '',
                 'opening' => isset($item['openingName']) ? $item['openingName'] : (isset($item['opening']) ? $this->capitalize_value($item['opening']) : ''),
+                'replacement' => isset($item['replacement']) ? (bool) $item['replacement'] : false,
                 'location' => isset($item['location']) ? $this->capitalize_value($item['location']) : '',
             );
 

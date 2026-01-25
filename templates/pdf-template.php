@@ -425,6 +425,12 @@ foreach ($data['basket_items'] as $item):
         </div>
         <?php endif; ?>
 
+        <?php if (!empty($item['replacement'])): ?>
+        <div class="item-detail">
+            <strong>Replacement:</strong> Yes
+        </div>
+        <?php endif; ?>
+
         <?php if (!empty($item['location'])): ?>
         <div class="item-detail">
             <strong>Location:</strong> <?php echo esc_html($item['location']); ?>

@@ -502,8 +502,17 @@ if (!$use_acf) {
                         </div>
                     </div>
 
+                    <!-- Replacement checkbox (only shown for Bay Windows) -->
+                    <div class="form-group replacement-checkbox-group" style="display: none;">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="replacement-checkbox" name="replacement">
+                            <span>Replacement</span>
+                        </label>
+                        <span class="field-hint">Check this if this is a replacement for an existing bay window</span>
+                    </div>
+
                     <div class="form-group">
-                        <label for="frame-images">Attach Image (Optional)</label>
+                        <label for="frame-images">Attach Image <span id="image-optional-text">(Optional)</span></label>
                         <input type="file" id="frame-images" name="frame_images" accept="image/*">
                         <span class="field-hint">Upload 1 image (max 1MB)</span>
                         <div id="file-preview" class="file-preview"></div>

@@ -553,6 +553,13 @@ function format_currency($amount) {
                 <span class="item-detail-value"><?php echo esc_html($item['opening']); ?></span>
             </div>
             <?php endif; ?>
+
+            <?php if (!empty($item['replacement'])): ?>
+            <div class="item-detail-row">
+                <span class="item-detail-label">Replacement:</span>
+                <span class="item-detail-value">Yes</span>
+            </div>
+            <?php endif; ?>
         </div>
     </div>
     <?php
