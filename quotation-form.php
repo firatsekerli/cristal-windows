@@ -780,6 +780,14 @@ class Quotation_Form_Plugin {
                     });
                 }
 
+                // Helper to get type name from a row (checks both select value and Select2 rendered text)
+                function getRowTypeName($row) {
+                    var $field = $row.find('[data-name="type_name"]');
+                    var val = ($field.find('select').val() || $field.find('input').val() || '');
+                    var text = ($field.find('.select2-selection__rendered').text() || '');
+                    return (val + ' ' + text).toLowerCase();
+                }
+
                 // Hide glazing fields for certain styles in admin
                 function hideGlazingFieldsForStyles() {
                     var hideGlazingStyles = ['5001', '5004', '5015', '5025', '5030', '5033', '5401'];
@@ -806,22 +814,6 @@ class Quotation_Form_Plugin {
                             $row.find('[data-name="glazing_features"]').show();
                         }
                     });
-                }
-
-                // Run on page load
-                hideGlazingFieldsForStyles();
-
-                // Also run when style field changes
-                $(document).on('change', '[data-name="style_name"] input, [data-name="style_name"] select', function() {
-                    hideGlazingFieldsForStyles();
-                });
-
-                // Helper to get type name from a row (checks both select value and Select2 rendered text)
-                function getRowTypeName($row) {
-                    var $field = $row.find('[data-name="type_name"]');
-                    var val = ($field.find('select').val() || $field.find('input').val() || '');
-                    var text = ($field.find('.select2-selection__rendered').text() || '');
-                    return (val + ' ' + text).toLowerCase();
                 }
 
                 // Hide side_panels field for non-Composite Doors in admin
@@ -864,18 +856,36 @@ class Quotation_Form_Plugin {
                 }
 
                 function runAllConditionalChecks() {
+                    hideGlazingFieldsForStyles();
                     hideSidePanelsForNonCompositeDoors();
                     hideReplacementForNonBayWindows();
                     hideOpeningForNonApplicableTypes();
                 }
 
-                // Run on page load and after a short delay for Select2 initialization
+                // Run on page load with multiple retries to handle Select2 initialization timing
                 runAllConditionalChecks();
                 setTimeout(runAllConditionalChecks, 500);
+                setTimeout(runAllConditionalChecks, 1500);
 
-                // Also run when type field changes
+                // Also run after ACF fields are fully loaded (fires after ready)
+                acf.addAction('load', function() {
+                    runAllConditionalChecks();
+                    setTimeout(runAllConditionalChecks, 500);
+                });
+
+                // Also run when new repeater rows are added
+                acf.addAction('append', function($el) {
+                    if ($el.closest('.acf-field[data-name="basket_items"]').length) {
+                        setTimeout(runAllConditionalChecks, 100);
+                    }
+                });
+
+                // Also run when type or style field changes
                 $(document).on('change', '[data-name="type_name"] input, [data-name="type_name"] select', function() {
                     runAllConditionalChecks();
+                });
+                $(document).on('change', '[data-name="style_name"] input, [data-name="style_name"] select', function() {
+                    hideGlazingFieldsForStyles();
                 });
             });
 
