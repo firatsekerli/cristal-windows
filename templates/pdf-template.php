@@ -406,7 +406,7 @@ foreach ($data['basket_items'] as $item):
         if (!empty($item['side_panels']) && (strpos($type_name_lower, 'composite') !== false || strpos($type_name_lower, 'door-co') !== false || strpos($type_name_lower, 'doorco') !== false)):
         ?>
         <div class="item-detail">
-            <strong>Number of Side Panels:</strong> <?php echo esc_html($item['side_panels']); ?>
+            <strong>Side Panels:</strong> <?php echo esc_html($item['side_panels']); ?>
         </div>
         <?php endif; ?>
 
