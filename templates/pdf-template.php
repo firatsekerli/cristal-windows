@@ -452,7 +452,7 @@ foreach ($data['basket_items'] as $item):
 
         <?php
         // Only show Replacement for Bay Windows
-        if (!empty($item['replacement']) && strpos($type_name_lower, 'bay window') !== false):
+        if (!empty($item['replacement']) && (strpos($type_name_lower, 'bay window') !== false || strpos($type_name_lower, 'bay-window') !== false)):
         ?>
         <div class="item-detail">
             <strong>Replacement:</strong> Yes

@@ -575,7 +575,7 @@ function format_currency($amount) {
 
             <?php
             // Only show Replacement for Bay Windows
-            if (!empty($item['replacement']) && strpos($type_name_lower, 'bay window') !== false):
+            if (!empty($item['replacement']) && (strpos($type_name_lower, 'bay window') !== false || strpos($type_name_lower, 'bay-window') !== false)):
             ?>
             <div class="item-detail-row">
                 <span class="item-detail-label">Replacement:</span>

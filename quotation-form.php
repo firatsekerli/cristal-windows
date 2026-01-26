@@ -844,7 +844,7 @@ class Quotation_Form_Plugin {
                         var $row = $(this);
                         var typeName = ($row.find('[data-name="type_name"] input, [data-name="type_name"] select').val() || '').toLowerCase();
 
-                        if (typeName.indexOf('bay window') !== -1) {
+                        if (typeName.indexOf('bay window') !== -1 || typeName.indexOf('bay-window') !== -1) {
                             $row.find('[data-name="replacement"]').show();
                         } else {
                             $row.find('[data-name="replacement"]').hide();
@@ -1817,7 +1817,7 @@ class Quotation_Form_Plugin {
         foreach ($basket_items as $item) {
             $normalized_item = array(
                 'category' => isset($item['category']) ? $item['category'] : '',
-                'type_name' => isset($item['type']) ? $item['type'] : '',
+                'type_name' => isset($item['typeName']) ? $item['typeName'] : (isset($item['type']) ? $item['type'] : ''),
                 'material_name' => isset($item['material']) ? $item['material'] : '',
                 'style_image' => isset($item['styleImage']) ? $item['styleImage'] : '',
                 'style_name' => isset($item['styleName']) ? $this->capitalize_value($item['styleName']) : '',
@@ -1954,7 +1954,7 @@ class Quotation_Form_Plugin {
             }
 
             // Add Replacement if checked (Bay Windows only)
-            if (!empty($item['replacement']) && strpos($typeName, 'bay window') !== false) {
+            if (!empty($item['replacement']) && (strpos($typeName, 'bay window') !== false || strpos($typeName, 'bay-window') !== false)) {
                 $message .= "Replacement: Yes\n";
             }
 
@@ -2037,7 +2037,7 @@ class Quotation_Form_Plugin {
                 }
 
                 // Add Replacement if checked (Bay Windows only)
-                if (!empty($item['replacement']) && strpos($typeName, 'bay window') !== false) {
+                if (!empty($item['replacement']) && (strpos($typeName, 'bay window') !== false || strpos($typeName, 'bay-window') !== false)) {
                     $customer_message .= "Replacement: Yes\n";
                 }
 
