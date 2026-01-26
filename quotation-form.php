@@ -829,7 +829,7 @@ class Quotation_Form_Plugin {
                     $('.acf-field[data-name="basket_items"] .acf-row:not(.acf-clone)').each(function() {
                         var typeName = getRowTypeName($(this));
 
-                        if (typeName.indexOf('composite') !== -1 || typeName.indexOf('doorco') !== -1) {
+                        if (typeName.indexOf('composite') !== -1 || typeName.indexOf('door-co') !== -1 || typeName.indexOf('doorco') !== -1) {
                             $(this).find('[data-name="side_panels"]').show();
                         } else {
                             $(this).find('[data-name="side_panels"]').hide();
@@ -855,7 +855,7 @@ class Quotation_Form_Plugin {
                     $('.acf-field[data-name="basket_items"] .acf-row:not(.acf-clone)').each(function() {
                         var typeName = getRowTypeName($(this));
 
-                        if (typeName.indexOf('french') !== -1 || typeName.indexOf('glazed') !== -1 || typeName.indexOf('composite') !== -1 || typeName.indexOf('doorco') !== -1) {
+                        if (typeName.indexOf('french') !== -1 || typeName.indexOf('glazed') !== -1 || typeName.indexOf('composite') !== -1 || typeName.indexOf('door-co') !== -1 || typeName.indexOf('doorco') !== -1) {
                             $(this).find('[data-name="opening"]').show();
                         } else {
                             $(this).find('[data-name="opening"]').hide();
@@ -1919,7 +1919,7 @@ class Quotation_Form_Plugin {
 
             // Add Side Panels if present (Composite Doors only)
             $typeName = strtolower($item['typeName'] ?? $item['type'] ?? '');
-            if (!empty($item['sidePanels']) && (strpos($typeName, 'composite') !== false || strpos($typeName, 'doorco') !== false)) {
+            if (!empty($item['sidePanels']) && (strpos($typeName, 'composite') !== false || strpos($typeName, 'door-co') !== false || strpos($typeName, 'doorco') !== false)) {
                 $message .= "Number of Side Panels: " . $item['sidePanels'] . "\n";
             }
 
@@ -1943,7 +1943,7 @@ class Quotation_Form_Plugin {
             $message .= "Hardware Colour: " . ucfirst($item['hardwareColourName'] ?? $item['hardwareColour'] ?? '') . "\n";
 
             // Add Opening if present (French Doors, Glazed Doors, Composite Doors only)
-            $show_opening = strpos($typeName, 'french') !== false || strpos($typeName, 'glazed') !== false || strpos($typeName, 'composite') !== false || strpos($typeName, 'doorco') !== false;
+            $show_opening = strpos($typeName, 'french') !== false || strpos($typeName, 'glazed') !== false || strpos($typeName, 'composite') !== false || strpos($typeName, 'door-co') !== false || strpos($typeName, 'doorco') !== false;
             if ($show_opening && (!empty($item['openingName']) || !empty($item['opening']))) {
                 $message .= "Opening: " . ($item['openingName'] ?? $item['opening'] ?? '') . "\n";
             }
@@ -2002,7 +2002,7 @@ class Quotation_Form_Plugin {
 
                 // Add Side Panels if present (Composite Doors only)
                 $typeName = strtolower($item['typeName'] ?? $item['type'] ?? '');
-                if (!empty($item['sidePanels']) && (strpos($typeName, 'composite') !== false || strpos($typeName, 'doorco') !== false)) {
+                if (!empty($item['sidePanels']) && (strpos($typeName, 'composite') !== false || strpos($typeName, 'door-co') !== false || strpos($typeName, 'doorco') !== false)) {
                     $customer_message .= "Number of Side Panels: " . $item['sidePanels'] . "\n";
                 }
 
@@ -2026,7 +2026,7 @@ class Quotation_Form_Plugin {
                 $customer_message .= "Hardware Colour: " . ucfirst($item['hardwareColourName'] ?? $item['hardwareColour'] ?? '') . "\n";
 
                 // Add Opening if present (French Doors, Glazed Doors, Composite Doors only)
-                $show_opening = strpos($typeName, 'french') !== false || strpos($typeName, 'glazed') !== false || strpos($typeName, 'composite') !== false || strpos($typeName, 'doorco') !== false;
+                $show_opening = strpos($typeName, 'french') !== false || strpos($typeName, 'glazed') !== false || strpos($typeName, 'composite') !== false || strpos($typeName, 'door-co') !== false || strpos($typeName, 'doorco') !== false;
                 if ($show_opening && (!empty($item['openingName']) || !empty($item['opening']))) {
                     $customer_message .= "Opening: " . ($item['openingName'] ?? $item['opening'] ?? '') . "\n";
                 }
