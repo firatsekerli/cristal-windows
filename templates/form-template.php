@@ -366,6 +366,7 @@ if (!$use_acf) {
                         <label for="side-panels">Number of Side Panels</label>
                         <select id="side-panels" name="side_panels">
                             <option value="">Select Number of Side Panels</option>
+                            <option value="Not Required">Not Required</option>
                             <option value="1">1</option>
                             <option value="2">2</option>
                         </select>

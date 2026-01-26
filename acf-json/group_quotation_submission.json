@@ -183,6 +183,7 @@
                     "type": "select",
                     "choices": {
                         "": "Not Applicable",
+                        "Not Required": "Not Required",
                         "1": "1",
                         "2": "2"
                     },
