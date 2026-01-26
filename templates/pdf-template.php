@@ -345,13 +345,19 @@ foreach ($data['basket_items'] as $item):
         }
     }
 ?>
+<?php
+    // Convert type slug to display name
+    $type_display_name = !empty($data['type_lookup'][$item['type_name']])
+        ? $data['type_lookup'][$item['type_name']]
+        : $item['type_name'];
+?>
 <div class="item">
     <div class="item-header">
         <?php echo $item_letter; ?>)
         <?php if (!empty($brand_name)): ?>
             <?php echo esc_html($brand_name); ?>
         <?php endif; ?>
-        <?php echo esc_html($item['type_name']); ?>
+        <?php echo esc_html($type_display_name); ?>
         <?php if (!empty($item['material_name']) && $item['material_name'] !== 'N/A'): ?>
             <?php echo esc_html($item['material_name']); ?>
         <?php endif; ?>
@@ -366,7 +372,7 @@ foreach ($data['basket_items'] as $item):
 
         <?php if (!empty($item['type_name'])): ?>
         <div class="item-detail">
-            <strong>Type:</strong> <?php echo esc_html($item['type_name']); ?>
+            <strong>Type:</strong> <?php echo esc_html($type_display_name); ?>
         </div>
         <?php endif; ?>
 

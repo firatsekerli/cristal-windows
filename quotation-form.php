@@ -1817,7 +1817,7 @@ class Quotation_Form_Plugin {
         foreach ($basket_items as $item) {
             $normalized_item = array(
                 'category' => isset($item['category']) ? $item['category'] : '',
-                'type_name' => isset($item['typeName']) ? $item['typeName'] : (isset($item['type']) ? $item['type'] : ''),
+                'type_name' => isset($item['type']) ? $item['type'] : '',
                 'material_name' => isset($item['material']) ? $item['material'] : '',
                 'style_image' => isset($item['styleImage']) ? $item['styleImage'] : '',
                 'style_name' => isset($item['styleName']) ? $this->capitalize_value($item['styleName']) : '',
