@@ -515,7 +515,7 @@ function format_currency($amount) {
             if (!empty($item['side_panels']) && (strpos($type_name_lower, 'composite') !== false || strpos($type_name_lower, 'door-co') !== false || strpos($type_name_lower, 'doorco') !== false)):
             ?>
             <div class="item-detail-row">
-                <span class="item-detail-label">Number of Side Panels:</span>
+                <span class="item-detail-label">Side Panels:</span>
                 <span class="item-detail-value"><?php echo esc_html($item['side_panels']); ?></span>
             </div>
             <?php endif; ?>
