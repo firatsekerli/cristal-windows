@@ -822,7 +822,7 @@ class Quotation_Form_Plugin {
                         var $row = $(this);
                         var typeName = ($row.find('[data-name="type_name"] input, [data-name="type_name"] select').val() || '').toLowerCase();
 
-                        if (typeName.indexOf('composite') !== -1) {
+                        if (typeName.indexOf('composite') !== -1 || typeName.indexOf('doorco') !== -1) {
                             $row.find('[data-name="side_panels"]').show();
                         } else {
                             $row.find('[data-name="side_panels"]').hide();
@@ -867,7 +867,7 @@ class Quotation_Form_Plugin {
                         var typeName = ($row.find('[data-name="type_name"] input, [data-name="type_name"] select').val() || '').toLowerCase();
 
                         // Show Opening only for French Doors, Glazed Doors, and Composite Doors
-                        if (typeName.indexOf('french') !== -1 || typeName.indexOf('glazed') !== -1 || typeName.indexOf('composite') !== -1) {
+                        if (typeName.indexOf('french') !== -1 || typeName.indexOf('glazed') !== -1 || typeName.indexOf('composite') !== -1 || typeName.indexOf('doorco') !== -1) {
                             $row.find('[data-name="opening"]').show();
                         } else {
                             $row.find('[data-name="opening"]').hide();
@@ -1924,7 +1924,7 @@ class Quotation_Form_Plugin {
 
             // Add Side Panels if present (Composite Doors only)
             $typeName = strtolower($item['typeName'] ?? $item['type'] ?? '');
-            if (!empty($item['sidePanels']) && strpos($typeName, 'composite') !== false) {
+            if (!empty($item['sidePanels']) && (strpos($typeName, 'composite') !== false || strpos($typeName, 'doorco') !== false)) {
                 $message .= "Number of Side Panels: " . $item['sidePanels'] . "\n";
             }
 
@@ -1948,7 +1948,7 @@ class Quotation_Form_Plugin {
             $message .= "Hardware Colour: " . ucfirst($item['hardwareColourName'] ?? $item['hardwareColour'] ?? '') . "\n";
 
             // Add Opening if present (French Doors, Glazed Doors, Composite Doors only)
-            $show_opening = strpos($typeName, 'french') !== false || strpos($typeName, 'glazed') !== false || strpos($typeName, 'composite') !== false;
+            $show_opening = strpos($typeName, 'french') !== false || strpos($typeName, 'glazed') !== false || strpos($typeName, 'composite') !== false || strpos($typeName, 'doorco') !== false;
             if ($show_opening && (!empty($item['openingName']) || !empty($item['opening']))) {
                 $message .= "Opening: " . ($item['openingName'] ?? $item['opening'] ?? '') . "\n";
             }
@@ -2007,7 +2007,7 @@ class Quotation_Form_Plugin {
 
                 // Add Side Panels if present (Composite Doors only)
                 $typeName = strtolower($item['typeName'] ?? $item['type'] ?? '');
-                if (!empty($item['sidePanels']) && strpos($typeName, 'composite') !== false) {
+                if (!empty($item['sidePanels']) && (strpos($typeName, 'composite') !== false || strpos($typeName, 'doorco') !== false)) {
                     $customer_message .= "Number of Side Panels: " . $item['sidePanels'] . "\n";
                 }
 
@@ -2031,7 +2031,7 @@ class Quotation_Form_Plugin {
                 $customer_message .= "Hardware Colour: " . ucfirst($item['hardwareColourName'] ?? $item['hardwareColour'] ?? '') . "\n";
 
                 // Add Opening if present (French Doors, Glazed Doors, Composite Doors only)
-                $show_opening = strpos($typeName, 'french') !== false || strpos($typeName, 'glazed') !== false || strpos($typeName, 'composite') !== false;
+                $show_opening = strpos($typeName, 'french') !== false || strpos($typeName, 'glazed') !== false || strpos($typeName, 'composite') !== false || strpos($typeName, 'doorco') !== false;
                 if ($show_opening && (!empty($item['openingName']) || !empty($item['opening']))) {
                     $customer_message .= "Opening: " . ($item['openingName'] ?? $item['opening'] ?? '') . "\n";
                 }

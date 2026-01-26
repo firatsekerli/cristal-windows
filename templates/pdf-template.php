@@ -397,7 +397,7 @@ foreach ($data['basket_items'] as $item):
         <?php
         // Only show Side Panels for Composite Doors
         $type_name_lower = strtolower($item['type_name'] ?? '');
-        if (!empty($item['side_panels']) && strpos($type_name_lower, 'composite') !== false):
+        if (!empty($item['side_panels']) && (strpos($type_name_lower, 'composite') !== false || strpos($type_name_lower, 'doorco') !== false)):
         ?>
         <div class="item-detail">
             <strong>Number of Side Panels:</strong> <?php echo esc_html($item['side_panels']); ?>
@@ -442,7 +442,7 @@ foreach ($data['basket_items'] as $item):
 
         <?php
         // Only show Opening for French Doors, Glazed Doors, and Composite Doors
-        $show_opening = strpos($type_name_lower, 'french') !== false || strpos($type_name_lower, 'glazed') !== false || strpos($type_name_lower, 'composite') !== false;
+        $show_opening = strpos($type_name_lower, 'french') !== false || strpos($type_name_lower, 'glazed') !== false || strpos($type_name_lower, 'composite') !== false || strpos($type_name_lower, 'doorco') !== false;
         if ($show_opening && !empty($item['opening'])):
         ?>
         <div class="item-detail">
