@@ -816,71 +816,66 @@ class Quotation_Form_Plugin {
                     hideGlazingFieldsForStyles();
                 });
 
+                // Helper to get type name from a row (checks both select value and Select2 rendered text)
+                function getRowTypeName($row) {
+                    var $field = $row.find('[data-name="type_name"]');
+                    var val = ($field.find('select').val() || $field.find('input').val() || '');
+                    var text = ($field.find('.select2-selection__rendered').text() || '');
+                    return (val + ' ' + text).toLowerCase();
+                }
+
                 // Hide side_panels field for non-Composite Doors in admin
                 function hideSidePanelsForNonCompositeDoors() {
                     $('.acf-field[data-name="basket_items"] .acf-row:not(.acf-clone)').each(function() {
-                        var $row = $(this);
-                        var typeName = ($row.find('[data-name="type_name"] input, [data-name="type_name"] select').val() || '').toLowerCase();
+                        var typeName = getRowTypeName($(this));
 
                         if (typeName.indexOf('composite') !== -1 || typeName.indexOf('doorco') !== -1) {
-                            $row.find('[data-name="side_panels"]').show();
+                            $(this).find('[data-name="side_panels"]').show();
                         } else {
-                            $row.find('[data-name="side_panels"]').hide();
+                            $(this).find('[data-name="side_panels"]').hide();
                         }
                     });
                 }
-
-                // Run on page load
-                hideSidePanelsForNonCompositeDoors();
-
-                // Also run when type field changes
-                $(document).on('change', '[data-name="type_name"] input, [data-name="type_name"] select', function() {
-                    hideSidePanelsForNonCompositeDoors();
-                });
 
                 // Hide replacement field for non-Bay Windows in admin
                 function hideReplacementForNonBayWindows() {
                     $('.acf-field[data-name="basket_items"] .acf-row:not(.acf-clone)').each(function() {
-                        var $row = $(this);
-                        var typeName = ($row.find('[data-name="type_name"] input, [data-name="type_name"] select').val() || '').toLowerCase();
+                        var typeName = getRowTypeName($(this));
 
                         if (typeName.indexOf('bay window') !== -1 || typeName.indexOf('bay-window') !== -1) {
-                            $row.find('[data-name="replacement"]').show();
+                            $(this).find('[data-name="replacement"]').show();
                         } else {
-                            $row.find('[data-name="replacement"]').hide();
+                            $(this).find('[data-name="replacement"]').hide();
                         }
                     });
                 }
-
-                // Run on page load
-                hideReplacementForNonBayWindows();
-
-                // Also run when type field changes
-                $(document).on('change', '[data-name="type_name"] input, [data-name="type_name"] select', function() {
-                    hideReplacementForNonBayWindows();
-                });
 
                 // Hide opening field for non-applicable door types in admin
                 function hideOpeningForNonApplicableTypes() {
                     $('.acf-field[data-name="basket_items"] .acf-row:not(.acf-clone)').each(function() {
-                        var $row = $(this);
-                        var typeName = ($row.find('[data-name="type_name"] input, [data-name="type_name"] select').val() || '').toLowerCase();
+                        var typeName = getRowTypeName($(this));
 
-                        // Show Opening only for French Doors, Glazed Doors, and Composite Doors
                         if (typeName.indexOf('french') !== -1 || typeName.indexOf('glazed') !== -1 || typeName.indexOf('composite') !== -1 || typeName.indexOf('doorco') !== -1) {
-                            $row.find('[data-name="opening"]').show();
+                            $(this).find('[data-name="opening"]').show();
                         } else {
-                            $row.find('[data-name="opening"]').hide();
+                            $(this).find('[data-name="opening"]').hide();
                         }
                     });
                 }
 
-                // Run on page load
-                hideOpeningForNonApplicableTypes();
+                function runAllConditionalChecks() {
+                    hideSidePanelsForNonCompositeDoors();
+                    hideReplacementForNonBayWindows();
+                    hideOpeningForNonApplicableTypes();
+                }
+
+                // Run on page load and after a short delay for Select2 initialization
+                runAllConditionalChecks();
+                setTimeout(runAllConditionalChecks, 500);
 
                 // Also run when type field changes
                 $(document).on('change', '[data-name="type_name"] input, [data-name="type_name"] select', function() {
-                    hideOpeningForNonApplicableTypes();
+                    runAllConditionalChecks();
                 });
             });
 
