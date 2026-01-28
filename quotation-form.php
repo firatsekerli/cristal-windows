@@ -855,11 +855,29 @@ class Quotation_Form_Plugin {
                     });
                 }
 
+                // Hide segment widths for non-Bay Windows or non-sided styles in admin
+                function hideSegmentWidthsForNonBayWindows() {
+                    $('.acf-field[data-name="basket_items"] .acf-row:not(.acf-clone)').each(function() {
+                        var typeName = getRowTypeName($(this));
+                        var styleName = ($(this).find('[data-name="style_name"] input, [data-name="style_name"] select').val() || '').toLowerCase();
+
+                        var isBayWindow = typeName.indexOf('bay window') !== -1 || typeName.indexOf('bay-window') !== -1;
+                        var isSidedStyle = styleName.indexOf('sided') !== -1;
+
+                        if (isBayWindow && isSidedStyle) {
+                            $(this).find('[data-name="segment_widths"]').show();
+                        } else {
+                            $(this).find('[data-name="segment_widths"]').hide();
+                        }
+                    });
+                }
+
                 function runAllConditionalChecks() {
                     hideGlazingFieldsForStyles();
                     hideSidePanelsForNonCompositeDoors();
                     hideReplacementForNonBayWindows();
                     hideOpeningForNonApplicableTypes();
+                    hideSegmentWidthsForNonBayWindows();
                 }
 
                 // Run on page load with multiple retries to handle Select2 initialization timing
@@ -886,6 +904,7 @@ class Quotation_Form_Plugin {
                 });
                 $(document).on('change', '[data-name="style_name"] input, [data-name="style_name"] select', function() {
                     hideGlazingFieldsForStyles();
+                    hideSegmentWidthsForNonBayWindows();
                 });
             });
 
