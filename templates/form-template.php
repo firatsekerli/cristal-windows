@@ -332,6 +332,12 @@ if (!$use_acf) {
                         <span class="field-hint">Min: <?php echo esc_html($min_width); ?>mm - Max: <?php echo esc_html($max_width); ?>mm</span>
                     </div>
 
+                    <!-- Segment Widths (only shown for Bay Windows with sided styles) -->
+                    <div id="segment-widths-group" class="form-group" style="display: none;">
+                        <label>Segment Widths (mm)</label>
+                        <div id="segment-widths-inputs"></div>
+                    </div>
+
                     <div class="form-group">
                         <label for="height">Height (mm)</label>
                         <input type="number" id="height" name="height" min="<?php echo esc_attr($min_height); ?>" max="<?php echo esc_attr($max_height); ?>">

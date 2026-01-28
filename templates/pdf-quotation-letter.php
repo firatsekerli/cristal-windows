@@ -502,6 +502,20 @@ function format_currency($amount) {
             </div>
             <?php endif; ?>
 
+            <?php if (!empty($item['segment_widths'])): ?>
+            <div class="item-detail-row">
+                <span class="item-detail-label">Segment Widths:</span>
+                <span class="item-detail-value"><?php
+                    $widths = array_map('trim', explode(',', $item['segment_widths']));
+                    $parts = array();
+                    foreach ($widths as $idx => $w) {
+                        $parts[] = 'S' . ($idx + 1) . ': ' . esc_html($w) . 'mm';
+                    }
+                    echo implode(', ', $parts);
+                ?></span>
+            </div>
+            <?php endif; ?>
+
             <?php if (!empty($item['cill'])): ?>
             <div class="item-detail-row">
                 <span class="item-detail-label">Cill:</span>

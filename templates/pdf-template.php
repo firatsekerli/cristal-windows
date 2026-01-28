@@ -394,6 +394,19 @@ foreach ($data['basket_items'] as $item):
         </div>
         <?php endif; ?>
 
+        <?php if (!empty($item['segment_widths'])): ?>
+        <div class="item-detail">
+            <strong>Segment Widths:</strong> <?php
+                $widths = array_map('trim', explode(',', $item['segment_widths']));
+                $parts = array();
+                foreach ($widths as $idx => $w) {
+                    $parts[] = 'S' . ($idx + 1) . ': ' . esc_html($w) . 'mm';
+                }
+                echo implode(', ', $parts);
+            ?>
+        </div>
+        <?php endif; ?>
+
         <?php if (!empty($item['cill'])): ?>
         <div class="item-detail">
             <strong>Cill:</strong> <?php echo esc_html($item['cill']); ?>

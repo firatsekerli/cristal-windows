@@ -1839,7 +1839,13 @@ class Quotation_Form_Plugin {
                 'opening' => isset($item['openingName']) ? $item['openingName'] : (isset($item['opening']) ? $this->capitalize_value($item['opening']) : ''),
                 'replacement' => isset($item['replacement']) ? (bool) $item['replacement'] : false,
                 'location' => isset($item['location']) ? $this->capitalize_value($item['location']) : '',
+                'segment_widths' => '',
             );
+
+            // Handle segment widths for bay windows with sided styles
+            if (isset($item['segmentWidths']) && is_array($item['segmentWidths']) && !empty($item['segmentWidths'])) {
+                $normalized_item['segment_widths'] = implode(', ', array_map('sanitize_text_field', $item['segmentWidths']));
+            }
 
             // Handle attached image - upload base64 image to media library
             $normalized_item['attached_image'] = '';
@@ -1925,6 +1931,16 @@ class Quotation_Form_Plugin {
             $style_name = $item['styleName'] ?? $item['style'] ?? '';
             $message .= "Style: " . $style_name . "\n";
             $message .= "Dimensions: " . ($item['width'] ?? 0) . "mm (W) x " . ($item['height'] ?? 0) . "mm (H)\n";
+
+            // Add Segment Widths if present (Bay Windows with sided styles)
+            if (!empty($item['segmentWidths']) && is_array($item['segmentWidths'])) {
+                $segment_parts = array();
+                foreach ($item['segmentWidths'] as $si => $sw) {
+                    $segment_parts[] = 'S' . ($si + 1) . ': ' . $sw . 'mm';
+                }
+                $message .= "Segment Widths: " . implode(', ', $segment_parts) . "\n";
+            }
+
             $message .= "Cill: " . ($item['cillName'] ?? $item['cill'] ?? '') . "\n";
 
             // Add Side Panels if present (Composite Doors only)
@@ -2008,6 +2024,16 @@ class Quotation_Form_Plugin {
                 $style_name = $item['styleName'] ?? $item['style'] ?? '';
                 $customer_message .= "Style: " . $style_name . "\n";
                 $customer_message .= "Dimensions: " . ($item['width'] ?? 0) . "mm (W) x " . ($item['height'] ?? 0) . "mm (H)\n";
+
+                // Add Segment Widths if present (Bay Windows with sided styles)
+                if (!empty($item['segmentWidths']) && is_array($item['segmentWidths'])) {
+                    $segment_parts = array();
+                    foreach ($item['segmentWidths'] as $si => $sw) {
+                        $segment_parts[] = 'S' . ($si + 1) . ': ' . $sw . 'mm';
+                    }
+                    $customer_message .= "Segment Widths: " . implode(', ', $segment_parts) . "\n";
+                }
+
                 $customer_message .= "Cill: " . ($item['cillName'] ?? $item['cill'] ?? '') . "\n";
 
                 // Add Side Panels if present (Composite Doors only)

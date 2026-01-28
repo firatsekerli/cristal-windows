@@ -418,6 +418,10 @@ jQuery(document).ready(function($) {
                 // Update dimension limits based on selected style
                 self.updateDimensionLimits(style);
 
+                // Generate segment width fields for bay windows with sided styles
+                var segmentCount = self.getSegmentCount();
+                self.generateSegmentWidthFields(segmentCount);
+
                 // Check if glazing options should be hidden for this style
                 const hideGlazing = $(this).data('hide-glazing') === '1' || $(this).data('hide-glazing') === 1;
                 self.toggleGlazingTypeVisibility(hideGlazing);
@@ -1548,6 +1552,69 @@ jQuery(document).ready(function($) {
             $heightInput.next('.field-hint').text('Min: ' + minHeight + 'mm - Max: ' + maxHeight + 'mm');
         },
 
+        /**
+         * Get the number of segments for bay window sided styles
+         * Returns 0 if not a bay window or not a sided style
+         */
+        getSegmentCount: function() {
+            var typeName = (this.currentItem.typeName || '').toLowerCase();
+            var styleSlug = this.currentItem.style || '';
+
+            // Only for bay windows
+            if (!typeName.includes('bay window')) return 0;
+
+            // Check if style is a "sided" variant (e.g., style-3-sided, style-9-sided)
+            var match = styleSlug.match(/(\d+)-sided/);
+            return match ? parseInt(match[1]) : 0;
+        },
+
+        /**
+         * Get segment count from a basket item (for edit modal)
+         */
+        getSegmentCountFromItem: function(item) {
+            var typeName = (item.typeName || '').toLowerCase();
+            var styleSlug = item.style || '';
+
+            if (!typeName.includes('bay window')) return 0;
+
+            var match = styleSlug.match(/(\d+)-sided/);
+            return match ? parseInt(match[1]) : 0;
+        },
+
+        /**
+         * Generate segment width input fields for bay windows
+         */
+        generateSegmentWidthFields: function(count, existingValues) {
+            var $container = $('#segment-widths-inputs');
+            $container.empty();
+
+            if (count > 0) {
+                for (var i = 1; i <= count; i++) {
+                    var val = (existingValues && existingValues[i - 1]) ? existingValues[i - 1] : '';
+                    $container.append(
+                        '<div class="segment-width-field">' +
+                        '<label for="segment-width-' + i + '">Segment ' + i + ' Width (mm)</label>' +
+                        '<input type="number" id="segment-width-' + i + '" class="segment-width-input" data-segment="' + i + '" min="1" value="' + val + '">' +
+                        '</div>'
+                    );
+                }
+                $('#segment-widths-group').show();
+            } else {
+                $('#segment-widths-group').hide();
+            }
+        },
+
+        /**
+         * Collect all segment width values from the form
+         */
+        collectSegmentWidths: function() {
+            var widths = [];
+            $('.segment-width-input').each(function() {
+                widths.push($(this).val());
+            });
+            return widths;
+        },
+
         toggleGlazingTypeVisibility: function(shouldHide) {
             const $glazingTypeGroup = $('.form-group').filter(function() {
                 return $(this).find('label').first().text().trim() === 'Glazing Type';
@@ -1693,6 +1760,19 @@ jQuery(document).ready(function($) {
                 return false;
             }
 
+            // Validate segment widths for bay windows with sided styles
+            var segmentCount = this.getSegmentCount();
+            if (segmentCount > 0) {
+                var segmentWidths = this.collectSegmentWidths();
+                for (var i = 0; i < segmentCount; i++) {
+                    var sw = parseInt(segmentWidths[i]);
+                    if (!sw || sw < 1) {
+                        alert('Please enter a valid width for Segment ' + (i + 1));
+                        return false;
+                    }
+                }
+            }
+
             return true;
         },
 
@@ -1751,6 +1831,12 @@ jQuery(document).ready(function($) {
                 item.replacement = $('#replacement-checkbox').is(':checked');
             }
 
+            // Include segment widths for bay windows with sided styles
+            var segmentCount = this.getSegmentCount();
+            if (segmentCount > 0) {
+                item.segmentWidths = this.collectSegmentWidths();
+            }
+
             if (this.editingItemId) {
                 // Update existing item
                 const index = this.basket.findIndex(i => i.id === this.editingItemId);
@@ -1794,6 +1880,9 @@ jQuery(document).ready(function($) {
             // Reset replacement checkbox
             $('#replacement-checkbox').prop('checked', false);
             this.updateImageRequiredState(false);
+            // Reset segment widths
+            $('#segment-widths-inputs').empty();
+            $('#segment-widths-group').hide();
             $('.colour-item').removeClass('selected');
             $('.glazing-type-card').removeClass('selected');
             $('.glazing-pattern-card').removeClass('selected');
@@ -1870,9 +1959,18 @@ jQuery(document).ready(function($) {
 
             const fields = [
                 { label: 'Product', value: (item.materialName || '') + ' ' + item.typeName, field: 'product' },
-                { label: 'Size', value: item.width + 'w x ' + item.height + 'h mm', field: 'size' },
-                { label: 'Colours', value: insideColourDisplay + ' / ' + outsideColourDisplay, field: 'colour' }
+                { label: 'Size', value: item.width + 'w x ' + item.height + 'h mm', field: 'size' }
             ];
+
+            // Show Segment Widths if present (Bay Windows with sided styles)
+            if (item.segmentWidths && item.segmentWidths.length > 0) {
+                var segmentDisplay = item.segmentWidths.map(function(w, i) {
+                    return 'S' + (i + 1) + ': ' + w + 'mm';
+                }).join(', ');
+                fields.push({ label: 'Segment Widths', value: segmentDisplay, field: 'size' });
+            }
+
+            fields.push({ label: 'Colours', value: insideColourDisplay + ' / ' + outsideColourDisplay, field: 'colour' });
 
             // Only show Glazing Type if it exists (some styles hide this field)
             if (item.glazingType || item.glazingTypeName) {
@@ -1980,6 +2078,17 @@ jQuery(document).ready(function($) {
                 });
                 cillOptionsHtml += '</select></div>';
                 $content.append(cillOptionsHtml);
+
+                // Add segment width fields for bay windows with sided styles
+                var editSegmentCount = this.getSegmentCountFromItem(item);
+                if (editSegmentCount > 0) {
+                    var editSegmentWidths = item.segmentWidths || [];
+                    $content.append('<div class="edit-field-group"><label><strong>Segment Widths (mm):</strong></label></div>');
+                    for (var si = 1; si <= editSegmentCount; si++) {
+                        var sVal = editSegmentWidths[si - 1] || '';
+                        $content.append('<div class="edit-field-group"><label>Segment ' + si + ' Width (mm):</label><input type="number" class="edit-segment-width" data-segment="' + si + '" value="' + sVal + '" min="1"></div>');
+                    }
+                }
             } else if (field === 'colour') {
                 // Store modal selected colors
                 this.modalSelectedColors = {
@@ -2187,6 +2296,14 @@ jQuery(document).ready(function($) {
                     item.height = $('#edit-height').val();
                     item.cill = $('#edit-cill').val();
                     item.cillName = $('#edit-cill option:selected').text();
+                    // Save segment widths if present
+                    var $editSegWidths = $('.edit-segment-width');
+                    if ($editSegWidths.length > 0) {
+                        item.segmentWidths = [];
+                        $editSegWidths.each(function() {
+                            item.segmentWidths.push($(this).val());
+                        });
+                    }
                 } else if (field === 'colour') {
                     item.insideColour = self.modalSelectedColors.inside;
                     item.outsideColour = self.modalSelectedColors.outside;

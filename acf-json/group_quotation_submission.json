@@ -164,6 +164,13 @@
                     "type": "number"
                 },
                 {
+                    "key": "field_item_segment_widths",
+                    "label": "Segment Widths",
+                    "name": "segment_widths",
+                    "type": "text",
+                    "instructions": "Comma-separated segment widths in mm (for bay windows with sided styles)"
+                },
+                {
                     "key": "field_item_cill",
                     "label": "Cill",
                     "name": "cill",
@@ -482,5 +489,5 @@
     "style": "default",
     "label_placement": "top",
     "instruction_placement": "label",
-    "modified": 1769453761
+    "modified": 1769601600
 }

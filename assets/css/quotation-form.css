@@ -446,6 +446,37 @@
     color: var(--text-muted);
 }
 
+/* Segment Widths for Bay Windows */
+#segment-widths-inputs {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 12px;
+}
+
+.segment-width-field label {
+    display: block;
+    margin-bottom: 4px;
+    font-weight: 500;
+    font-size: 13px;
+    color: var(--text-dark);
+}
+
+.segment-width-field input[type="number"] {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 14px;
+    transition: border-color var(--transition-speed);
+    box-sizing: border-box;
+}
+
+.segment-width-field input[type="number"]:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+}
+
 /* Checkbox label styling */
 .checkbox-label {
     display: inline-flex;
