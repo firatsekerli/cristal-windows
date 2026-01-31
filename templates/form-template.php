@@ -511,6 +511,7 @@ if (!$use_acf) {
 
                     <div class="form-group">
                         <label for="frame-images">Attach Image <span id="image-optional-text">(Optional)</span></label>
+                        <p class="field-description">Image upload is optional and not required but it will help us to see your property to help us understand your windows, doors, or other requirements.</p>
                         <input type="file" id="frame-images" name="frame_images" accept="image/*">
                         <span class="field-hint">Upload 1 image (max 1MB)</span>
                         <div id="file-preview" class="file-preview"></div>

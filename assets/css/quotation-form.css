@@ -446,6 +446,14 @@
     color: var(--text-muted);
 }
 
+.field-description {
+    display: block;
+    margin: 5px 0 10px 0;
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.4;
+}
+
 /* Segment Widths for Bay Windows */
 #segment-widths-inputs {
     display: grid;
