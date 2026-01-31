@@ -273,12 +273,23 @@ if (!$use_acf) {
                                 break;
                             }
                         }
+
+                        // Styles that should show Infill Panel option (Glazed Doors with midrails)
+                        $show_infill_panel_styles = array('1803', '1804', '1811', '1812', '1813', '1814', '1815', '1816', '1827', '1828', '1829', '1830', '1831', '1832');
+                        $show_infill_panel = '0';
+                        foreach ($show_infill_panel_styles as $style_num) {
+                            if ($slug === $style_num || strpos($slug, $style_num) !== false) {
+                                $show_infill_panel = '1';
+                                break;
+                            }
+                        }
                     ?>
                     <div class="image-card style-card"
                          data-style="<?php echo esc_attr($slug); ?>"
                          data-available-types="<?php echo esc_attr(json_encode($available_types)); ?>"
                          data-available-materials="<?php echo esc_attr(json_encode($available_materials)); ?>"
-                         data-hide-glazing="<?php echo esc_attr($hide_glazing); ?>">
+                         data-hide-glazing="<?php echo esc_attr($hide_glazing); ?>"
+                         data-show-infill-panel="<?php echo esc_attr($show_infill_panel); ?>">
                         <div class="card-image">
                             <?php if ($image_url): ?>
                                 <img src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($name); ?>" loading="lazy">
@@ -496,6 +507,16 @@ if (!$use_acf) {
                                 <p class="glazing-features-selection-display">Selected: <strong id="glazing-features-name">Not Required</strong></p>
                             </div>
                         </div>
+                    </div>
+
+                    <!-- Infill Panel (only shown for Glazed Doors with midrail styles) -->
+                    <div class="form-group infill-panel-selection" style="display: none;">
+                        <label for="infill-panel">Infill Panel</label>
+                        <select id="infill-panel" name="infill_panel">
+                            <option value="">Select Infill Panel</option>
+                            <option value="Not Required">Not Required</option>
+                            <option value="Yes">Yes</option>
+                        </select>
                     </div>
 
                     <div class="form-group">

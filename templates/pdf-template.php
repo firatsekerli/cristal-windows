@@ -423,6 +423,24 @@ foreach ($data['basket_items'] as $item):
         </div>
         <?php endif; ?>
 
+        <?php
+        // Only show Infill Panel for Glazed Doors with midrail styles
+        $show_infill_panel_styles = array('1803', '1804', '1811', '1812', '1813', '1814', '1815', '1816', '1827', '1828', '1829', '1830', '1831', '1832');
+        $style_name_pdf = strtolower($item['style_name'] ?? '');
+        $has_midrail_style_pdf = false;
+        foreach ($show_infill_panel_styles as $style_num) {
+            if (strpos($style_name_pdf, $style_num) !== false) {
+                $has_midrail_style_pdf = true;
+                break;
+            }
+        }
+        if (!empty($item['infill_panel']) && strpos($type_name_lower, 'glazed') !== false && $has_midrail_style_pdf):
+        ?>
+        <div class="item-detail">
+            <strong>Infill Panel:</strong> <?php echo esc_html($item['infill_panel']); ?>
+        </div>
+        <?php endif; ?>
+
         <?php if (!empty($item['inside_colour'])): ?>
         <div class="item-detail">
             <strong>Inside Colour:</strong> <?php echo esc_html($item['inside_colour']); ?>

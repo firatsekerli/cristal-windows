@@ -402,6 +402,11 @@ jQuery(document).ready(function($) {
                 self.toggleGlazingTypeVisibility(hideGlazing);
                 self.toggleGlazingFeaturesVisibility(hideGlazing);
 
+                // Check if infill panel should be shown for this style (Glazed Doors with midrails)
+                const showInfillPanel = $(this).data('show-infill-panel') === '1' || $(this).data('show-infill-panel') === 1;
+                self.currentItem.showInfillPanel = showInfillPanel;
+                self.toggleInfillPanelVisibility(showInfillPanel);
+
                 // Check if current product type has openings
                 setTimeout(function() {
                     if (self.hasOpeningsForCurrentType()) {
@@ -1639,6 +1644,19 @@ jQuery(document).ready(function($) {
             }
         },
 
+        toggleInfillPanelVisibility: function(shouldShow) {
+            const typeName = (this.currentItem.typeName || '').toLowerCase();
+            const isGlazedDoors = typeName.includes('glazed');
+
+            // Only show if both conditions are met: Glazed Doors type AND style has midrail
+            if (shouldShow && isGlazedDoors) {
+                $('.infill-panel-selection').show();
+            } else {
+                $('.infill-panel-selection').hide();
+                $('#infill-panel').val(''); // Reset value when hidden
+            }
+        },
+
         updateConfigurationPreview: function() {
             $('#style-preview').attr('src', this.currentItem.styleImage);
             $('#preview-category').text(this.capitalizeValue(this.currentItem.category) || '');
@@ -1661,6 +1679,14 @@ jQuery(document).ready(function($) {
             } else {
                 $('.side-panels-selection').hide();
                 $('#side-panels').val(''); // Reset value when hidden
+            }
+
+            // Show/hide Infill Panel field for Glazed Doors with midrail styles
+            if (this.currentItem.showInfillPanel && typeName.includes('glazed')) {
+                $('.infill-panel-selection').show();
+            } else {
+                $('.infill-panel-selection').hide();
+                $('#infill-panel').val(''); // Reset value when hidden
             }
 
         },
@@ -1753,6 +1779,7 @@ jQuery(document).ready(function($) {
                 cill: $('#cill').val(),
                 cillName: $('#cill option:selected').text(),
                 sidePanels: $('#side-panels').val() || '',
+                infillPanel: $('#infill-panel').val() || '',
                 insideColour: $('#inside-colour').val(),
                 outsideColour: $('#outside-colour').val(),
                 insideColourName: $('#inside-colour-name').text(),
@@ -1825,6 +1852,8 @@ jQuery(document).ready(function($) {
             $('#glazing-pattern-group').hide();
             $('#glazing-features').val('not-required');
             $('#glazing-features-name').text('Not Required');
+            $('#infill-panel').val('');
+            $('.infill-panel-selection').hide();
             $('#hardware-colour').val('');
             $('#hardware-colour-name').text('None');
             // Clear file upload state (data → UI → input for consistency)

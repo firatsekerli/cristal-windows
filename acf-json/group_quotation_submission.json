@@ -253,6 +253,23 @@
                     "ajax": 0
                 },
                 {
+                    "key": "field_item_infill_panel",
+                    "label": "Infill Panel",
+                    "name": "infill_panel",
+                    "type": "select",
+                    "choices": {
+                        "": "Not Applicable",
+                        "Not Required": "Not Required",
+                        "Yes": "Yes"
+                    },
+                    "default_value": "",
+                    "allow_null": 1,
+                    "multiple": 0,
+                    "ui": 1,
+                    "return_format": "value",
+                    "ajax": 0
+                },
+                {
                     "key": "field_item_hardware_colour",
                     "label": "Hardware Colour",
                     "name": "hardware_colour",
