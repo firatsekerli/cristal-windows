@@ -1967,6 +1967,11 @@ jQuery(document).ready(function($) {
                 fields.push({ label: 'Glazing Feature', value: glazingFeaturesDisplay, field: 'glazingFeatures' });
             }
 
+            // Only show Infill Panel if it exists (only for Glazed Doors and French Doors with midrail styles)
+            if (item.infillPanel) {
+                fields.push({ label: 'Infill Panel', value: item.infillPanel, field: 'infillPanel' });
+            }
+
             fields.push({ label: 'Hardware Colour', value: hardwareColourDisplay, field: 'hardware' });
 
             // Only show Opening if it exists (only for products that have opening options)
@@ -1977,11 +1982,6 @@ jQuery(document).ready(function($) {
             // Only show Side Panels if it exists (only for Composite Doors)
             if (item.sidePanels) {
                 fields.push({ label: 'Side Panels', value: item.sidePanels, field: 'sidePanels' });
-            }
-
-            // Only show Infill Panel if it exists (only for Glazed Doors and French Doors with midrail styles)
-            if (item.infillPanel) {
-                fields.push({ label: 'Infill Panel', value: item.infillPanel, field: 'infillPanel' });
             }
 
             fields.forEach(field => {
@@ -2271,6 +2271,23 @@ jQuery(document).ready(function($) {
                 setTimeout(function() {
                     self.renderModalOpeningGrid('modal-opening-grid', item);
                 }, 10);
+            } else if (field === 'infillPanel') {
+                // Store modal selected infill panel
+                this.modalSelectedInfillPanel = item.infillPanel;
+
+                // Create infill panel picker with select dropdown
+                $content.append('<div class="edit-field-group modal-infill-panel-picker">' +
+                    '<label>Infill Panel:</label>' +
+                    '<select id="modal-infill-panel">' +
+                    '<option value="Not Required"' + (item.infillPanel === 'Not Required' ? ' selected' : '') + '>Not Required</option>' +
+                    '<option value="Yes"' + (item.infillPanel === 'Yes' ? ' selected' : '') + '>Yes</option>' +
+                    '</select>' +
+                    '</div>');
+
+                // Update selected value when changed
+                $('#modal-infill-panel').on('change', function() {
+                    self.modalSelectedInfillPanel = $(this).val();
+                });
             }
 
             $modal.show();
@@ -2310,6 +2327,8 @@ jQuery(document).ready(function($) {
                 } else if (field === 'opening') {
                     item.opening = self.modalSelectedOpening;
                     item.openingName = self.modalSelectedOpeningName;
+                } else if (field === 'infillPanel') {
+                    item.infillPanel = self.modalSelectedInfillPanel;
                 }
 
                 $modal.hide();
