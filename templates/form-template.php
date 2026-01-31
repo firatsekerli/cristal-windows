@@ -274,8 +274,8 @@ if (!$use_acf) {
                             }
                         }
 
-                        // Styles that should show Infill Panel option (Glazed Doors with midrails)
-                        $show_infill_panel_styles = array('1803', '1804', '1811', '1812', '1813', '1814', '1815', '1816', '1827', '1828', '1829', '1830', '1831', '1832');
+                        // Styles that should show Infill Panel option (Glazed Doors and French Doors with midrails)
+                        $show_infill_panel_styles = array('1803', '1804', '1811', '1812', '1813', '1814', '1815', '1816', '1827', '1828', '1829', '1830', '1831', '1832', '2101', '2104', '2105', '2202', '2205', '2206');
                         $show_infill_panel = '0';
                         foreach ($show_infill_panel_styles as $style_num) {
                             if ($slug === $style_num || strpos($slug, $style_num) !== false) {

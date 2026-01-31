@@ -424,8 +424,8 @@ foreach ($data['basket_items'] as $item):
         <?php endif; ?>
 
         <?php
-        // Only show Infill Panel for Glazed Doors with midrail styles
-        $show_infill_panel_styles = array('1803', '1804', '1811', '1812', '1813', '1814', '1815', '1816', '1827', '1828', '1829', '1830', '1831', '1832');
+        // Only show Infill Panel for Glazed Doors or French Doors with midrail styles
+        $show_infill_panel_styles = array('1803', '1804', '1811', '1812', '1813', '1814', '1815', '1816', '1827', '1828', '1829', '1830', '1831', '1832', '2101', '2104', '2105', '2202', '2205', '2206');
         $style_name_pdf = strtolower($item['style_name'] ?? '');
         $has_midrail_style_pdf = false;
         foreach ($show_infill_panel_styles as $style_num) {
@@ -434,7 +434,7 @@ foreach ($data['basket_items'] as $item):
                 break;
             }
         }
-        if (!empty($item['infill_panel']) && strpos($type_name_lower, 'glazed') !== false && $has_midrail_style_pdf):
+        if (!empty($item['infill_panel']) && (strpos($type_name_lower, 'glazed') !== false || strpos($type_name_lower, 'french') !== false) && $has_midrail_style_pdf):
         ?>
         <div class="item-detail">
             <strong>Infill Panel:</strong> <?php echo esc_html($item['infill_panel']); ?>

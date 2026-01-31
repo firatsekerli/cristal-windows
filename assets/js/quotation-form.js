@@ -1647,9 +1647,10 @@ jQuery(document).ready(function($) {
         toggleInfillPanelVisibility: function(shouldShow) {
             const typeName = (this.currentItem.typeName || '').toLowerCase();
             const isGlazedDoors = typeName.includes('glazed');
+            const isFrenchDoors = typeName.includes('french');
 
-            // Only show if both conditions are met: Glazed Doors type AND style has midrail
-            if (shouldShow && isGlazedDoors) {
+            // Only show if both conditions are met: Glazed Doors or French Doors type AND style has midrail
+            if (shouldShow && (isGlazedDoors || isFrenchDoors)) {
                 $('.infill-panel-selection').show();
             } else {
                 $('.infill-panel-selection').hide();
@@ -1681,8 +1682,8 @@ jQuery(document).ready(function($) {
                 $('#side-panels').val(''); // Reset value when hidden
             }
 
-            // Show/hide Infill Panel field for Glazed Doors with midrail styles
-            if (this.currentItem.showInfillPanel && typeName.includes('glazed')) {
+            // Show/hide Infill Panel field for Glazed Doors or French Doors with midrail styles
+            if (this.currentItem.showInfillPanel && (typeName.includes('glazed') || typeName.includes('french'))) {
                 $('.infill-panel-selection').show();
             } else {
                 $('.infill-panel-selection').hide();
