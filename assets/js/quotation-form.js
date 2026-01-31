@@ -1979,6 +1979,11 @@ jQuery(document).ready(function($) {
                 fields.push({ label: 'Side Panels', value: item.sidePanels, field: 'sidePanels' });
             }
 
+            // Only show Infill Panel if it exists (only for Glazed Doors and French Doors with midrail styles)
+            if (item.infillPanel) {
+                fields.push({ label: 'Infill Panel', value: item.infillPanel, field: 'infillPanel' });
+            }
+
             fields.forEach(field => {
                 const $row = $('<tr></tr>');
                 $row.append('<td><strong>' + field.label + ':</strong></td>');
