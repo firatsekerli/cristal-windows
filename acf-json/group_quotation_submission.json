@@ -279,14 +279,6 @@
                     "ajax": 0
                 },
                 {
-                    "key": "field_item_replacement",
-                    "label": "Replacement",
-                    "name": "replacement",
-                    "type": "true_false",
-                    "default_value": 0,
-                    "ui": 1
-                },
-                {
                     "key": "field_item_location",
                     "label": "Location",
                     "name": "location",

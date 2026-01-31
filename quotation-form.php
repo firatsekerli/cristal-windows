@@ -829,19 +829,6 @@ class Quotation_Form_Plugin {
                     });
                 }
 
-                // Hide replacement field for non-Bay Windows in admin
-                function hideReplacementForNonBayWindows() {
-                    $('.acf-field[data-name="basket_items"] .acf-row:not(.acf-clone)').each(function() {
-                        var typeName = getRowTypeName($(this));
-
-                        if (typeName.indexOf('bay window') !== -1 || typeName.indexOf('bay-window') !== -1) {
-                            $(this).find('[data-name="replacement"]').show();
-                        } else {
-                            $(this).find('[data-name="replacement"]').hide();
-                        }
-                    });
-                }
-
                 // Hide opening field for non-applicable door types in admin
                 function hideOpeningForNonApplicableTypes() {
                     $('.acf-field[data-name="basket_items"] .acf-row:not(.acf-clone)').each(function() {
@@ -875,7 +862,6 @@ class Quotation_Form_Plugin {
                 function runAllConditionalChecks() {
                     hideGlazingFieldsForStyles();
                     hideSidePanelsForNonCompositeDoors();
-                    hideReplacementForNonBayWindows();
                     hideOpeningForNonApplicableTypes();
                     hideSegmentWidthsForNonBayWindows();
                 }
@@ -1616,7 +1602,6 @@ class Quotation_Form_Plugin {
                 'hardwareColourName' => sanitize_text_field($item['hardwareColourName'] ?? ''),
                 'opening' => sanitize_text_field($item['opening'] ?? ''),
                 'openingName' => sanitize_text_field($item['openingName'] ?? ''),
-                'replacement' => isset($item['replacement']) ? (bool) $item['replacement'] : false,
                 'location' => sanitize_text_field($item['location'] ?? ''),
                 'attachedFiles' => isset($item['attachedFiles']) && is_array($item['attachedFiles']) ? $item['attachedFiles'] : array()
             );
@@ -1856,7 +1841,6 @@ class Quotation_Form_Plugin {
                 'glazing_patterns' => isset($item['glazingPattern']) ? $this->capitalize_value($item['glazingPattern']) : '',
                 'hardware_colour' => isset($item['hardwareColour']) ? $this->capitalize_value($item['hardwareColour']) : '',
                 'opening' => isset($item['openingName']) ? $item['openingName'] : (isset($item['opening']) ? $this->capitalize_value($item['opening']) : ''),
-                'replacement' => isset($item['replacement']) ? (bool) $item['replacement'] : false,
                 'location' => isset($item['location']) ? $this->capitalize_value($item['location']) : '',
                 'segment_widths' => '',
             );
@@ -1993,11 +1977,6 @@ class Quotation_Form_Plugin {
                 $message .= "Opening: " . ($item['openingName'] ?? $item['opening'] ?? '') . "\n";
             }
 
-            // Add Replacement if checked (Bay Windows only)
-            if (!empty($item['replacement']) && (strpos($typeName, 'bay window') !== false || strpos($typeName, 'bay-window') !== false)) {
-                $message .= "Replacement: Yes\n";
-            }
-
             if (!empty($item['location'])) {
                 $message .= "Location: " . $item['location'] . "\n";
             }
@@ -2084,11 +2063,6 @@ class Quotation_Form_Plugin {
                 $show_opening = strpos($typeName, 'french') !== false || strpos($typeName, 'glazed') !== false || strpos($typeName, 'composite') !== false || strpos($typeName, 'door-co') !== false || strpos($typeName, 'doorco') !== false;
                 if ($show_opening && (!empty($item['openingName']) || !empty($item['opening']))) {
                     $customer_message .= "Opening: " . ($item['openingName'] ?? $item['opening'] ?? '') . "\n";
-                }
-
-                // Add Replacement if checked (Bay Windows only)
-                if (!empty($item['replacement']) && (strpos($typeName, 'bay window') !== false || strpos($typeName, 'bay-window') !== false)) {
-                    $customer_message .= "Replacement: Yes\n";
                 }
 
                 if (!empty($item['location'])) {
