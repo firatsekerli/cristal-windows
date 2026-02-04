@@ -518,7 +518,7 @@ function format_currency($amount) {
 
             <?php if (!empty($item['cill'])): ?>
             <div class="item-detail-row">
-                <span class="item-detail-label">Cill:</span>
+                <span class="item-detail-label">External Sub Cill:</span>
                 <span class="item-detail-value"><?php echo esc_html($item['cill']); ?></span>
             </div>
             <?php endif; ?>
