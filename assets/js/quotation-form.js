@@ -837,6 +837,10 @@ jQuery(document).ready(function($) {
         initializeColourPickers: function() {
             this.renderColourGrid('inside-colour-grid');
             this.renderColourGrid('outside-colour-grid');
+
+            // Select White as default colour for both inside and outside
+            this.selectColour('outside-colour-grid', 'White', false);
+            this.selectColour('inside-colour-grid', 'White', true);
         },
 
         renderColourGrid: function(gridId) {
