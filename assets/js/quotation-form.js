@@ -1722,7 +1722,7 @@ jQuery(document).ready(function($) {
             }
 
             if (!cill) {
-                alert('Please select a cill option');
+                alert('Please select an external sub cill option');
                 return false;
             }
 
@@ -2057,7 +2057,7 @@ jQuery(document).ready(function($) {
                 $content.append('<div class="edit-field-group"><label>Height (mm):</label><input type="number" id="edit-height" value="' + item.height + '" min="200" max="3200"></div>');
 
                 // Build cill options dynamically from settings
-                let cillOptionsHtml = '<div class="edit-field-group"><label>Cill:</label><select id="edit-cill">';
+                let cillOptionsHtml = '<div class="edit-field-group"><label>External Sub Cill:</label><select id="edit-cill">';
                 this.cillOptions.forEach(function(option) {
                     const selected = item.cill === option.value ? ' selected' : '';
                     cillOptionsHtml += '<option value="' + option.value + '"' + selected + '>' + option.label + '</option>';
