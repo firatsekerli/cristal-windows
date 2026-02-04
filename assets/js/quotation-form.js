@@ -1886,7 +1886,7 @@ jQuery(document).ready(function($) {
             $('.basket-counter').text(this.basket.length);
 
             if (this.basket.length === 0) {
-                $container.append('<p class="empty-basket">Your basket is empty. Add items to continue.</p>');
+                $container.append('<p class="empty-basket">Your basket is empty. Click <strong>Add Item</strong> button to continue.</p>');
                 return;
             }
 
