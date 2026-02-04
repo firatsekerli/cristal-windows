@@ -441,15 +441,15 @@ foreach ($data['basket_items'] as $item):
         </div>
         <?php endif; ?>
 
-        <?php if (!empty($item['inside_colour'])): ?>
-        <div class="item-detail">
-            <strong>Inside Colour:</strong> <?php echo esc_html($item['inside_colour']); ?>
-        </div>
-        <?php endif; ?>
-
         <?php if (!empty($item['outside_colour'])): ?>
         <div class="item-detail">
             <strong>Outside Colour:</strong> <?php echo esc_html($item['outside_colour']); ?>
+        </div>
+        <?php endif; ?>
+
+        <?php if (!empty($item['inside_colour'])): ?>
+        <div class="item-detail">
+            <strong>Inside Colour:</strong> <?php echo esc_html($item['inside_colour']); ?>
         </div>
         <?php endif; ?>
 
