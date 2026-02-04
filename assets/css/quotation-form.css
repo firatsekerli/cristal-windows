@@ -219,6 +219,10 @@
     font-size: 24px !important;
     font-weight: 600 !important;
     color: var(--text-dark) !important;
+    margin-bottom: 30px !important;
+}
+
+.basket-header .quotation-heading {
     margin-top: 0px !important;
     margin-bottom: 0px !important;
 }
