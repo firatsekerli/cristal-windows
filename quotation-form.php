@@ -1996,8 +1996,8 @@ class Quotation_Form_Plugin {
                 $message .= "Infill Panel: " . $item['infillPanel'] . "\n";
             }
 
-            $message .= "Inside Colour: " . ($item['insideColourName'] ?? $item['insideColour'] ?? '') . "\n";
             $message .= "Outside Colour: " . ($item['outsideColourName'] ?? $item['outsideColour'] ?? '') . "\n";
+            $message .= "Inside Colour: " . ($item['insideColourName'] ?? $item['insideColour'] ?? '') . "\n";
 
             // Check if glazing should be hidden for this style
             $hide_glazing = false;
@@ -2097,8 +2097,8 @@ class Quotation_Form_Plugin {
                     $customer_message .= "Infill Panel: " . $item['infillPanel'] . "\n";
                 }
 
-                $customer_message .= "Inside Colour: " . ($item['insideColourName'] ?? $item['insideColour'] ?? '') . "\n";
                 $customer_message .= "Outside Colour: " . ($item['outsideColourName'] ?? $item['outsideColour'] ?? '') . "\n";
+                $customer_message .= "Inside Colour: " . ($item['insideColourName'] ?? $item['insideColour'] ?? '') . "\n";
 
                 // Check if glazing should be hidden for this style
                 $hide_glazing = false;
