@@ -1862,7 +1862,7 @@ class Quotation_Form_Plugin {
                 'style_name' => isset($item['styleName']) ? $this->capitalize_value($item['styleName']) : '',
                 'width' => isset($item['width']) ? $item['width'] : '',
                 'height' => isset($item['height']) ? $item['height'] : '',
-                'cill' => isset($item['cillName']) && !empty($item['cillName']) && $item['cillName'] !== 'Select Cill' ? $item['cillName'] : (isset($item['cill']) ? $this->capitalize_value($item['cill']) : ''),
+                'cill' => isset($item['cillName']) && !empty($item['cillName']) && $item['cillName'] !== 'Select External Sub Cill' ? $item['cillName'] : (isset($item['cill']) ? $this->capitalize_value($item['cill']) : ''),
                 'side_panels' => isset($item['sidePanels']) ? $item['sidePanels'] : '',
                 'infill_panel' => isset($item['infillPanel']) ? $item['infillPanel'] : '',
                 'inside_colour' => isset($item['insideColourName']) ? $item['insideColourName'] : (isset($item['insideColour']) ? $this->capitalize_value($item['insideColour']) : ''),
@@ -2076,7 +2076,7 @@ class Quotation_Form_Plugin {
                     $customer_message .= "Segment Widths: " . implode(', ', $segment_parts) . "\n";
                 }
 
-                $customer_message .= "Cill: " . ($item['cillName'] ?? $item['cill'] ?? '') . "\n";
+                $customer_message .= "External Sub Cill: " . ($item['cillName'] ?? $item['cill'] ?? '') . "\n";
 
                 // Add Side Panels if present (Composite Doors only)
                 $typeName = strtolower($item['typeName'] ?? $item['type'] ?? '');
