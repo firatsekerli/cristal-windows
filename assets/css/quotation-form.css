@@ -95,7 +95,7 @@
     z-index: 2;
 }
 
-.progress-step .step-title {
+.quotation-heading {
     display: block;
     font-size: 14px;
     color: var(--text-muted);
@@ -219,7 +219,8 @@
     font-size: 24px !important;
     font-weight: 600 !important;
     color: var(--text-dark) !important;
-    margin-bottom: 30px !important;
+    margin-top: 0px !important;
+    margin-bottom: 0px !important;
 }
 
 /* Sub-Steps */
@@ -1542,8 +1543,8 @@
         font-size: 16px;
     }
 
-    .progress-step .step-title {
-        font-size: 12px;
+    .quotation-heading {
+        font-size: 10px;
     }
 
     .category-grid,
@@ -1564,10 +1565,6 @@
     .configuration-actions,
     .basket-actions {
         flex-direction: column;
-    }
-
-    .btn {
-        width: 100%;
     }
 
     .form-navigation {
@@ -1653,7 +1650,6 @@
     }
 
     .progress-step {
-        flex: 0 0 50%;
         margin-bottom: 20px;
     }
 
