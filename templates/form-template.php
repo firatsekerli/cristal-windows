@@ -409,19 +409,6 @@ if (!$use_acf) {
                         <label>Section Colour</label>
 
                         <div class="colour-selection">
-                            <h4 class="colour-section-label inside-colour-label">Inside Colour</h4>
-                            <div class="colour-picker-container">
-                                <input type="text" id="inside-colour-search" placeholder="Search colours...">
-                                <div class="colour-grid" id="inside-colour-grid">
-                                    <!-- Colours will be populated by JavaScript -->
-                                </div>
-                                <input type="hidden" id="inside-colour" name="inside_colour">
-                                <input type="hidden" id="inside-finish-type" name="inside_finish_type">
-                                <p class="colour-selection-display">You have chosen: <strong id="inside-colour-name">None</strong></p>
-                            </div>
-                        </div>
-
-                        <div class="colour-selection">
                             <h4 class="colour-section-label outside-colour-label">Outside Colour</h4>
                             <div class="colour-picker-container">
                                 <input type="text" id="outside-colour-search" placeholder="Search colours...">
@@ -431,6 +418,19 @@ if (!$use_acf) {
                                 <input type="hidden" id="outside-colour" name="outside_colour">
                                 <input type="hidden" id="outside-finish-type" name="outside_finish_type">
                                 <p class="colour-selection-display">You have chosen: <strong id="outside-colour-name">None</strong></p>
+                            </div>
+                        </div>
+
+                        <div class="colour-selection">
+                            <h4 class="colour-section-label inside-colour-label">Inside Colour</h4>
+                            <div class="colour-picker-container">
+                                <input type="text" id="inside-colour-search" placeholder="Search colours...">
+                                <div class="colour-grid" id="inside-colour-grid">
+                                    <!-- Colours will be populated by JavaScript -->
+                                </div>
+                                <input type="hidden" id="inside-colour" name="inside_colour">
+                                <input type="hidden" id="inside-finish-type" name="inside_finish_type">
+                                <p class="colour-selection-display">You have chosen: <strong id="inside-colour-name">None</strong></p>
                             </div>
                         </div>
                     </div>
