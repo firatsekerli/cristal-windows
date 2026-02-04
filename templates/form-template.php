@@ -356,9 +356,9 @@ if (!$use_acf) {
                     </div>
 
                     <div class="form-group">
-                        <label for="cill">Cill</label>
+                        <label for="cill">External Sub Cill</label>
                         <select id="cill" name="cill">
-                            <option value="">Select Cill</option>
+                            <option value="">Select External Sub Cill</option>
                             <?php
                             if (!empty($cill_options) && is_array($cill_options)) {
                                 foreach ($cill_options as $option) {
