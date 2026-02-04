@@ -94,7 +94,7 @@ Edit `/assets/js/quotation-form.js` around line 15:
 
 ```javascript
 colours: [
-    { name: 'White', category: 'Base', hex: '#FFFFFF' },
+    { name: 'White', category: 'Standard', hex: '#FFFFFF' },
     { name: 'Your New Color', category: 'Colour', hex: '#123456' },
     // Add more...
 ],

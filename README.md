@@ -162,7 +162,7 @@ Edit `/assets/js/quotation-form.js` and update the `colours` array:
 
 ```javascript
 colours: [
-    { name: 'White', category: 'Base', hex: '#FFFFFF' },
+    { name: 'White', category: 'Standard', hex: '#FFFFFF' },
     { name: 'Custom Grey', category: 'Colour', hex: '#A1A1A1' },
     // Add more colours
 ],

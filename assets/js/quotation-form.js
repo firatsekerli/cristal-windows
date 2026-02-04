@@ -15,7 +15,7 @@ jQuery(document).ready(function($) {
             const colours = (typeof quotationFormAjax !== 'undefined' && quotationFormAjax.config && quotationFormAjax.config.colours)
                 ? quotationFormAjax.config.colours
                 : [
-                { name: 'White', category: 'Base', hex: '#FFFFFF' },
+                { name: 'White', category: 'Standard', hex: '#FFFFFF' },
                 { name: 'Cream', category: 'Colour', hex: '#FFFDD0' },
                 { name: 'Agate Grey', category: 'Colour', hex: '#B5B5B5' },
                 { name: 'Anthracite Grey', category: 'Colour', hex: '#3E3E3E' },
