@@ -2116,16 +2116,6 @@ jQuery(document).ready(function($) {
                         '</div>');
                 }
 
-                // Create inside colour picker
-                const insideLabel = isAluminium && this.modalAluminiumType === 'stock' ? 'Select Colour' : 'Inside Colour';
-
-                $content.append('<div class="edit-field-group modal-colour-picker">' +
-                    '<label id="modal-inside-colour-label">' + insideLabel + ':</label>' +
-                    '<div class="colour-selection-display">Selected: <strong id="modal-inside-colour-name">' + (item.insideColourName || item.insideColour) + '</strong></div>' +
-                    '<input type="text" id="modal-inside-colour-search" class="modal-colour-search" placeholder="Search colours...">' +
-                    '<div id="modal-inside-colour-grid" class="colour-grid modal-colour-grid"></div>' +
-                    '</div>');
-
                 // Create outside colour picker (hide for aluminium stock)
                 const outsideLabel = 'Outside Colour';
                 const outsideDisplay = isAluminium && this.modalAluminiumType === 'stock' ? 'style="display:none;"' : '';
@@ -2135,6 +2125,16 @@ jQuery(document).ready(function($) {
                     '<div class="colour-selection-display">Selected: <strong id="modal-outside-colour-name">' + (item.outsideColourName || item.outsideColour) + '</strong></div>' +
                     '<input type="text" id="modal-outside-colour-search" class="modal-colour-search" placeholder="Search colours...">' +
                     '<div id="modal-outside-colour-grid" class="colour-grid modal-colour-grid"></div>' +
+                    '</div>');
+
+                // Create inside colour picker
+                const insideLabel = isAluminium && this.modalAluminiumType === 'stock' ? 'Select Colour' : 'Inside Colour';
+
+                $content.append('<div class="edit-field-group modal-colour-picker">' +
+                    '<label id="modal-inside-colour-label">' + insideLabel + ':</label>' +
+                    '<div class="colour-selection-display">Selected: <strong id="modal-inside-colour-name">' + (item.insideColourName || item.insideColour) + '</strong></div>' +
+                    '<input type="text" id="modal-inside-colour-search" class="modal-colour-search" placeholder="Search colours...">' +
+                    '<div id="modal-inside-colour-grid" class="colour-grid modal-colour-grid"></div>' +
                     '</div>');
 
                 // Handle aluminium type selection
@@ -2174,12 +2174,12 @@ jQuery(document).ready(function($) {
                 }, 10);
 
                 // Add search functionality
-                $('#modal-inside-colour-search').on('input', function() {
-                    self.filterColours('modal-inside-colour-grid', $(this).val().toLowerCase());
-                });
-
                 $('#modal-outside-colour-search').on('input', function() {
                     self.filterColours('modal-outside-colour-grid', $(this).val().toLowerCase());
+                });
+
+                $('#modal-inside-colour-search').on('input', function() {
+                    self.filterColours('modal-inside-colour-grid', $(this).val().toLowerCase());
                 });
             } else if (field === 'glazing') {
                 // Store modal selected glazing type and pattern
