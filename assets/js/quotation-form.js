@@ -1955,7 +1955,7 @@ jQuery(document).ready(function($) {
                 fields.push({ label: 'Segment Widths', value: segmentDisplay, field: 'size' });
             }
 
-            fields.push({ label: 'Colours', value: insideColourDisplay + ' / ' + outsideColourDisplay, field: 'colour' });
+            fields.push({ label: 'Colours', value: outsideColourDisplay + ' / ' + insideColourDisplay, field: 'colour' });
 
             // Only show Glazing Type if it exists (some styles hide this field)
             if (item.glazingType || item.glazingTypeName) {
@@ -2942,7 +2942,7 @@ jQuery(document).ready(function($) {
                 // Use display names with finish types if available, otherwise fall back to colour values
                 const insideColourDisplay = item.insideColourName || item.insideColour;
                 const outsideColourDisplay = item.outsideColourName || item.outsideColour;
-                $itemSummary.append('<p><strong>Colours:</strong> ' + insideColourDisplay + ' / ' + outsideColourDisplay + '</p>');
+                $itemSummary.append('<p><strong>Colours:</strong> ' + outsideColourDisplay + ' / ' + insideColourDisplay + '</p>');
 
                 if (item.location) {
                     $itemSummary.append('<p><strong>Location:</strong> ' + item.location + '</p>');
