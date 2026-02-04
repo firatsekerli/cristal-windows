@@ -1346,9 +1346,15 @@ jQuery(document).ready(function($) {
             if (patterns && patterns.length > 0) {
                 this.renderGlazingPatterns(patterns);
                 $('#glazing-pattern-group').show();
-                // Reset pattern selection when changing glazing type
-                $('#glazing-pattern').val('');
-                $('.glazing-pattern-card').removeClass('selected');
+                // Select "Clear" pattern by default if it exists
+                const clearPattern = patterns.find(p => p.value === 'Clear' || p.name === 'Clear');
+                if (clearPattern) {
+                    this.selectGlazingPattern(clearPattern.value || 'Clear', clearPattern.name || 'Clear');
+                } else {
+                    // Reset pattern selection if no Clear pattern
+                    $('#glazing-pattern').val('');
+                    $('.glazing-pattern-card').removeClass('selected');
+                }
             } else {
                 $('#glazing-pattern-group').hide();
                 $('#glazing-pattern').val('');
