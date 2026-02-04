@@ -409,7 +409,7 @@ foreach ($data['basket_items'] as $item):
 
         <?php if (!empty($item['cill'])): ?>
         <div class="item-detail">
-            <strong>Cill:</strong> <?php echo esc_html($item['cill']); ?>
+            <strong>External Sub Cill:</strong> <?php echo esc_html($item['cill']); ?>
         </div>
         <?php endif; ?>
 
