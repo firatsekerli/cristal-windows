@@ -586,7 +586,7 @@ if (!$use_acf) {
                     </div>
 
                     <div class="form-group">
-                        <label for="customer-street">Street *</label>
+                        <label for="customer-street">House Number / Name & Street *</label>
                         <input type="text" id="customer-street" name="customer_street" required>
                     </div>
 
