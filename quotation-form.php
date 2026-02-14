@@ -2589,11 +2589,7 @@ class Quotation_Form_Plugin {
      * Generate PDF content
      */
     private function generate_pdf_content($post_id, $data) {
-        // Use the new quotation letter template if it exists
-        $new_template = QUOTATION_FORM_PLUGIN_DIR . 'templates/pdf-quotation-letter.php';
-        $old_template = QUOTATION_FORM_PLUGIN_DIR . 'templates/pdf-template.php';
-
-        $template_path = file_exists($new_template) ? $new_template : $old_template;
+        $template_path = QUOTATION_FORM_PLUGIN_DIR . 'templates/pdf-quotation-letter.php';
 
         ob_start();
         include $template_path;
