@@ -812,11 +812,13 @@ jQuery(document).ready(function($) {
             const $prevBtn = $('#prev-btn');
             const $nextBtn = $('#next-btn');
             const $submitBtn = $('#submit-btn');
+            const $submitDisclaimer = $('#submit-disclaimer');
 
             // Hide all by default
             $prevBtn.hide();
             $nextBtn.hide();
             $submitBtn.hide();
+            $submitDisclaimer.hide();
 
             if (this.currentStep === 1) {
                 // Show back button if not on first sub-step
@@ -829,6 +831,7 @@ jQuery(document).ready(function($) {
             } else if (this.currentStep === 4) {
                 $prevBtn.show();
                 $submitBtn.show();
+                $submitDisclaimer.show();
             } else {
                 $prevBtn.show();
             }

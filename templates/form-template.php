@@ -629,6 +629,8 @@ if (!$use_acf) {
             </div>
         </div>
 
+        <p id="submit-disclaimer" style="display: none; text-align: center; color: #666; font-size: 14px; margin-bottom: 10px;">Initial quotations are given in good faith based on our interpretations of information submitted.</p>
+
         <!-- Navigation Buttons -->
         <div class="form-navigation">
             <button type="button" class="btn btn-secondary" id="prev-btn" style="display: none;">Back</button>
