@@ -2667,6 +2667,28 @@ class Quotation_Form_Plugin {
                     $debug_log[] = "✓ wkhtmltopdf: PDF created successfully: " . round($file_size / 1024, 2) . " KB";
                     error_log("PDF Generation: Success - wkhtmltopdf created PDF at $file_path");
 
+                    // Merge cover page with main PDF
+                    $debug_log[] = "\n--- COVER PAGE MERGE ---";
+                    $cover_pdf_path = $quotes_dir . '/cover-' . $post_id . '.pdf';
+                    $cover_result = $this->generate_cover_pdf($cover_pdf_path, $debug_log);
+                    $debug_log = $cover_result['debug_log'];
+
+                    if ($cover_result['path']) {
+                        $merged_pdf_path = $quotes_dir . '/merged-' . $post_id . '.pdf';
+                        $merge_result = $this->merge_pdfs_with_qpdf($cover_pdf_path, $file_path, $merged_pdf_path, $debug_log);
+                        $debug_log = $merge_result['debug_log'];
+
+                        if ($merge_result['path']) {
+                            // Replace main PDF with merged version
+                            @unlink($file_path);
+                            rename($merged_pdf_path, $file_path);
+                            $debug_log[] = "✓ Merged PDF replaced original file";
+                        }
+
+                        // Clean up cover PDF
+                        @unlink($cover_pdf_path);
+                    }
+
                     $pdf_url = $quotes_url . '/' . $filename;
                     return array('url' => $pdf_url, 'debug_log' => $debug_log);
                 } else {
@@ -2733,6 +2755,26 @@ class Quotation_Form_Plugin {
                 $file_size = filesize($file_path);
                 $debug_log[] = "✓ PDF file saved: " . round($file_size / 1024, 2) . " KB";
                 error_log("PDF Generation: Success - mPDF created PDF at $file_path");
+
+                // Merge cover page with main PDF
+                $debug_log[] = "\n--- COVER PAGE MERGE ---";
+                $cover_pdf_path = $quotes_dir . '/cover-' . $post_id . '.pdf';
+                $cover_result = $this->generate_cover_pdf($cover_pdf_path, $debug_log);
+                $debug_log = $cover_result['debug_log'];
+
+                if ($cover_result['path']) {
+                    $merged_pdf_path = $quotes_dir . '/merged-' . $post_id . '.pdf';
+                    $merge_result = $this->merge_pdfs_with_qpdf($cover_pdf_path, $file_path, $merged_pdf_path, $debug_log);
+                    $debug_log = $merge_result['debug_log'];
+
+                    if ($merge_result['path']) {
+                        @unlink($file_path);
+                        rename($merged_pdf_path, $file_path);
+                        $debug_log[] = "✓ Merged PDF replaced original file";
+                    }
+
+                    @unlink($cover_pdf_path);
+                }
             } else {
                 $debug_log[] = "❌ ERROR: PDF file not created";
                 error_log("PDF Generation: ERROR - File not found after generation");
@@ -2749,6 +2791,118 @@ class Quotation_Form_Plugin {
             error_log("Stack trace: " . $e->getTraceAsString());
             return array('url' => false, 'debug_log' => $debug_log);
         }
+    }
+
+    /**
+     * Generate cover page PDF using wkhtmltopdf
+     * Returns the path to the generated cover PDF, or false on failure
+     */
+    private function generate_cover_pdf($output_path, $debug_log = array()) {
+        $cover_html = '<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+@page { margin: 0; padding: 0; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { margin: 0; padding: 0; width: 100%; height: 100%; }
+img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+</style>
+</head>
+<body>
+<img src="https://cristalwindows.co.uk/cristal-windows-quote-cover-background.jpg">
+</body>
+</html>';
+
+        // Find wkhtmltopdf
+        $wkhtmltopdf_paths = ['/usr/local/bin/wkhtmltopdf', '/usr/bin/wkhtmltopdf', 'wkhtmltopdf'];
+        $wkhtmltopdf_binary = null;
+        foreach ($wkhtmltopdf_paths as $path) {
+            if (@is_executable($path) || $path === 'wkhtmltopdf') {
+                $test_output = shell_exec($path . ' --version 2>&1');
+                if ($test_output && strpos($test_output, 'wkhtmltopdf') !== false) {
+                    $wkhtmltopdf_binary = $path;
+                    break;
+                }
+            }
+        }
+
+        if (!$wkhtmltopdf_binary) {
+            $debug_log[] = "⚠ Cover PDF: wkhtmltopdf not found for cover page generation";
+            return array('path' => false, 'debug_log' => $debug_log);
+        }
+
+        $temp_html = sys_get_temp_dir() . '/cover-' . uniqid() . '.html';
+        file_put_contents($temp_html, $cover_html);
+
+        $command = sprintf(
+            '%s --page-size A4 --margin-top 0 --margin-right 0 --margin-bottom 0 --margin-left 0 --encoding UTF-8 --enable-local-file-access --quiet %s %s 2>&1',
+            escapeshellarg($wkhtmltopdf_binary),
+            escapeshellarg($temp_html),
+            escapeshellarg($output_path)
+        );
+
+        $output = shell_exec($command);
+        @unlink($temp_html);
+
+        if (file_exists($output_path) && filesize($output_path) > 0) {
+            $debug_log[] = "✓ Cover PDF generated successfully";
+            return array('path' => $output_path, 'debug_log' => $debug_log);
+        }
+
+        $debug_log[] = "⚠ Cover PDF generation failed";
+        if ($output) {
+            $debug_log[] = "Cover PDF output: " . substr($output, 0, 200);
+        }
+        return array('path' => false, 'debug_log' => $debug_log);
+    }
+
+    /**
+     * Merge cover page PDF with main quotation PDF using qpdf
+     * Returns the path to the merged PDF, or false on failure
+     */
+    private function merge_pdfs_with_qpdf($cover_pdf_path, $main_pdf_path, $merged_pdf_path, $debug_log = array()) {
+        // Find qpdf
+        $qpdf_paths = ['/usr/local/bin/qpdf', '/usr/bin/qpdf', 'qpdf'];
+        $qpdf_binary = null;
+        foreach ($qpdf_paths as $path) {
+            if (@is_executable($path) || $path === 'qpdf') {
+                $test_output = shell_exec($path . ' --version 2>&1');
+                if ($test_output && strpos($test_output, 'qpdf') !== false) {
+                    $qpdf_binary = $path;
+                    break;
+                }
+            }
+        }
+
+        if (!$qpdf_binary) {
+            $debug_log[] = "⚠ qpdf not found, skipping cover page merge";
+            return array('path' => false, 'debug_log' => $debug_log);
+        }
+
+        $debug_log[] = "✓ Found qpdf: $qpdf_binary";
+
+        // qpdf merge: cover first, then main quotation
+        $command = sprintf(
+            '%s --empty --pages %s %s -- %s 2>&1',
+            escapeshellarg($qpdf_binary),
+            escapeshellarg($cover_pdf_path),
+            escapeshellarg($main_pdf_path),
+            escapeshellarg($merged_pdf_path)
+        );
+
+        $output = shell_exec($command);
+
+        if (file_exists($merged_pdf_path) && filesize($merged_pdf_path) > 0) {
+            $debug_log[] = "✓ PDFs merged successfully: " . round(filesize($merged_pdf_path) / 1024, 2) . " KB";
+            return array('path' => $merged_pdf_path, 'debug_log' => $debug_log);
+        }
+
+        $debug_log[] = "⚠ PDF merge failed";
+        if ($output) {
+            $debug_log[] = "qpdf output: " . substr($output, 0, 200);
+        }
+        return array('path' => false, 'debug_log' => $debug_log);
     }
 
     /**
@@ -2906,14 +3060,33 @@ class Quotation_Form_Plugin {
 
                 // Check if PDF was created
                 if (file_exists($temp_pdf) && filesize($temp_pdf) > 0) {
+                    // Merge cover page with main PDF
+                    $temp_cover = tempnam(sys_get_temp_dir(), 'cover_') . '.pdf';
+                    $cover_result = $this->generate_cover_pdf($temp_cover);
+                    $output_pdf = $temp_pdf;
+
+                    if ($cover_result['path']) {
+                        $temp_merged = tempnam(sys_get_temp_dir(), 'merged_') . '.pdf';
+                        $merge_result = $this->merge_pdfs_with_qpdf($temp_cover, $temp_pdf, $temp_merged);
+
+                        if ($merge_result['path']) {
+                            $output_pdf = $temp_merged;
+                        }
+
+                        @unlink($temp_cover);
+                    }
+
                     header('Content-Type: application/pdf');
                     header('Content-Disposition: attachment; filename="' . $filename . '"');
-                    header('Content-Length: ' . filesize($temp_pdf));
-                    readfile($temp_pdf);
+                    header('Content-Length: ' . filesize($output_pdf));
+                    readfile($output_pdf);
 
                     // Clean up
                     @unlink($temp_pdf);
                     @unlink($temp_html);
+                    if ($output_pdf !== $temp_pdf) {
+                        @unlink($output_pdf);
+                    }
                     exit;
                 }
 
@@ -2952,7 +3125,38 @@ class Quotation_Form_Plugin {
             $mpdf->SetTitle('Quotation - ' . $data['customer_name']);
             $mpdf->SetSubject('Quotation');
             $mpdf->WriteHTML($html);
-            $mpdf->Output($filename, \Mpdf\Output\Destination::DOWNLOAD);
+
+            // Save to temp file so we can merge with cover page
+            $temp_mpdf = tempnam(sys_get_temp_dir(), 'mpdf_') . '.pdf';
+            $mpdf->Output($temp_mpdf, \Mpdf\Output\Destination::FILE);
+
+            $output_pdf = $temp_mpdf;
+
+            // Merge cover page with main PDF
+            $temp_cover = tempnam(sys_get_temp_dir(), 'cover_') . '.pdf';
+            $cover_result = $this->generate_cover_pdf($temp_cover);
+
+            if ($cover_result['path']) {
+                $temp_merged = tempnam(sys_get_temp_dir(), 'merged_') . '.pdf';
+                $merge_result = $this->merge_pdfs_with_qpdf($temp_cover, $temp_mpdf, $temp_merged);
+
+                if ($merge_result['path']) {
+                    $output_pdf = $temp_merged;
+                }
+
+                @unlink($temp_cover);
+            }
+
+            header('Content-Type: application/pdf');
+            header('Content-Disposition: attachment; filename="' . $filename . '"');
+            header('Content-Length: ' . filesize($output_pdf));
+            readfile($output_pdf);
+
+            // Clean up
+            @unlink($temp_mpdf);
+            if ($output_pdf !== $temp_mpdf) {
+                @unlink($output_pdf);
+            }
             exit;
         } catch (Exception $e) {
             error_log('PDF Generation Error: ' . $e->getMessage());
