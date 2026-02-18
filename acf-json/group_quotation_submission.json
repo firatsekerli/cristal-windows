@@ -83,6 +83,55 @@
             "required": 1
         },
         {
+            "key": "field_utm_source",
+            "label": "UTM Source",
+            "name": "utm_source",
+            "type": "text",
+            "readonly": 1
+        },
+        {
+            "key": "field_utm_medium",
+            "label": "UTM Medium",
+            "name": "utm_medium",
+            "type": "text",
+            "readonly": 1
+        },
+        {
+            "key": "field_utm_campaign",
+            "label": "UTM Campaign",
+            "name": "utm_campaign",
+            "type": "text",
+            "readonly": 1
+        },
+        {
+            "key": "field_utm_content",
+            "label": "UTM Content",
+            "name": "utm_content",
+            "type": "text",
+            "readonly": 1
+        },
+        {
+            "key": "field_fbclid",
+            "label": "Facebook Click ID",
+            "name": "fbclid",
+            "type": "text",
+            "readonly": 1
+        },
+        {
+            "key": "field_landing_url",
+            "label": "Landing URL",
+            "name": "landing_url",
+            "type": "url",
+            "readonly": 1
+        },
+        {
+            "key": "field_referrer",
+            "label": "Referrer",
+            "name": "referrer",
+            "type": "url",
+            "readonly": 1
+        },
+        {
             "key": "field_tab_items",
             "label": "Basket Items",
             "name": "",

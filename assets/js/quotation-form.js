@@ -279,9 +279,23 @@ jQuery(document).ready(function($) {
             }
         },
 
+        captureAttribution: function() {
+            var params = new URLSearchParams(window.location.search);
+            var fields = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'fbclid'];
+            for (var i = 0; i < fields.length; i++) {
+                var val = params.get(fields[i]);
+                if (val) {
+                    $('#' + fields[i]).val(val);
+                }
+            }
+            $('#landing_url').val(window.location.href);
+            $('#referrer').val(document.referrer || '');
+        },
+
         init: function() {
             this.glazingTypeHidden = false; // Initialize glazing type visibility state
             this.glazingFeaturesHidden = false; // Initialize glazing features visibility state
+            this.captureAttribution();
             this.debugColours(); // Debug colour data
             this.loadState(); // Restore saved state if available
             this.bindEvents();
@@ -2993,7 +3007,14 @@ jQuery(document).ready(function($) {
                 county: $('#customer-county').val(),
                 postcode: $('#customer-postcode').val(),
                 preferred_contact: $('#preferred-contact').val(),
-                additional_notes: $('#additional-notes').val()
+                additional_notes: $('#additional-notes').val(),
+                utm_source: $('#utm_source').val(),
+                utm_medium: $('#utm_medium').val(),
+                utm_campaign: $('#utm_campaign').val(),
+                utm_content: $('#utm_content').val(),
+                fbclid: $('#fbclid').val(),
+                landing_url: $('#landing_url').val(),
+                referrer: $('#referrer').val()
             };
 
             // Show loading

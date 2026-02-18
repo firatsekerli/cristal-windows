@@ -618,6 +618,15 @@ if (!$use_acf) {
                         <label for="additional-notes">Additional Notes</label>
                         <textarea id="additional-notes" name="additional_notes" rows="4" placeholder="Any special requirements or questions?"></textarea>
                     </div>
+
+                    <!-- Attribution tracking fields -->
+                    <input type="hidden" id="utm_source" name="utm_source">
+                    <input type="hidden" id="utm_medium" name="utm_medium">
+                    <input type="hidden" id="utm_campaign" name="utm_campaign">
+                    <input type="hidden" id="utm_content" name="utm_content">
+                    <input type="hidden" id="fbclid" name="fbclid">
+                    <input type="hidden" id="landing_url" name="landing_url">
+                    <input type="hidden" id="referrer" name="referrer">
                 </div>
 
                 <div class="order-summary">

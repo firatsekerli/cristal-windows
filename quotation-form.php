@@ -1661,7 +1661,14 @@ class Quotation_Form_Plugin {
             'county' => sanitize_text_field($customer_data['county'] ?? ''),
             'postcode' => $this->sanitize_postcode($customer_data['postcode'] ?? ''),
             'preferred_contact' => sanitize_text_field($customer_data['preferred_contact'] ?? 'email'),
-            'additional_notes' => sanitize_textarea_field($customer_data['additional_notes'] ?? '')
+            'additional_notes' => sanitize_textarea_field($customer_data['additional_notes'] ?? ''),
+            'utm_source' => sanitize_text_field($customer_data['utm_source'] ?? ''),
+            'utm_medium' => sanitize_text_field($customer_data['utm_medium'] ?? ''),
+            'utm_campaign' => sanitize_text_field($customer_data['utm_campaign'] ?? ''),
+            'utm_content' => sanitize_text_field($customer_data['utm_content'] ?? ''),
+            'fbclid' => sanitize_text_field($customer_data['fbclid'] ?? ''),
+            'landing_url' => esc_url_raw($customer_data['landing_url'] ?? ''),
+            'referrer' => esc_url_raw($customer_data['referrer'] ?? ''),
         );
 
         // Save to quotation CPT
@@ -1698,6 +1705,13 @@ class Quotation_Form_Plugin {
                                   (isset($customer_data['customer_postcode']) ? $customer_data['customer_postcode'] : ''),
             'preferred_contact' => isset($customer_data['preferred_contact']) ? $customer_data['preferred_contact'] : 'email',
             'additional_notes' => isset($customer_data['additional_notes']) ? $customer_data['additional_notes'] : '',
+            'utm_source' => isset($customer_data['utm_source']) ? $customer_data['utm_source'] : '',
+            'utm_medium' => isset($customer_data['utm_medium']) ? $customer_data['utm_medium'] : '',
+            'utm_campaign' => isset($customer_data['utm_campaign']) ? $customer_data['utm_campaign'] : '',
+            'utm_content' => isset($customer_data['utm_content']) ? $customer_data['utm_content'] : '',
+            'fbclid' => isset($customer_data['fbclid']) ? $customer_data['fbclid'] : '',
+            'landing_url' => isset($customer_data['landing_url']) ? $customer_data['landing_url'] : '',
+            'referrer' => isset($customer_data['referrer']) ? $customer_data['referrer'] : '',
         );
 
         // Create post in quotation CPT
@@ -1725,6 +1739,13 @@ class Quotation_Form_Plugin {
             update_field('customer_postcode', $normalized_data['customer_postcode'], $post_id);
             update_field('preferred_contact', $normalized_data['preferred_contact'], $post_id);
             update_field('additional_notes', $normalized_data['additional_notes'], $post_id);
+            update_field('utm_source', $normalized_data['utm_source'], $post_id);
+            update_field('utm_medium', $normalized_data['utm_medium'], $post_id);
+            update_field('utm_campaign', $normalized_data['utm_campaign'], $post_id);
+            update_field('utm_content', $normalized_data['utm_content'], $post_id);
+            update_field('fbclid', $normalized_data['fbclid'], $post_id);
+            update_field('landing_url', $normalized_data['landing_url'], $post_id);
+            update_field('referrer', $normalized_data['referrer'], $post_id);
             update_field('submission_date', current_time('Y-m-d H:i:s'), $post_id);
 
             // Save normalized basket items
