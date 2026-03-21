@@ -1890,7 +1890,7 @@ class Quotation_Form_Plugin {
                 'inside_colour' => isset($item['insideColourName']) ? $item['insideColourName'] : (isset($item['insideColour']) ? $this->capitalize_value($item['insideColour']) : ''),
                 'outside_colour' => isset($item['outsideColourName']) ? $item['outsideColourName'] : (isset($item['outsideColour']) ? $this->capitalize_value($item['outsideColour']) : ''),
                 'glazing_type' => isset($item['glazingType']) ? $this->capitalize_value($item['glazingType']) : '',
-                'glazing_features' => isset($item['glazingFeatures']) ? $this->capitalize_value($item['glazingFeatures']) : '',
+                'glazing_features' => isset($item['glazingFeaturesName']) && !empty($item['glazingFeaturesName']) ? $item['glazingFeaturesName'] : (isset($item['glazingFeatures']) ? $this->capitalize_value($item['glazingFeatures']) : ''),
                 'glazing_patterns' => isset($item['glazingPattern']) ? $this->capitalize_value($item['glazingPattern']) : '',
                 'hardware_colour' => isset($item['hardwareColour']) ? $this->capitalize_value($item['hardwareColour']) : '',
                 'opening' => isset($item['openingName']) ? $item['openingName'] : (isset($item['opening']) ? $this->capitalize_value($item['opening']) : ''),
