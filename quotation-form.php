@@ -469,6 +469,9 @@ class Quotation_Form_Plugin {
     public function populate_basket_item_glazing_feature_choices($field) {
         $field['choices'] = array();
 
+        // Add the default "Not Required" option first
+        $field['choices']['Not Required'] = 'Not Required';
+
         // Get glazing features from settings
         if (function_exists('get_field')) {
             $glazing_features = get_field('glazing_features', 'option');
