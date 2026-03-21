@@ -2032,6 +2032,9 @@ class Quotation_Form_Plugin {
 
             if (!$hide_glazing) {
                 $message .= "Glazing Type: " . ucfirst($item['glazingTypeName'] ?? $item['glazingType'] ?? '') . "\n";
+                if (!empty($item['glazingPattern'])) {
+                    $message .= "Glazing Pattern: " . ucfirst($item['glazingPattern']) . "\n";
+                }
                 $message .= "Glazing Feature: " . ucfirst($item['glazingFeaturesName'] ?? $item['glazingFeatures'] ?? '') . "\n";
             }
 
@@ -2133,6 +2136,9 @@ class Quotation_Form_Plugin {
 
                 if (!$hide_glazing) {
                     $customer_message .= "Glazing Type: " . ucfirst($item['glazingTypeName'] ?? $item['glazingType'] ?? '') . "\n";
+                    if (!empty($item['glazingPattern'])) {
+                        $customer_message .= "Glazing Pattern: " . ucfirst($item['glazingPattern']) . "\n";
+                    }
                     $customer_message .= "Glazing Feature: " . ucfirst($item['glazingFeaturesName'] ?? $item['glazingFeatures'] ?? '') . "\n";
                 }
 
