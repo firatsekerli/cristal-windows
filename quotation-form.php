@@ -1633,7 +1633,8 @@ class Quotation_Form_Plugin {
                 'opening' => sanitize_text_field($item['opening'] ?? ''),
                 'openingName' => sanitize_text_field($item['openingName'] ?? ''),
                 'location' => sanitize_text_field($item['location'] ?? ''),
-                'attachedFiles' => isset($item['attachedFiles']) && is_array($item['attachedFiles']) ? $item['attachedFiles'] : array()
+                'attachedFiles' => isset($item['attachedFiles']) && is_array($item['attachedFiles']) ? $item['attachedFiles'] : array(),
+                'segmentWidths' => isset($item['segmentWidths']) && is_array($item['segmentWidths']) ? array_map('sanitize_text_field', $item['segmentWidths']) : array()
             );
         }
         return $sanitized;
