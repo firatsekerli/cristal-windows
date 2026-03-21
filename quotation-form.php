@@ -2011,8 +2011,9 @@ class Quotation_Form_Plugin {
             // Add Infill Panel if present (Glazed Doors or French Doors with midrail styles only)
             $show_infill_panel_styles = array('1803', '1804', '1811', '1812', '1813', '1814', '1815', '1816', '1827', '1828', '1829', '1830', '1831', '1832', '2101', '2104', '2105', '2202', '2205', '2206');
             $has_midrail_style = false;
+            $style_slug = strtolower($item['style'] ?? '');
             foreach ($show_infill_panel_styles as $style_num) {
-                if (strpos($style_name, $style_num) !== false) {
+                if (strpos($style_name, $style_num) !== false || $style_slug === $style_num || strpos($style_slug, $style_num) !== false) {
                     $has_midrail_style = true;
                     break;
                 }
@@ -2115,8 +2116,9 @@ class Quotation_Form_Plugin {
                 // Add Infill Panel if present (Glazed Doors or French Doors with midrail styles only)
                 $show_infill_panel_styles_customer = array('1803', '1804', '1811', '1812', '1813', '1814', '1815', '1816', '1827', '1828', '1829', '1830', '1831', '1832', '2101', '2104', '2105', '2202', '2205', '2206');
                 $has_midrail_style_customer = false;
+                $style_slug_customer = strtolower($item['style'] ?? '');
                 foreach ($show_infill_panel_styles_customer as $style_num) {
-                    if (strpos($style_name, $style_num) !== false) {
+                    if (strpos($style_name, $style_num) !== false || $style_slug_customer === $style_num || strpos($style_slug_customer, $style_num) !== false) {
                         $has_midrail_style_customer = true;
                         break;
                     }
