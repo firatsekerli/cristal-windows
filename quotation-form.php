@@ -1619,6 +1619,7 @@ class Quotation_Form_Plugin {
                 'cill' => sanitize_text_field($item['cill'] ?? ''),
                 'cillName' => sanitize_text_field($item['cillName'] ?? ''),
                 'sidePanels' => sanitize_text_field($item['sidePanels'] ?? ''),
+                'infillPanel' => sanitize_text_field($item['infillPanel'] ?? ''),
                 'insideColour' => sanitize_text_field($item['insideColour'] ?? ''),
                 'outsideColour' => sanitize_text_field($item['outsideColour'] ?? ''),
                 'insideColourName' => sanitize_text_field($item['insideColourName'] ?? ''),
