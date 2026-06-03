@@ -1413,6 +1413,9 @@ jQuery(document).ready(function($) {
             // Update hidden field
             $('#glazing-pattern').val(patternValue);
 
+            // Remember the pattern's display name for the basket/summary display
+            this.currentGlazingPatternName = patternName || '';
+
             // Update display to include pattern name
             if (this.currentGlazingTypeName && patternName) {
                 $('#glazing-type-name').text(this.currentGlazingTypeName + ' - ' + patternName);
@@ -1816,6 +1819,7 @@ jQuery(document).ready(function($) {
                 outsideFinishType: $('#outside-finish-type').val(),
                 aluminiumColourType: this.currentItem.aluminiumColourType || '',
                 glazingPattern: $('#glazing-pattern').val(),
+                glazingPatternName: this.currentGlazingPatternName || '',
                 hardwareColour: $('#hardware-colour').val(),
                 hardwareColourName: $('#hardware-colour-name').text(),
                 location: '', // Can be set later
@@ -1984,10 +1988,13 @@ jQuery(document).ready(function($) {
 
             // Only show Glazing Type if it exists (some styles hide this field)
             if (item.glazingType || item.glazingTypeName) {
-                const glazingValue = item.glazingTypeName ||
-                    (item.glazingPattern
-                        ? item.glazingType + ' - ' + item.glazingPattern
-                        : item.glazingType);
+                // glazingTypeName is stored clean (without the pattern); append the
+                // pattern name for display so the basket shows e.g. "Low E (Triple) - Clear".
+                const glazingTypeLabel = item.glazingTypeName || item.glazingType;
+                const glazingPatternLabel = item.glazingPatternName || item.glazingPattern;
+                const glazingValue = glazingPatternLabel
+                    ? glazingTypeLabel + ' - ' + glazingPatternLabel
+                    : glazingTypeLabel;
                 fields.push({ label: 'Glazing Type', value: glazingValue, field: 'glazing' });
             }
 
@@ -2214,6 +2221,7 @@ jQuery(document).ready(function($) {
                 // Store modal selected glazing type and pattern
                 this.modalSelectedGlazingType = item.glazingType;
                 this.modalSelectedGlazingPattern = item.glazingPattern || '';
+                this.modalSelectedGlazingPatternName = item.glazingPatternName || '';
 
                 // Create glazing type picker (display text will be set by renderModalGlazingTypeGrid)
                 $content.append('<div class="edit-field-group modal-glazing-type-picker">' +
@@ -2348,6 +2356,7 @@ jQuery(document).ready(function($) {
                     // Use the clean type label (without the appended " - pattern" suffix).
                     item.glazingTypeName = self.modalSelectedGlazingTypeName || $('#modal-glazing-type-name').text();
                     item.glazingPattern = self.modalSelectedGlazingPattern;
+                    item.glazingPatternName = self.modalSelectedGlazingPatternName || '';
                 } else if (field === 'glazingFeatures') {
                     item.glazingFeatures = self.modalSelectedGlazingFeature;
                     item.glazingFeaturesName = $('#modal-glazing-features-name').text();
@@ -2800,7 +2809,9 @@ jQuery(document).ready(function($) {
                 const glazingType = $card.data('glazing-type');
                 const patterns = $card.data('patterns');
 
-                // Mark selected type
+                // Clear any stale selection cloned from the main form, then mark
+                // only the type that matches this item.
+                $card.removeClass('selected');
                 if (glazingType === selectedType) {
                     $card.addClass('selected');
                 }
@@ -2853,6 +2864,9 @@ jQuery(document).ready(function($) {
                                 if (patternDisplayName.startsWith(typeName)) {
                                     patternDisplayName = patternDisplayName.substring(typeName.length).replace(/^\s*-\s*/, '').trim();
                                 }
+                                // Remember the resolved pattern name so applying without
+                                // changing the pattern keeps the correct display value.
+                                self.modalSelectedGlazingPatternName = patternDisplayName;
                                 $('#modal-glazing-type-name').text(typeName + ' - ' + patternDisplayName);
                             }
                         }
@@ -2924,6 +2938,7 @@ jQuery(document).ready(function($) {
         selectModalGlazingPattern: function(patternValue, patternName) {
             // Update the modal selected pattern
             this.modalSelectedGlazingPattern = patternValue;
+            this.modalSelectedGlazingPatternName = patternName || '';
 
             // Update display to include pattern name
             if (this.modalSelectedGlazingTypeName && patternName) {
