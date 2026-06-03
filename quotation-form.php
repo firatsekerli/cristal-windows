@@ -1880,6 +1880,21 @@ class Quotation_Form_Plugin {
         $normalized = array();
 
         foreach ($basket_items as $item) {
+            // Determine the glazing type display value. Prefer glazingTypeName (the
+            // selected label, e.g. "Low E (Triple)") since the slug can be out of sync.
+            // Strip the " - {pattern}" suffix that the form appends to the display text.
+            $glazing_type_value = $item['glazingTypeName'] ?? '';
+            $glazing_pattern_value = $item['glazingPattern'] ?? '';
+            if (!empty($glazing_pattern_value)) {
+                $suffix = ' - ' . $glazing_pattern_value;
+                if (substr($glazing_type_value, -strlen($suffix)) === $suffix) {
+                    $glazing_type_value = substr($glazing_type_value, 0, -strlen($suffix));
+                }
+            }
+            if (empty($glazing_type_value)) {
+                $glazing_type_value = isset($item['glazingType']) ? $this->capitalize_value($item['glazingType']) : '';
+            }
+
             $normalized_item = array(
                 'category' => isset($item['category']) ? $item['category'] : '',
                 'type_name' => isset($item['type']) ? $item['type'] : '',
@@ -1893,7 +1908,7 @@ class Quotation_Form_Plugin {
                 'infill_panel' => isset($item['infillPanel']) ? $item['infillPanel'] : '',
                 'inside_colour' => isset($item['insideColourName']) ? $item['insideColourName'] : (isset($item['insideColour']) ? $this->capitalize_value($item['insideColour']) : ''),
                 'outside_colour' => isset($item['outsideColourName']) ? $item['outsideColourName'] : (isset($item['outsideColour']) ? $this->capitalize_value($item['outsideColour']) : ''),
-                'glazing_type' => isset($item['glazingType']) ? $this->capitalize_value($item['glazingType']) : '',
+                'glazing_type' => $glazing_type_value,
                 'glazing_features' => isset($item['glazingFeaturesName']) && !empty($item['glazingFeaturesName']) ? $item['glazingFeaturesName'] : (isset($item['glazingFeatures']) ? $this->capitalize_value($item['glazingFeatures']) : ''),
                 'glazing_patterns' => isset($item['glazingPattern']) ? $this->capitalize_value($item['glazingPattern']) : '',
                 'hardware_colour' => isset($item['hardwareColour']) ? $this->capitalize_value($item['hardwareColour']) : '',
