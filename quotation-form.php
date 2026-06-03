@@ -1941,8 +1941,12 @@ class Quotation_Form_Plugin {
                       (isset($customer_data['customer_email']) ? $customer_data['customer_email'] : ''),
             'Phone' => isset($customer_data['phone']) ? $customer_data['phone'] :
                       (isset($customer_data['customer_phone']) ? $customer_data['customer_phone'] : ''),
-            'Address' => isset($customer_data['address']) ? $customer_data['address'] :
-                        (isset($customer_data['customer_address']) ? $customer_data['customer_address'] : ''),
+            'House Number / Name & Street' => isset($customer_data['street']) ? $customer_data['street'] :
+                                             (isset($customer_data['customer_street']) ? $customer_data['customer_street'] : ''),
+            'Town' => isset($customer_data['town']) ? $customer_data['town'] :
+                     (isset($customer_data['customer_town']) ? $customer_data['customer_town'] : ''),
+            'County' => isset($customer_data['county']) ? $customer_data['county'] :
+                       (isset($customer_data['customer_county']) ? $customer_data['customer_county'] : ''),
             'Postcode' => isset($customer_data['postcode']) ? $customer_data['postcode'] :
                          (isset($customer_data['customer_postcode']) ? $customer_data['customer_postcode'] : ''),
             'Preferred Contact' => isset($customer_data['preferred_contact']) ? $customer_data['preferred_contact'] : 'email',
