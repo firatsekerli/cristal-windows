@@ -2071,8 +2071,12 @@ class Quotation_Form_Plugin {
             $message .= "\nView quotation in admin: " . $edit_link . "\n";
         }
 
-        // Send email
-        wp_mail($admin_email, $subject, $message);
+        // Send email as HTML so the admin copy uses a larger 18px font.
+        // The message content is unchanged - it is simply wrapped and its
+        // line breaks converted so it renders identically at a bigger size.
+        $admin_headers = array('Content-Type: text/html; charset=UTF-8');
+        $admin_html_message = '<div style="font-size:18px; line-height:1.5; font-family: Arial, Helvetica, sans-serif;">' . nl2br(esc_html($message)) . '</div>';
+        wp_mail($admin_email, $subject, $admin_html_message, $admin_headers);
 
         // Send confirmation email to customer (if enabled)
         $customer_email = isset($customer_data['email']) ? $customer_data['email'] :
