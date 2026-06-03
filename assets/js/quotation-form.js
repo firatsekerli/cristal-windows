@@ -1825,7 +1825,9 @@ jQuery(document).ready(function($) {
             // Only include glazing type if it's not hidden for this style
             if (!this.glazingTypeHidden) {
                 item.glazingType = $('#glazing-type').val();
-                item.glazingTypeName = $('#glazing-type-name').text();
+                // Use the clean type label (without the appended " - pattern" suffix
+                // that is shown in the display text) so the backend stores it correctly.
+                item.glazingTypeName = this.currentGlazingTypeName || $('#glazing-type-name').text();
             }
 
             // Only include glazing features if it's not hidden for this style
@@ -2343,7 +2345,8 @@ jQuery(document).ready(function($) {
                     item.outsideFinishType = self.modalFinishTypes.outside;
                 } else if (field === 'glazing') {
                     item.glazingType = self.modalSelectedGlazingType;
-                    item.glazingTypeName = $('#modal-glazing-type-name').text();
+                    // Use the clean type label (without the appended " - pattern" suffix).
+                    item.glazingTypeName = self.modalSelectedGlazingTypeName || $('#modal-glazing-type-name').text();
                     item.glazingPattern = self.modalSelectedGlazingPattern;
                 } else if (field === 'glazingFeatures') {
                     item.glazingFeatures = self.modalSelectedGlazingFeature;
