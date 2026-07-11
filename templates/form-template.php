@@ -619,6 +619,28 @@ if (!$use_acf) {
                         <textarea id="additional-notes" name="additional_notes" rows="4" placeholder="Any special requirements or questions?"></textarea>
                     </div>
 
+                    <div class="form-group availability-group">
+                        <label>When is someone usually at home? *</label>
+                        <p class="availability-subtext">Tick the days and times someone is home so we can arrange a call or carry out the work.</p>
+                        <div class="availability-grid">
+                            <?php
+                            $availability_days = array('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday');
+                            foreach ($availability_days as $day) :
+                                foreach (array('AM', 'PM') as $slot) :
+                                    $slot_label = $day . ' ' . $slot;
+                            ?>
+                                <label class="checkbox-label availability-option">
+                                    <input type="checkbox" name="availability[]" value="<?php echo esc_attr($slot_label); ?>">
+                                    <span><?php echo esc_html($slot_label); ?></span>
+                                </label>
+                            <?php
+                                endforeach;
+                            endforeach;
+                            ?>
+                        </div>
+                        <p class="availability-note"><strong>Please note:</strong> We will do our best to visit during your preferred AM or PM slot, but because of the nature of our work and travel between jobs we are unable to guarantee or commit to specific times. We do not offer same day call outs. We aim to respond to all requests within 7 working days of receiving your form.</p>
+                    </div>
+
                     <!-- Attribution tracking fields -->
                     <input type="hidden" id="utm_source" name="utm_source">
                     <input type="hidden" id="utm_medium" name="utm_medium">

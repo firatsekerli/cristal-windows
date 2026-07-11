@@ -3015,6 +3015,17 @@ jQuery(document).ready(function($) {
                 return;
             }
 
+            // Require at least one availability slot to be selected
+            if ($('input[name="availability[]"]:checked').length === 0) {
+                const availabilityBox = $('input[name="availability[]"]')[0];
+                if (availabilityBox) {
+                    availabilityBox.setCustomValidity('Please select at least one time when someone is usually at home.');
+                    form.reportValidity();
+                    availabilityBox.setCustomValidity('');
+                }
+                return;
+            }
+
             // Prepare data
             const customerData = {
                 name: $('#customer-name').val(),
@@ -3026,6 +3037,9 @@ jQuery(document).ready(function($) {
                 postcode: $('#customer-postcode').val(),
                 preferred_contact: $('#preferred-contact').val(),
                 additional_notes: $('#additional-notes').val(),
+                availability: $('input[name="availability[]"]:checked').map(function() {
+                    return $(this).val();
+                }).get(),
                 utm_source: $('#utm_source').val(),
                 utm_medium: $('#utm_medium').val(),
                 utm_campaign: $('#utm_campaign').val(),
@@ -3190,6 +3204,7 @@ jQuery(document).ready(function($) {
             $('#customer-county').val('');
             $('#customer-postcode').val('');
             $('#additional-notes').val('');
+            $('input[name="availability[]"]').prop('checked', false);
             this.navigateToStep(1);
             this.navigateToSubStep('1a');
         }

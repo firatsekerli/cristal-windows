@@ -515,6 +515,39 @@
     line-height: 18px;
 }
 
+/* Availability (when is someone at home) section */
+.availability-subtext {
+    margin: 0 0 16px;
+    color: var(--text-light, #6b7280);
+    font-size: 14px;
+}
+
+.availability-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 16px;
+    padding: 16px;
+    background: var(--background-light, #f8f9fa);
+    border-radius: 6px;
+}
+
+.availability-option {
+    font-weight: 400;
+}
+
+.availability-note {
+    margin: 16px 0 0;
+    color: var(--text-light, #6b7280);
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+    .availability-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
 .file-preview {
     margin-top: 10px;
     display: flex;

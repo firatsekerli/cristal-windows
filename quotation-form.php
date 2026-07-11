@@ -1667,6 +1667,9 @@ class Quotation_Form_Plugin {
             'postcode' => $this->sanitize_postcode($customer_data['postcode'] ?? ''),
             'preferred_contact' => sanitize_text_field($customer_data['preferred_contact'] ?? 'email'),
             'additional_notes' => sanitize_textarea_field($customer_data['additional_notes'] ?? ''),
+            'availability' => (isset($customer_data['availability']) && is_array($customer_data['availability']))
+                ? array_map('sanitize_text_field', $customer_data['availability'])
+                : array(),
             'utm_source' => sanitize_text_field($customer_data['utm_source'] ?? ''),
             'utm_medium' => sanitize_text_field($customer_data['utm_medium'] ?? ''),
             'utm_campaign' => sanitize_text_field($customer_data['utm_campaign'] ?? ''),
@@ -1951,6 +1954,8 @@ class Quotation_Form_Plugin {
                          (isset($customer_data['customer_postcode']) ? $customer_data['customer_postcode'] : ''),
             'Preferred Contact' => isset($customer_data['preferred_contact']) ? $customer_data['preferred_contact'] : 'email',
             'Additional Notes' => isset($customer_data['additional_notes']) ? $customer_data['additional_notes'] : '',
+            'Availability' => (isset($customer_data['availability']) && is_array($customer_data['availability']))
+                ? implode(', ', $customer_data['availability']) : '',
         );
 
         // Get email settings from ACF or use defaults
