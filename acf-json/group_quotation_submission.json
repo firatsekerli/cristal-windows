@@ -86,6 +86,25 @@
             "rows": 4
         },
         {
+            "key": "field_customer_availability",
+            "label": "Availability (When Someone Is Home)",
+            "name": "customer_availability",
+            "type": "checkbox",
+            "choices": {
+                "Monday AM": "Monday AM",
+                "Monday PM": "Monday PM",
+                "Tuesday AM": "Tuesday AM",
+                "Tuesday PM": "Tuesday PM",
+                "Wednesday AM": "Wednesday AM",
+                "Wednesday PM": "Wednesday PM",
+                "Thursday AM": "Thursday AM",
+                "Thursday PM": "Thursday PM",
+                "Friday AM": "Friday AM",
+                "Friday PM": "Friday PM"
+            },
+            "layout": "horizontal"
+        },
+        {
             "key": "field_submission_date",
             "label": "Submission Date",
             "name": "submission_date",

@@ -1719,6 +1719,8 @@ class Quotation_Form_Plugin {
                                   (isset($customer_data['customer_postcode']) ? $customer_data['customer_postcode'] : ''),
             'preferred_contact' => isset($customer_data['preferred_contact']) ? $customer_data['preferred_contact'] : 'email',
             'additional_notes' => isset($customer_data['additional_notes']) ? $customer_data['additional_notes'] : '',
+            'customer_availability' => (isset($customer_data['availability']) && is_array($customer_data['availability']))
+                ? $customer_data['availability'] : array(),
             'utm_source' => isset($customer_data['utm_source']) ? $customer_data['utm_source'] : '',
             'utm_medium' => isset($customer_data['utm_medium']) ? $customer_data['utm_medium'] : '',
             'utm_campaign' => isset($customer_data['utm_campaign']) ? $customer_data['utm_campaign'] : '',
@@ -1755,6 +1757,7 @@ class Quotation_Form_Plugin {
             update_field('customer_postcode', $normalized_data['customer_postcode'], $post_id);
             update_field('preferred_contact', $normalized_data['preferred_contact'], $post_id);
             update_field('additional_notes', $normalized_data['additional_notes'], $post_id);
+            update_field('customer_availability', $normalized_data['customer_availability'], $post_id);
             update_field('utm_source', $normalized_data['utm_source'], $post_id);
             update_field('utm_medium', $normalized_data['utm_medium'], $post_id);
             update_field('utm_campaign', $normalized_data['utm_campaign'], $post_id);
