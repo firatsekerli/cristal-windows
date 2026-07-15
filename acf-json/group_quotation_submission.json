@@ -24,11 +24,23 @@
             "required": 1
         },
         {
+            "key": "field_customer_alt_email",
+            "label": "Alternative Email",
+            "name": "customer_alt_email",
+            "type": "email"
+        },
+        {
             "key": "field_customer_phone",
             "label": "Customer Phone",
             "name": "customer_phone",
             "type": "text",
             "required": 1
+        },
+        {
+            "key": "field_customer_alt_phone",
+            "label": "Alternative Phone Number",
+            "name": "customer_alt_phone",
+            "type": "text"
         },
         {
             "key": "field_customer_street",

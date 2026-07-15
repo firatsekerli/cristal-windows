@@ -3030,7 +3030,9 @@ jQuery(document).ready(function($) {
             const customerData = {
                 name: $('#customer-name').val(),
                 email: $('#customer-email').val(),
+                alt_email: $('#customer-alt-email').val(),
                 phone: $('#customer-phone').val(),
+                alt_phone: $('#customer-alt-phone').val(),
                 street: $('#customer-street').val(),
                 town: $('#customer-town').val(),
                 county: $('#customer-county').val(),
@@ -3198,7 +3200,9 @@ jQuery(document).ready(function($) {
             $('.image-card').removeClass('selected');
             $('#customer-name').val('');
             $('#customer-email').val('');
+            $('#customer-alt-email').val('');
             $('#customer-phone').val('');
+            $('#customer-alt-phone').val('');
             $('#customer-street').val('');
             $('#customer-town').val('');
             $('#customer-county').val('');

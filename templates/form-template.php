@@ -581,8 +581,18 @@ if (!$use_acf) {
                     </div>
 
                     <div class="form-group">
+                        <label for="customer-alt-email">Alternative Email *</label>
+                        <input type="email" id="customer-alt-email" name="customer_alt_email" required>
+                    </div>
+
+                    <div class="form-group">
                         <label for="customer-phone">Phone *</label>
                         <input type="tel" id="customer-phone" name="customer_phone" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="customer-alt-phone">Alternative Phone Number *</label>
+                        <input type="tel" id="customer-alt-phone" name="customer_alt_phone" required>
                     </div>
 
                     <div class="form-group">

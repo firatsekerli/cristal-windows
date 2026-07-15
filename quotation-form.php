@@ -1660,7 +1660,9 @@ class Quotation_Form_Plugin {
         $sanitized_customer_data = array(
             'name' => sanitize_text_field($customer_data['name'] ?? ''),
             'email' => sanitize_email($customer_data['email'] ?? ''),
+            'alt_email' => sanitize_email($customer_data['alt_email'] ?? ''),
             'phone' => $this->sanitize_phone_number($customer_data['phone'] ?? ''),
+            'alt_phone' => $this->sanitize_phone_number($customer_data['alt_phone'] ?? ''),
             'street' => sanitize_text_field($customer_data['street'] ?? ''),
             'town' => sanitize_text_field($customer_data['town'] ?? ''),
             'county' => sanitize_text_field($customer_data['county'] ?? ''),
@@ -1701,8 +1703,12 @@ class Quotation_Form_Plugin {
                               (isset($customer_data['customer_name']) ? $customer_data['customer_name'] : ''),
             'customer_email' => isset($customer_data['email']) ? $customer_data['email'] :
                                (isset($customer_data['customer_email']) ? $customer_data['customer_email'] : ''),
+            'customer_alt_email' => isset($customer_data['alt_email']) ? $customer_data['alt_email'] :
+                                   (isset($customer_data['customer_alt_email']) ? $customer_data['customer_alt_email'] : ''),
             'customer_phone' => isset($customer_data['phone']) ? $customer_data['phone'] :
                                (isset($customer_data['customer_phone']) ? $customer_data['customer_phone'] : ''),
+            'customer_alt_phone' => isset($customer_data['alt_phone']) ? $customer_data['alt_phone'] :
+                                   (isset($customer_data['customer_alt_phone']) ? $customer_data['customer_alt_phone'] : ''),
             'customer_street' => isset($customer_data['street']) ? $customer_data['street'] :
                                 (isset($customer_data['customer_street']) ? $customer_data['customer_street'] : ''),
             'customer_town' => isset($customer_data['town']) ? $customer_data['town'] :
@@ -1740,7 +1746,9 @@ class Quotation_Form_Plugin {
         if (function_exists('update_field')) {
             update_field('customer_name', $normalized_data['customer_name'], $post_id);
             update_field('customer_email', $normalized_data['customer_email'], $post_id);
+            update_field('customer_alt_email', $normalized_data['customer_alt_email'], $post_id);
             update_field('customer_phone', $normalized_data['customer_phone'], $post_id);
+            update_field('customer_alt_phone', $normalized_data['customer_alt_phone'], $post_id);
             update_field('customer_street', $normalized_data['customer_street'], $post_id);
             update_field('customer_town', $normalized_data['customer_town'], $post_id);
             update_field('customer_county', $normalized_data['customer_county'], $post_id);
@@ -1942,8 +1950,12 @@ class Quotation_Form_Plugin {
                      (isset($customer_data['customer_name']) ? $customer_data['customer_name'] : ''),
             'Email' => isset($customer_data['email']) ? $customer_data['email'] :
                       (isset($customer_data['customer_email']) ? $customer_data['customer_email'] : ''),
+            'Alternative Email' => isset($customer_data['alt_email']) ? $customer_data['alt_email'] :
+                                  (isset($customer_data['customer_alt_email']) ? $customer_data['customer_alt_email'] : ''),
             'Phone' => isset($customer_data['phone']) ? $customer_data['phone'] :
                       (isset($customer_data['customer_phone']) ? $customer_data['customer_phone'] : ''),
+            'Alternative Phone' => isset($customer_data['alt_phone']) ? $customer_data['alt_phone'] :
+                                  (isset($customer_data['customer_alt_phone']) ? $customer_data['customer_alt_phone'] : ''),
             'House Number / Name & Street' => isset($customer_data['street']) ? $customer_data['street'] :
                                              (isset($customer_data['customer_street']) ? $customer_data['customer_street'] : ''),
             'Town' => isset($customer_data['town']) ? $customer_data['town'] :
