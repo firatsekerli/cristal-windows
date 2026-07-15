@@ -525,7 +525,7 @@
 .availability-grid {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    gap: 16px;
+    gap: 12px 10px;
     padding: 16px;
     background: var(--background-light, #f8f9fa);
     border-radius: 6px;
@@ -533,6 +533,18 @@
 
 .availability-option {
     font-weight: 400;
+    font-size: 13px;
+    gap: 6px;
+    white-space: nowrap;
+}
+
+.availability-option span {
+    white-space: nowrap;
+}
+
+.availability-option input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
 }
 
 .availability-note {
@@ -1149,6 +1161,14 @@
     background: var(--background-light);
     padding: 25px;
     border-radius: 8px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 24px;
+    align-content: start;
+}
+
+.customer-details-form .form-group.full-width {
+    grid-column: 1 / -1;
 }
 
 .order-summary {
@@ -1543,6 +1563,11 @@
 
     .review-container {
         grid-template-columns: 1fr;
+    }
+
+    .customer-details-form {
+        grid-template-columns: 1fr;
+        column-gap: 0;
     }
 
     .order-summary {

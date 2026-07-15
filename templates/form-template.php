@@ -570,7 +570,7 @@ if (!$use_acf) {
 
             <div class="review-container">
                 <div class="customer-details-form">
-                    <div class="form-group">
+                    <div class="form-group full-width">
                         <label for="customer-name">Full Name *</label>
                         <input type="text" id="customer-name" name="customer_name" required>
                     </div>
@@ -581,13 +581,13 @@ if (!$use_acf) {
                     </div>
 
                     <div class="form-group">
-                        <label for="customer-alt-email">Alternative Email *</label>
-                        <input type="email" id="customer-alt-email" name="customer_alt_email" required>
+                        <label for="customer-phone">Phone Number *</label>
+                        <input type="tel" id="customer-phone" name="customer_phone" required>
                     </div>
 
                     <div class="form-group">
-                        <label for="customer-phone">Phone *</label>
-                        <input type="tel" id="customer-phone" name="customer_phone" required>
+                        <label for="customer-alt-email">Alternative Email *</label>
+                        <input type="email" id="customer-alt-email" name="customer_alt_email" required>
                     </div>
 
                     <div class="form-group">
@@ -595,7 +595,7 @@ if (!$use_acf) {
                         <input type="tel" id="customer-alt-phone" name="customer_alt_phone" required>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group full-width">
                         <label for="customer-street">House Number / Name & Street *</label>
                         <input type="text" id="customer-street" name="customer_street" required>
                     </div>
@@ -624,12 +624,7 @@ if (!$use_acf) {
                         </select>
                     </div>
 
-                    <div class="form-group">
-                        <label for="additional-notes">Additional Notes</label>
-                        <textarea id="additional-notes" name="additional_notes" rows="4" placeholder="Any special requirements or questions?"></textarea>
-                    </div>
-
-                    <div class="form-group availability-group">
+                    <div class="form-group full-width availability-group">
                         <label>When is someone usually at home? *</label>
                         <p class="availability-subtext">Tick the days and times someone is home so we can arrange a call or carry out the work.</p>
                         <div class="availability-grid">
@@ -649,6 +644,11 @@ if (!$use_acf) {
                             ?>
                         </div>
                         <p class="availability-note"><strong>Please note:</strong> We will do our best to visit during your preferred AM or PM slot, but because of the nature of our work and travel between jobs we are unable to guarantee or commit to specific times. We do not offer same day call outs. We aim to respond to all requests within 7 working days of receiving your form.</p>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="additional-notes">Additional Notes</label>
+                        <textarea id="additional-notes" name="additional_notes" rows="4" placeholder="Any special requirements or questions?"></textarea>
                     </div>
 
                     <!-- Attribution tracking fields -->
