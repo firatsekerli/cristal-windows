@@ -12,6 +12,37 @@ $vat_amount = $quote_price - ($quote_price / 1.2);
 function format_currency($amount) {
     return '£' . number_format($amount, 2);
 }
+
+// ---- Proposal content (Phase 3): editable settings + per-quote fields ----
+// Every value below is optional. Sections only render when their content
+// exists, so an un-synced or empty site produces the same PDF as before.
+$qf_get_opt = function($name) {
+    return function_exists('get_field') ? get_field($name, 'option') : '';
+};
+$qf_lines = function($text) {
+    $lines = preg_split('/\r\n|\r|\n/', (string) $text);
+    $lines = array_map('trim', $lines);
+    return array_values(array_filter($lines, function($l) { return $l !== ''; }));
+};
+
+$customer_name = isset($data['customer_name']) ? $data['customer_name'] : '';
+
+$intro_letter        = $qf_get_opt('proposal_intro_letter');
+$five_reasons        = $qf_get_opt('proposal_five_reasons');
+$whats_included      = $qf_get_opt('proposal_whats_included');
+$why_choose          = $qf_get_opt('proposal_why_choose');
+$what_happens_next   = $qf_get_opt('proposal_what_happens_next');
+$vat_comparison_note = $qf_get_opt('proposal_vat_comparison_note');
+$lead_time_setting   = $qf_get_opt('proposal_lead_time');
+$validity_days       = $qf_get_opt('proposal_validity_days');
+$additional_spec     = $qf_get_opt('proposal_additional_specification');
+$customer_checklist  = $qf_get_opt('proposal_customer_checklist');
+$payment_conditions  = $qf_get_opt('proposal_payment_conditions');
+$final_thought       = $qf_get_opt('proposal_final_thought');
+$acceptance_wording  = $qf_get_opt('proposal_acceptance_wording');
+
+$brief_description = function_exists('get_field') ? get_field('brief_project_description', $post_id) : '';
+$install_days     = function_exists('get_field') ? get_field('estimated_installation_days', $post_id) : '';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -275,6 +306,134 @@ function format_currency($amount) {
             color: #333;
         }
 
+        /* Proposal content pages (Phase 3) */
+        .proposal-page {
+            page-break-before: always;
+            padding: 0;
+        }
+
+        .proposal-page h2 {
+            color: #1a5490;
+            font-size: 20px;
+            margin: 0 0 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid #1a5490;
+            padding-bottom: 8px;
+        }
+
+        .proposal-page h3 {
+            color: #1a5490;
+            font-size: 16px;
+            margin: 25px 0 10px;
+        }
+
+        .proposal-body p {
+            margin: 10px 0;
+            line-height: 1.8;
+            font-size: 14px;
+        }
+
+        .proposal-list {
+            margin: 10px 0;
+            padding-left: 22px;
+            font-size: 14px;
+            line-height: 1.9;
+        }
+
+        .proposal-list li {
+            margin-bottom: 6px;
+        }
+
+        .checklist {
+            list-style: none;
+            margin: 15px 0;
+            padding: 0;
+            font-size: 14px;
+        }
+
+        .checklist li {
+            padding: 10px 0 10px 30px;
+            border-bottom: 1px solid #e0e0e0;
+            position: relative;
+        }
+
+        .checklist li:before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 11px;
+            width: 12px;
+            height: 12px;
+            border: 2px solid #1a5490;
+        }
+
+        .brief-description {
+            background: #f8f9fa;
+            padding: 15px 20px;
+            border-radius: 5px;
+            margin: 30px 0;
+        }
+
+        .brief-description h3 {
+            color: #1a5490;
+            margin: 0 0 8px;
+            font-size: 15px;
+        }
+
+        .brief-description p {
+            margin: 0;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .duration-box {
+            background: #1a5490;
+            color: white;
+            padding: 20px;
+            border-radius: 5px;
+            text-align: center;
+            margin: 20px 0;
+            font-size: 18px;
+        }
+
+        .duration-box strong {
+            font-size: 24px;
+        }
+
+        .final-thought {
+            background: #f8f9fa;
+            border-left: 4px solid #1a5490;
+            padding: 20px 25px;
+            margin: 25px 0;
+            font-style: italic;
+            font-size: 15px;
+            line-height: 1.8;
+        }
+
+        .final-thought .attribution {
+            display: block;
+            margin-top: 12px;
+            font-style: normal;
+            font-weight: bold;
+            text-align: right;
+        }
+
+        .acceptance-fields {
+            margin-top: 45px;
+        }
+
+        .acceptance-field {
+            margin: 30px 0;
+            font-size: 14px;
+        }
+
+        .acceptance-line {
+            display: inline-block;
+            border-bottom: 1px solid #333;
+            min-width: 320px;
+        }
+
         @media print {
             body {
                 padding: 0;
@@ -336,7 +495,7 @@ function format_currency($amount) {
                     <span class="info-label">Email:</span> sales@cristalwindows.co.uk
                 </div>
                 <div class="info-item">
-                    <span class="info-label">Lead Time:</span> 4-6 weeks on standard range products
+                    <span class="info-label">Lead Time:</span> <?php echo !empty($lead_time_setting) ? esc_html($lead_time_setting) : '4-6 weeks on standard range products'; ?>
                 </div>
                 <div class="info-item">
                     <span class="info-label">Guarantee:</span> 10 years Parts & Labour
@@ -346,12 +505,37 @@ function format_currency($amount) {
     </div>
 
     <div class="message-section">
+        <?php if (!empty($intro_letter)): ?>
+            <?php echo str_replace('[Customer Name]', esc_html($customer_name), $intro_letter); ?>
+        <?php else: ?>
         <p>Dear <?php echo esc_html($data['customer_name']); ?>,</p>
 
         <p>Thank you for your recent enquiry regarding windows, doors and conservatories. We are pleased to provide you with the following quotation based on your requirements.</p>
 
         <p>This quotation is based on a supply and installation service. All prices are given in good faith and are subject to a signed company contract and final survey. <strong>Prices are inclusive of VAT at 20%.</strong></p>
+        <?php endif; ?>
     </div>
+
+    <?php
+    $reasons_list = !empty($five_reasons) ? $qf_lines($five_reasons) : array();
+    if (!empty($reasons_list)):
+    ?>
+    <div class="message-section">
+        <h3 style="color:#1a5490; margin-top:0;">Five great reasons to choose us</h3>
+        <ol class="proposal-list">
+            <?php foreach ($reasons_list as $reason): ?>
+            <li><?php echo esc_html($reason); ?></li>
+            <?php endforeach; ?>
+        </ol>
+    </div>
+    <?php endif; ?>
+
+    <?php if (!empty($brief_description)): ?>
+    <div class="brief-description">
+        <h3>Brief Project Description</h3>
+        <p><?php echo nl2br(esc_html($brief_description)); ?></p>
+    </div>
+    <?php endif; ?>
 
     <div class="price-section">
         <div style="font-size: 18px; margin-bottom: 10px;">TOTAL QUOTATION VALUE</div>
@@ -613,6 +797,126 @@ function format_currency($amount) {
         endforeach;
     endif;
     ?>
+
+    <!-- Proposal content pages (Phase 3). Payment schedule (Phase 4) and
+         additional documents (Phase 5) will slot in around these. -->
+
+    <?php if (!empty($payment_conditions)): ?>
+    <div class="proposal-page">
+        <h2>Payment Conditions</h2>
+        <div class="proposal-body"><?php echo $payment_conditions; ?></div>
+    </div>
+    <?php endif; ?>
+
+    <?php
+    $included_list = !empty($whats_included) ? $qf_lines($whats_included) : array();
+    if (!empty($included_list)):
+    ?>
+    <div class="proposal-page">
+        <h2>What's Included In Our Price</h2>
+        <ul class="checklist">
+            <?php foreach ($included_list as $inc): ?>
+            <li><?php echo esc_html($inc); ?></li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+    <?php endif; ?>
+
+    <?php
+    $next_steps = !empty($what_happens_next) ? $qf_lines($what_happens_next) : array();
+    $has_project_info = !empty($why_choose) || !empty($next_steps) || !empty($lead_time_setting) || !empty($validity_days) || !empty($vat_comparison_note);
+    if ($has_project_info):
+    ?>
+    <div class="proposal-page">
+        <h2>Why Choose Cristal</h2>
+        <?php if (!empty($why_choose)): ?>
+        <div class="proposal-body"><?php echo $why_choose; ?></div>
+        <?php endif; ?>
+
+        <?php if (!empty($next_steps)): ?>
+        <h3>What Happens Next</h3>
+        <ol class="proposal-list">
+            <?php foreach ($next_steps as $step): ?>
+            <li><?php echo esc_html($step); ?></li>
+            <?php endforeach; ?>
+        </ol>
+        <?php endif; ?>
+
+        <?php if (!empty($lead_time_setting) || !empty($validity_days)): ?>
+        <h3>Project Information</h3>
+        <div class="proposal-body">
+            <?php if (!empty($lead_time_setting)): ?><p><strong>Estimated lead time:</strong> <?php echo esc_html($lead_time_setting); ?></p><?php endif; ?>
+            <?php if (!empty($validity_days)): ?><p><strong>Quotation validity:</strong> <?php echo esc_html($validity_days); ?> days.</p><?php endif; ?>
+        </div>
+        <?php endif; ?>
+
+        <?php if (!empty($vat_comparison_note)): ?>
+        <h3>VAT &amp; Price Comparison</h3>
+        <div class="proposal-body"><p><?php echo esc_html($vat_comparison_note); ?></p></div>
+        <?php endif; ?>
+    </div>
+    <?php endif; ?>
+
+    <?php if (!empty($additional_spec)): ?>
+    <div class="proposal-page">
+        <h2>Additional Project Information &amp; Specification</h2>
+        <div class="proposal-body"><?php echo $additional_spec; ?></div>
+    </div>
+    <?php endif; ?>
+
+    <?php
+    $checklist_items = !empty($customer_checklist) ? $qf_lines($customer_checklist) : array();
+    if (!empty($checklist_items)):
+    ?>
+    <div class="proposal-page">
+        <h2>Customer Checklist</h2>
+        <div class="proposal-body"><p>Please check that the following details are correct and let us know of any amendments required.</p></div>
+        <ul class="checklist">
+            <?php foreach ($checklist_items as $ci): ?>
+            <li><?php echo esc_html($ci); ?></li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+    <?php endif; ?>
+
+    <?php if (!empty($install_days) || !empty($final_thought)): ?>
+    <div class="proposal-page">
+        <h2>Installation &amp; A Final Thought</h2>
+        <?php if (!empty($install_days)): ?>
+        <div class="duration-box">Estimated Installation Duration<br><strong><?php echo esc_html($install_days); ?></strong> Working Day(s)</div>
+        <?php endif; ?>
+        <?php
+        if (!empty($final_thought)):
+            $ft_lines = $qf_lines($final_thought);
+            $attribution = '';
+            if (!empty($ft_lines)) {
+                $last = end($ft_lines);
+                if (preg_match('/^[-\x{2014}]/u', $last)) {
+                    $attribution = ltrim($last, "-\xe2\x80\x94 ");
+                    array_pop($ft_lines);
+                }
+            }
+            $ft_body = implode(' ', $ft_lines);
+        ?>
+        <div class="final-thought">
+            <?php echo esc_html($ft_body); ?>
+            <?php if ($attribution !== ''): ?><span class="attribution">&mdash; <?php echo esc_html($attribution); ?></span><?php endif; ?>
+        </div>
+        <?php endif; ?>
+    </div>
+    <?php endif; ?>
+
+    <?php if (!empty($acceptance_wording)): ?>
+    <div class="proposal-page">
+        <h2>Customer Acceptance</h2>
+        <div class="proposal-body"><?php echo $acceptance_wording; ?></div>
+        <div class="acceptance-fields">
+            <div class="acceptance-field">Customer Name: <span class="acceptance-line"></span></div>
+            <div class="acceptance-field">Signature: <span class="acceptance-line"></span></div>
+            <div class="acceptance-field">Date: <span class="acceptance-line"></span></div>
+        </div>
+    </div>
+    <?php endif; ?>
 
     <!-- Terms and Conditions Page -->
     <div class="page-break terms-page">
