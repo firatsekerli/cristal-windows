@@ -562,6 +562,123 @@
             "instructions": "The PDF will be auto-generated and the link will appear here after saving.",
             "readonly": 1,
             "disabled": 1
+        },
+        {
+            "key": "field_tab_proposal_details",
+            "label": "Proposal Details",
+            "name": "",
+            "type": "tab",
+            "placement": "left"
+        },
+        {
+            "key": "field_brief_project_description",
+            "label": "Brief Project Description",
+            "name": "brief_project_description",
+            "type": "textarea",
+            "instructions": "Short description of the project. Appears on the quotation summary page of the proposal PDF.",
+            "rows": 4
+        },
+        {
+            "key": "field_estimated_installation_days",
+            "label": "Estimated Installation Duration",
+            "name": "estimated_installation_days",
+            "type": "number",
+            "instructions": "Approximate number of working days on site.",
+            "min": 0,
+            "append": "Working Day(s)"
+        },
+        {
+            "key": "field_payment_stages_message",
+            "label": "Payment Schedule",
+            "name": "",
+            "type": "message",
+            "message": "The payment schedule amounts are calculated from the Quote Price using the percentages below. Leave any percentage blank to use the company default set under Settings -> Proposal Content.",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_override_deposit_pct",
+            "label": "Deposit (%)",
+            "name": "override_deposit_pct",
+            "type": "number",
+            "instructions": "Blank = use company default.",
+            "min": 0,
+            "max": 100,
+            "append": "%"
+        },
+        {
+            "key": "field_override_stage1_pct",
+            "label": "Stage Payment 1 (%)",
+            "name": "override_stage1_pct",
+            "type": "number",
+            "min": 0,
+            "max": 100,
+            "append": "%"
+        },
+        {
+            "key": "field_override_stage2_pct",
+            "label": "Stage Payment 2 (%)",
+            "name": "override_stage2_pct",
+            "type": "number",
+            "min": 0,
+            "max": 100,
+            "append": "%"
+        },
+        {
+            "key": "field_override_final_pct",
+            "label": "Final Balance (%)",
+            "name": "override_final_pct",
+            "type": "number",
+            "min": 0,
+            "max": 100,
+            "append": "%"
+        },
+        {
+            "key": "field_additional_documents",
+            "label": "Additional Documents",
+            "name": "additional_documents",
+            "type": "repeater",
+            "instructions": "Supplier drawings, specifications, energy ratings, survey notes, photos, etc. These are attached to the 'Quote Sent' email and listed on the Additional Documents page of the proposal PDF.",
+            "layout": "block",
+            "button_label": "Add Document",
+            "sub_fields": [
+                {
+                    "key": "field_ad_document_type",
+                    "label": "Document Type",
+                    "name": "document_type",
+                    "type": "select",
+                    "choices": {
+                        "Window Specifications": "Window Specifications",
+                        "Door Specifications": "Door Specifications",
+                        "Composite Door Specification": "Composite Door Specification",
+                        "Conservatory Specification": "Conservatory Specification",
+                        "Energy Rating Information": "Energy Rating Information",
+                        "Survey Notes": "Survey Notes",
+                        "Lintels / Brickwork Additional Works": "Lintels / Brickwork Additional Works",
+                        "Supporting Photographs": "Supporting Photographs",
+                        "Additional Technical Information": "Additional Technical Information",
+                        "Other": "Other"
+                    },
+                    "allow_null": 0,
+                    "ui": 1
+                },
+                {
+                    "key": "field_ad_document_file",
+                    "label": "File",
+                    "name": "document_file",
+                    "type": "file",
+                    "return_format": "id",
+                    "library": "all",
+                    "instructions": "PDF or image."
+                },
+                {
+                    "key": "field_ad_document_label",
+                    "label": "Custom Label (optional)",
+                    "name": "document_label",
+                    "type": "text",
+                    "instructions": "Overrides the document type as the label shown to the customer."
+                }
+            ]
         }
     ],
     "location": [
@@ -578,5 +695,5 @@
     "style": "default",
     "label_placement": "top",
     "instruction_placement": "label",
-    "modified": 1784127074
+    "modified": 1784584281
 }
