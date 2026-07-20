@@ -847,6 +847,226 @@
             "type": "true_false",
             "default_value": 1,
             "ui": 1
+        },
+        {
+            "key": "field_tab_proposal_content",
+            "label": "Proposal Content",
+            "name": "",
+            "type": "tab",
+            "placement": "left"
+        },
+        {
+            "key": "field_proposal_intro_letter",
+            "label": "Introduction Letter",
+            "name": "proposal_intro_letter",
+            "type": "wysiwyg",
+            "instructions": "Opening letter shown near the start of the proposal PDF. Use [Customer Name] where the customer's name should appear.",
+            "tabs": "visual",
+            "toolbar": "full",
+            "media_upload": 0,
+            "default_value": "<p>Dear [Customer Name],</p>\n<p>Thank you for giving us the opportunity to present our proposal for improving your home.</p>\n<p>We are a local family business with a dedicated team who are passionate about supplying customers with great products and an outstanding service. We have a great supply chain and partner with leading UK manufacturers, who have been supplying businesses like us for many years.</p>\n<p><strong>Genuine, Friendly Service - No High-Pressure Sales</strong></p>\n<p>Choosing the right home improvement partner is an important decision. Our proposal is comprehensive and detailed to give you all the information you need to make an informed choice. Please take your time to go through the information, think about the options and let us know when you are ready to go ahead. We really want you to choose us as we are confident that we offer great products and services, but we want you to be happy with your choice, so we won't hound you or offer drastic price cuts to sign up on the night.</p>\n<p>We're happy to offer free, professional advice and answer any queries you may have. Only once you are happy will we move to the next stage and arrange for a qualified surveyor to visit to double-check all the details and ensure you are happy.</p>"
+        },
+        {
+            "key": "field_proposal_five_reasons",
+            "label": "Five Reasons to Choose Us",
+            "name": "proposal_five_reasons",
+            "type": "textarea",
+            "instructions": "One reason per line.",
+            "rows": 6,
+            "default_value": "We've operated in Hampshire, Surrey & Berkshire for many years, and 80% of our business comes from repeat custom and recommendations, so we really want to do a great job for you.\nWe offer a genuine, friendly service, with no high-pressure sales.\nWe only use qualified and insured installers who are closely supported by experienced and trained customer service staff, so that we can offer you a great customer experience.\nWe are honest and will tell you now that sometimes things do go wrong! When they do, we will work hard to put them right as quickly as we can.\nYou will have a team of dedicated people who will work to ensure that you are satisfied with the completed installation."
+        },
+        {
+            "key": "field_proposal_whats_included",
+            "label": "What's Included in Our Price",
+            "name": "proposal_whats_included",
+            "type": "textarea",
+            "instructions": "One item per line.",
+            "rows": 10,
+            "default_value": "Professional Survey\nBespoke Made-to-Measure Manufacture\nProfessional Installation\nMaking Good to Immediate Fitting Areas\nRemoval & Disposal of Existing Frames\nVAT Included\nFENSA Registration (where applicable)\nInsurance Backed Guarantee\nManufacturer's Product Guarantees\nDedicated After-Sales Support"
+        },
+        {
+            "key": "field_proposal_why_choose",
+            "label": "Why Choose Cristal",
+            "name": "proposal_why_choose",
+            "type": "wysiwyg",
+            "tabs": "visual",
+            "toolbar": "full",
+            "media_upload": 0,
+            "default_value": "<p>We specialise in the supply and installation of quality replacement windows, doors and conservatory products, backed by dependable after-sales support, FENSA certification and industry recognised guarantees.</p>"
+        },
+        {
+            "key": "field_proposal_what_happens_next",
+            "label": "What Happens Next",
+            "name": "proposal_what_happens_next",
+            "type": "textarea",
+            "instructions": "One step per line (shown as a numbered list).",
+            "rows": 8,
+            "default_value": "Accept your quotation.\nA detailed survey is arranged.\nFinal specifications and measurements are confirmed.\nFormal order confirmation and contract documentation are issued for your review and authorisation prior to manufacture commencing.\nYour bespoke products enter manufacture.\nUpon receipt of your bespoke products into our stock and following quality inspection, we will contact you to arrange a mutually convenient installation date.\nInstallation is completed.\nFENSA registration and guarantee documentation are issued."
+        },
+        {
+            "key": "field_proposal_vat_comparison_note",
+            "label": "VAT & Price Comparison Note",
+            "name": "proposal_vat_comparison_note",
+            "type": "textarea",
+            "rows": 3,
+            "default_value": "This quotation is fully inclusive of VAT. Please ensure competing quotations are compared on a VAT-inclusive and like-for-like basis. The figure shown is the final amount payable."
+        },
+        {
+            "key": "field_proposal_lead_time",
+            "label": "Lead Time",
+            "name": "proposal_lead_time",
+            "type": "text",
+            "instructions": "Current estimated manufacturing and delivery time.",
+            "default_value": "approximately 3-5 weeks from final survey and order confirmation"
+        },
+        {
+            "key": "field_proposal_validity_days",
+            "label": "Quotation Validity (days)",
+            "name": "proposal_validity_days",
+            "type": "number",
+            "default_value": 14,
+            "min": 1
+        },
+        {
+            "key": "field_proposal_additional_specification",
+            "label": "Additional Project Information & Specification",
+            "name": "proposal_additional_specification",
+            "type": "wysiwyg",
+            "tabs": "visual",
+            "toolbar": "full",
+            "media_upload": 0,
+            "default_value": "<p><strong>Survey & Measurements:</strong> All products are manufactured on a bespoke made-to-measure basis and remain subject to final survey and confirmation of measurements.</p>\n<p><strong>Lintels:</strong> Existing lintels are assumed to be present and structurally adequate. Should no lintel be in position, or inadequate or defective structural support be identified, any required remedial works will be discussed and agreed before proceeding.</p>\n<p><strong>Brickwork & Surrounding Structure:</strong> This quotation assumes existing brickwork and surrounding structures are serviceable.</p>\n<p><strong>Making Good:</strong> Making good is limited to areas directly affected by the installation process unless otherwise stated.</p>\n<p><strong>Access:</strong> This quotation assumes safe and reasonable access to all working areas.</p>\n<p><strong>Waste Removal:</strong> All installation waste generated by our own works will be removed from site unless otherwise stated.</p>"
+        },
+        {
+            "key": "field_proposal_additional_documents_note",
+            "label": "Additional Documents - Intro Note",
+            "name": "proposal_additional_documents_note",
+            "type": "textarea",
+            "instructions": "Shown above the list of attached documents.",
+            "rows": 4,
+            "default_value": "The attached drawings, window schedules, door designs, composite door specifications and related documents form part of this quotation. Supplier drawings and product specifications attached to the main email body form part of this quotation. Please revisit our website www.cristalwindows.co.uk for all information & brochure downloads."
+        },
+        {
+            "key": "field_proposal_customer_checklist",
+            "label": "Customer Checklist Items",
+            "name": "proposal_customer_checklist",
+            "type": "textarea",
+            "instructions": "One checklist item per line.",
+            "rows": 6,
+            "default_value": "Product styles are correct\nColours are correct\nGlass specifications are correct\nHardware finishes are correct\nOpening configurations are correct\nSpecial requirements have been included"
+        },
+        {
+            "key": "field_proposal_payment_conditions",
+            "label": "Payment Conditions",
+            "name": "proposal_payment_conditions",
+            "type": "wysiwyg",
+            "tabs": "visual",
+            "toolbar": "full",
+            "media_upload": 0,
+            "default_value": "<ul>\n<li>Products supplied under this quotation are manufactured or ordered specifically to meet the customer's agreed requirements.</li>\n<li>Payments must be made at the stages shown above. Practical completion means that the main contracted installation has been completed and the products can be used for their intended purpose.</li>\n<li>Minor adjustments, replacement glass, cosmetic items or outstanding components that do not prevent normal use of the installation will not delay practical completion or payment of the final balance.</li>\n<li>Where a specific item remains outstanding or requires rectification, the customer may retain a reasonable sum proportionate to the cost of completing that item. The undisputed balance remains payable when due, and the retained sum becomes payable promptly once the item has been completed or rectified.</li>\n<li>Title to any goods supplied remains with Cristal Windows Doors & Conservatories Ltd until all sums due under the contract have been paid in full, to the extent permitted by law. This does not affect the customer's statutory rights.</li>\n</ul>"
+        },
+        {
+            "key": "field_proposal_final_thought",
+            "label": "Final Thought",
+            "name": "proposal_final_thought",
+            "type": "textarea",
+            "rows": 5,
+            "default_value": "\"The cheapest quotation is not always the best value. Product quality, installation standards, guarantees and aftercare should all be carefully considered when making your decision. Investing in quality products and professional installation often provides greater comfort, reliability and long-term value.\"\n- Inspired by John Ruskin"
+        },
+        {
+            "key": "field_proposal_acceptance_wording",
+            "label": "Customer Acceptance Wording",
+            "name": "proposal_acceptance_wording",
+            "type": "wysiwyg",
+            "tabs": "visual",
+            "toolbar": "full",
+            "media_upload": 0,
+            "default_value": "<p>I/We confirm that I/we have read and accept this Proposal, the attached specification, payment schedule, Terms and Conditions and cancellation information. I/We instruct Cristal Windows Doors & Conservatories Ltd to proceed subject to those terms.</p>"
+        },
+        {
+            "key": "field_proposal_payment_methods_note",
+            "label": "Payment Methods Note",
+            "name": "proposal_payment_methods_note",
+            "type": "textarea",
+            "rows": 3,
+            "default_value": "We accept payment by BACS bank transfer, personal cheque, cash or credit card. We do not accept American Express (AMEX). Finance may be available through our appointed credit broker, subject to status, approval and separate finance terms."
+        },
+        {
+            "key": "field_proposal_bank_account_name",
+            "label": "Bank Account Name",
+            "name": "proposal_bank_account_name",
+            "type": "text",
+            "default_value": "Cristal Windows Doors & Conservatories Ltd"
+        },
+        {
+            "key": "field_proposal_bank_name",
+            "label": "Bank",
+            "name": "proposal_bank_name",
+            "type": "text",
+            "default_value": "Barclays Bank, Leicester LE87 2BB"
+        },
+        {
+            "key": "field_proposal_bank_sort_code",
+            "label": "Sort Code",
+            "name": "proposal_bank_sort_code",
+            "type": "text",
+            "default_value": "20-31-06"
+        },
+        {
+            "key": "field_proposal_bank_account_number",
+            "label": "Account Number",
+            "name": "proposal_bank_account_number",
+            "type": "text",
+            "default_value": "70789097"
+        },
+        {
+            "key": "field_proposal_bank_security_note",
+            "label": "Bank Details Security Note",
+            "name": "proposal_bank_security_note",
+            "type": "textarea",
+            "rows": 3,
+            "default_value": "Our bank details will not change during your contract. If you receive different details, please telephone us on 01252 810777 before making payment."
+        },
+        {
+            "key": "field_proposal_deposit_pct",
+            "label": "Default Deposit (%)",
+            "name": "proposal_deposit_pct",
+            "type": "number",
+            "instructions": "Company-wide default. Can be overridden per quotation later. The four percentages should total 100.",
+            "default_value": 25,
+            "min": 0,
+            "max": 100,
+            "append": "%"
+        },
+        {
+            "key": "field_proposal_stage1_pct",
+            "label": "Default Stage Payment 1 (%)",
+            "name": "proposal_stage1_pct",
+            "type": "number",
+            "default_value": 25,
+            "min": 0,
+            "max": 100,
+            "append": "%"
+        },
+        {
+            "key": "field_proposal_stage2_pct",
+            "label": "Default Stage Payment 2 (%)",
+            "name": "proposal_stage2_pct",
+            "type": "number",
+            "default_value": 25,
+            "min": 0,
+            "max": 100,
+            "append": "%"
+        },
+        {
+            "key": "field_proposal_final_pct",
+            "label": "Default Final Balance (%)",
+            "name": "proposal_final_pct",
+            "type": "number",
+            "default_value": 25,
+            "min": 0,
+            "max": 100,
+            "append": "%"
         }
     ],
     "location": [
@@ -863,5 +1083,5 @@
     "style": "default",
     "label_placement": "top",
     "instruction_placement": "label",
-    "modified": 1770241130
+    "modified": 1784584281
 }
