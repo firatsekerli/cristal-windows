@@ -65,6 +65,10 @@ $bank_sort_code       = $qf_get_opt('proposal_bank_sort_code');
 $bank_account_number  = $qf_get_opt('proposal_bank_account_number');
 $payment_methods_note = $qf_get_opt('proposal_payment_methods_note');
 $bank_security_note   = $qf_get_opt('proposal_bank_security_note');
+
+// Additional documents (Phase 5)
+$additional_documents      = function_exists('get_field') ? get_field('additional_documents', $post_id) : array();
+$additional_documents_note = $qf_get_opt('proposal_additional_documents_note');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -1005,6 +1009,41 @@ $bank_security_note   = $qf_get_opt('proposal_bank_security_note');
     <div class="proposal-page">
         <h2>Additional Project Information &amp; Specification</h2>
         <div class="proposal-body"><?php echo $additional_spec; ?></div>
+    </div>
+    <?php endif; ?>
+
+    <?php
+    // Additional documents page (Phase 5)
+    $docs_list = array();
+    if (!empty($additional_documents) && is_array($additional_documents)) {
+        foreach ($additional_documents as $doc) {
+            $label = !empty($doc['document_label']) ? $doc['document_label']
+                   : (!empty($doc['document_type']) ? $doc['document_type'] : '');
+            $fname = '';
+            if (!empty($doc['document_file']) && function_exists('get_attached_file')) {
+                $fp = get_attached_file($doc['document_file']);
+                if ($fp) { $fname = basename($fp); }
+            }
+            if ($label === '' && $fname === '') { continue; }
+            $docs_list[] = array('label' => $label, 'file' => $fname);
+        }
+    }
+    if (!empty($additional_documents_note) || !empty($docs_list)):
+    ?>
+    <div class="proposal-page">
+        <h2>Additional Documents</h2>
+        <?php if (!empty($additional_documents_note)): ?>
+        <div class="proposal-body"><p><?php echo esc_html($additional_documents_note); ?></p></div>
+        <?php endif; ?>
+        <?php if (!empty($docs_list)): ?>
+        <ul class="checklist">
+            <?php foreach ($docs_list as $d): ?>
+            <li><?php echo esc_html($d['label']); ?><?php if (!empty($d['file'])): ?> <span style="color:#666;">(<?php echo esc_html($d['file']); ?>)</span><?php endif; ?></li>
+            <?php endforeach; ?>
+        </ul>
+        <?php else: ?>
+        <div class="proposal-body"><p>Supporting documents, where applicable, are attached to the covering email.</p></div>
+        <?php endif; ?>
     </div>
     <?php endif; ?>
 

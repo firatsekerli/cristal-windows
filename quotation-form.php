@@ -2288,10 +2288,76 @@ class Quotation_Form_Plugin {
      * Send email when status changes to "Quote Sent" with PDF attachment
      */
     private function send_status_email_quote_sent($post_id, $customer_email, $customer_name) {
+        // Build the attachment list first: the quote PDF, then any additional
+        // documents, capped at a total size to avoid mail-server rejections.
+        $max_total_bytes = 20 * 1024 * 1024; // 20 MB
+        $attachments = array();
+        $current_total = 0;
+
+        // Quote PDF
+        $pdf_url = get_field('quote_pdf_url', $post_id);
+        if ($pdf_url) {
+            $upload_dir = wp_upload_dir();
+            $pdf_path = str_replace($upload_dir['baseurl'], $upload_dir['basedir'], $pdf_url);
+            if (file_exists($pdf_path)) {
+                $attachments[] = $pdf_path;
+                $current_total += filesize($pdf_path);
+            }
+        }
+
+        // Additional documents (Phase 5)
+        $attached_docs = array();
+        $skipped_docs = array();
+        if (function_exists('get_field')) {
+            $additional_documents = get_field('additional_documents', $post_id);
+            if (!empty($additional_documents) && is_array($additional_documents)) {
+                foreach ($additional_documents as $doc) {
+                    $file_id = isset($doc['document_file']) ? $doc['document_file'] : 0;
+                    if (empty($file_id)) {
+                        continue;
+                    }
+                    $file_path = get_attached_file($file_id);
+                    if (!$file_path || !file_exists($file_path)) {
+                        continue;
+                    }
+                    $label = !empty($doc['document_label']) ? $doc['document_label']
+                           : (!empty($doc['document_type']) ? $doc['document_type'] : basename($file_path));
+                    $size = filesize($file_path);
+                    if (($current_total + $size) > $max_total_bytes) {
+                        $skipped_docs[] = $label;
+                        continue;
+                    }
+                    $attachments[] = $file_path;
+                    $current_total += $size;
+                    $attached_docs[] = $label;
+                }
+            }
+        }
+
+        // Build the message. When there are no additional documents this is
+        // identical to the previous email.
         $subject = 'Your Quotation is Ready';
         $message = "Dear " . $customer_name . ",\n\n";
         $message .= "We're pleased to send you the quotation you requested.\n\n";
         $message .= "Please find your detailed quote attached to this email. We've carefully prepared pricing for all the items you specified.\n\n";
+
+        if (!empty($attached_docs)) {
+            $message .= "The following supporting document(s) are also attached:\n";
+            foreach ($attached_docs as $ad) {
+                $message .= " - " . $ad . "\n";
+            }
+            $message .= "\n";
+        }
+
+        if (!empty($skipped_docs)) {
+            $message .= "Please note: the following document(s) were too large to attach to this email and can be provided on request:\n";
+            foreach ($skipped_docs as $sd) {
+                $message .= " - " . $sd . "\n";
+            }
+            $message .= "\n";
+            error_log('Quote email: skipped oversized attachments for post ' . $post_id . ': ' . implode(', ', $skipped_docs));
+        }
+
         $message .= "If you have any questions about the quote or would like to discuss any aspect of your project, please don't hesitate to contact us.\n\n";
         $message .= "We look forward to working with you!\n\n";
         $message .= "Best regards,\n";
@@ -2299,20 +2365,6 @@ class Quotation_Form_Plugin {
         $message .= "01252 810 777\n";
         $message .= "steve@cristalwindows.co.uk\n";
         $message .= "www.cristalwindows.co.uk";
-
-        // Get PDF URL and convert to file path
-        $pdf_url = get_field('quote_pdf_url', $post_id);
-        $attachments = array();
-
-        if ($pdf_url) {
-            // Convert URL to file path
-            $upload_dir = wp_upload_dir();
-            $pdf_path = str_replace($upload_dir['baseurl'], $upload_dir['basedir'], $pdf_url);
-
-            if (file_exists($pdf_path)) {
-                $attachments[] = $pdf_path;
-            }
-        }
 
         wp_mail($customer_email, $subject, $message, array(), $attachments);
     }
