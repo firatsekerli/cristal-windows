@@ -43,6 +43,28 @@ $acceptance_wording  = $qf_get_opt('proposal_acceptance_wording');
 
 $brief_description = function_exists('get_field') ? get_field('brief_project_description', $post_id) : '';
 $install_days     = function_exists('get_field') ? get_field('estimated_installation_days', $post_id) : '';
+
+// Payment schedule (Phase 4): use the per-quote override percentage when set
+// (0 is a valid value), otherwise the company default. Null means "not set".
+$pq = function($name) use ($post_id) {
+    return function_exists('get_field') ? get_field($name, $post_id) : null;
+};
+$qf_resolve_pct = function($override, $default) {
+    if ($override !== null && $override !== '') return floatval($override);
+    if ($default !== null && $default !== '') return floatval($default);
+    return null;
+};
+$dep_pct = $qf_resolve_pct($pq('override_deposit_pct'), $qf_get_opt('proposal_deposit_pct'));
+$s1_pct  = $qf_resolve_pct($pq('override_stage1_pct'),  $qf_get_opt('proposal_stage1_pct'));
+$s2_pct  = $qf_resolve_pct($pq('override_stage2_pct'),  $qf_get_opt('proposal_stage2_pct'));
+$fin_pct = $qf_resolve_pct($pq('override_final_pct'),   $qf_get_opt('proposal_final_pct'));
+
+$bank_account_name    = $qf_get_opt('proposal_bank_account_name');
+$bank_name            = $qf_get_opt('proposal_bank_name');
+$bank_sort_code       = $qf_get_opt('proposal_bank_sort_code');
+$bank_account_number  = $qf_get_opt('proposal_bank_account_number');
+$payment_methods_note = $qf_get_opt('proposal_payment_methods_note');
+$bank_security_note   = $qf_get_opt('proposal_bank_security_note');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -434,6 +456,69 @@ $install_days     = function_exists('get_field') ? get_field('estimated_installa
             min-width: 320px;
         }
 
+        .payment-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 14px;
+        }
+
+        .payment-table th,
+        .payment-table td {
+            border: 1px solid #ccc;
+            padding: 10px 12px;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        .payment-table th {
+            background: #1a5490;
+            color: #fff;
+        }
+
+        .payment-table .amount {
+            text-align: right;
+            white-space: nowrap;
+        }
+
+        .payment-table tr.total-row td {
+            font-weight: bold;
+            background: #f0f4f8;
+        }
+
+        .bank-details {
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            padding: 15px 20px;
+            margin: 15px 0;
+            font-size: 14px;
+        }
+
+        .bank-details table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .bank-details td {
+            padding: 4px 0;
+        }
+
+        .bank-details td.label {
+            font-weight: bold;
+            color: #555;
+            width: 40%;
+        }
+
+        .security-note {
+            background: #fff9e6;
+            border-left: 4px solid #ffc107;
+            padding: 12px 15px;
+            margin: 15px 0;
+            font-size: 13px;
+            border-radius: 4px;
+        }
+
         @media print {
             body {
                 padding: 0;
@@ -798,8 +883,67 @@ $install_days     = function_exists('get_field') ? get_field('estimated_installa
     endif;
     ?>
 
-    <!-- Proposal content pages (Phase 3). Payment schedule (Phase 4) and
-         additional documents (Phase 5) will slot in around these. -->
+    <!-- Proposal content pages. Additional documents (Phase 5) slot in later. -->
+
+    <?php
+    // Payment schedule (Phase 4)
+    $has_pcts = ($dep_pct !== null || $s1_pct !== null || $s2_pct !== null || $fin_pct !== null);
+    $has_bank = !empty($bank_account_name) || !empty($bank_name) || !empty($bank_sort_code) || !empty($bank_account_number);
+    if ($quote_price > 0 && ($has_pcts || $has_bank)):
+        $stage_rows = array(
+            array('Deposit - payable on acceptance of order', $dep_pct),
+            array('Stage Payment 1 - payable when the products have been manufactured and allocated to your order', $s1_pct),
+            array('Stage Payment 2 - payable on commencement of installation', $s2_pct),
+            array('Final balance - payable on practical completion of the contracted works', $fin_pct),
+        );
+        $total_amt = 0;
+    ?>
+    <div class="proposal-page">
+        <h2>Payment Schedule &amp; Payment Terms</h2>
+
+        <?php if ($has_pcts): ?>
+        <table class="payment-table">
+            <tr><th>Payment Stage</th><th class="amount">Amount</th></tr>
+            <tr>
+                <td>Total contract price (including VAT)</td>
+                <td class="amount"><?php echo format_currency($quote_price); ?></td>
+            </tr>
+            <?php foreach ($stage_rows as $row): ?>
+                <?php if ($row[1] === null || floatval($row[1]) == 0) { continue; } $amt = $quote_price * $row[1] / 100; $total_amt += $amt; ?>
+                <tr>
+                    <td><?php echo esc_html($row[0]); ?> (<?php echo rtrim(rtrim(number_format($row[1], 2), '0'), '.'); ?>%)</td>
+                    <td class="amount"><?php echo format_currency($amt); ?></td>
+                </tr>
+            <?php endforeach; ?>
+            <tr class="total-row">
+                <td>Total payments (including VAT)</td>
+                <td class="amount"><?php echo format_currency($total_amt); ?></td>
+            </tr>
+        </table>
+        <?php endif; ?>
+
+        <?php if (!empty($payment_methods_note)): ?>
+        <h3>Payment Methods</h3>
+        <div class="proposal-body"><p><?php echo esc_html($payment_methods_note); ?></p></div>
+        <?php endif; ?>
+
+        <?php if ($has_bank): ?>
+        <h3>Bank Details for BACS Transfers</h3>
+        <div class="bank-details">
+            <table>
+                <?php if (!empty($bank_account_name)): ?><tr><td class="label">Account name</td><td><?php echo esc_html($bank_account_name); ?></td></tr><?php endif; ?>
+                <?php if (!empty($bank_name)): ?><tr><td class="label">Bank</td><td><?php echo esc_html($bank_name); ?></td></tr><?php endif; ?>
+                <?php if (!empty($bank_sort_code)): ?><tr><td class="label">Sort code</td><td><?php echo esc_html($bank_sort_code); ?></td></tr><?php endif; ?>
+                <?php if (!empty($bank_account_number)): ?><tr><td class="label">Account number</td><td><?php echo esc_html($bank_account_number); ?></td></tr><?php endif; ?>
+            </table>
+        </div>
+        <?php endif; ?>
+
+        <?php if (!empty($bank_security_note)): ?>
+        <div class="security-note"><strong>Security note:</strong> <?php echo esc_html($bank_security_note); ?></div>
+        <?php endif; ?>
+    </div>
+    <?php endif; ?>
 
     <?php if (!empty($payment_conditions)): ?>
     <div class="proposal-page">
