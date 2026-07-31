@@ -470,23 +470,10 @@ $additional_documents_note = $qf_get_opt('proposal_additional_documents_note');
             min-width: 320px;
         }
 
-        /* Intro letter + five reasons single-page spread */
-        .intro-columns {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
-            table-layout: fixed;
-        }
-
-        .intro-left {
-            width: 57%;
-            vertical-align: top;
-            padding-right: 24px;
-        }
-
-        .intro-right {
-            width: 43%;
-            vertical-align: top;
+        /* Intro letter + five reasons single-page (one column) */
+        .intro-page {
+            page-break-after: always;
+            page-break-inside: avoid;
         }
 
         .intro-heading {
@@ -497,7 +484,7 @@ $additional_documents_note = $qf_get_opt('proposal_additional_documents_note');
         }
 
         .intro-letter-body p {
-            font-size: 11px;
+            font-size: 12px;
             line-height: 1.5;
             margin: 0 0 9px;
         }
@@ -510,7 +497,8 @@ $additional_documents_note = $qf_get_opt('proposal_additional_documents_note');
             background: #1a3a7a;
             color: #ffffff;
             border-radius: 12px;
-            padding: 22px 20px;
+            padding: 22px 24px;
+            margin-top: 22px;
         }
 
         .reasons-box h3 {
@@ -739,27 +727,19 @@ $additional_documents_note = $qf_get_opt('proposal_additional_documents_note');
             $greeting = 'Dear ' . $customer_name;
         }
     ?>
-    <div class="proposal-page">
-        <table class="intro-columns">
-            <tr>
-                <td class="intro-left">
-                    <h2 class="intro-heading"><?php echo esc_html($greeting); ?></h2>
-                    <div class="intro-letter-body"><?php echo $intro_body; ?></div>
-                </td>
-                <td class="intro-right">
-                    <?php if (!empty($reasons_list)): ?>
-                    <div class="reasons-box">
-                        <h3>Five great reasons to choose our service, windows and doors</h3>
-                        <ol>
-                            <?php foreach ($reasons_list as $reason): ?>
-                            <li><?php echo esc_html($reason); ?></li>
-                            <?php endforeach; ?>
-                        </ol>
-                    </div>
-                    <?php endif; ?>
-                </td>
-            </tr>
-        </table>
+    <div class="proposal-page intro-page">
+        <h2 class="intro-heading"><?php echo esc_html($greeting); ?></h2>
+        <div class="intro-letter-body"><?php echo $intro_body; ?></div>
+        <?php if (!empty($reasons_list)): ?>
+        <div class="reasons-box">
+            <h3>Five great reasons to choose our service, windows and doors</h3>
+            <ol>
+                <?php foreach ($reasons_list as $reason): ?>
+                <li><?php echo esc_html($reason); ?></li>
+                <?php endforeach; ?>
+            </ol>
+        </div>
+        <?php endif; ?>
     </div>
     <?php endif; ?>
 
