@@ -105,7 +105,7 @@ $additional_documents_note = $qf_get_opt('proposal_additional_documents_note');
             border-bottom: 3px solid #1a5490;
             padding-top: 0px;
             padding-bottom: 20px;
-            margin-bottom: 25px;
+            margin-bottom: 40px;
             overflow: hidden;
             display: table;
             width: 100%;
@@ -142,7 +142,7 @@ $additional_documents_note = $qf_get_opt('proposal_additional_documents_note');
         .info-grid-wrapper {
             margin-left: -7.5px;
             margin-right: -7.5px;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
         }
 
         .info-grid {
@@ -188,7 +188,7 @@ $additional_documents_note = $qf_get_opt('proposal_additional_documents_note');
             padding: 20px;
             border: 1px solid #e0e0e0;
             border-radius: 5px;
-            margin: 20px 0;
+            margin: 30px 0;
         }
 
         .message-section p {
@@ -203,7 +203,7 @@ $additional_documents_note = $qf_get_opt('proposal_additional_documents_note');
             color: white;
             padding: 25px;
             border-radius: 5px;
-            margin: 22px 0;
+            margin: 30px 0;
             text-align: center;
         }
 
@@ -223,7 +223,7 @@ $additional_documents_note = $qf_get_opt('proposal_additional_documents_note');
             background: #fff9e6;
             border-left: 4px solid #ffc107;
             padding: 15px;
-            margin: 15px 0;
+            margin: 20px 0;
             border-radius: 5px;
         }
 
@@ -470,10 +470,23 @@ $additional_documents_note = $qf_get_opt('proposal_additional_documents_note');
             min-width: 320px;
         }
 
-        /* Intro letter + five reasons single-page (one column) */
-        .intro-page {
-            page-break-after: always;
-            page-break-inside: avoid;
+        /* Intro letter + five reasons single-page spread */
+        .intro-columns {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            table-layout: fixed;
+        }
+
+        .intro-left {
+            width: 57%;
+            vertical-align: top;
+            padding-right: 24px;
+        }
+
+        .intro-right {
+            width: 43%;
+            vertical-align: top;
         }
 
         .intro-heading {
@@ -484,7 +497,7 @@ $additional_documents_note = $qf_get_opt('proposal_additional_documents_note');
         }
 
         .intro-letter-body p {
-            font-size: 12px;
+            font-size: 11px;
             line-height: 1.5;
             margin: 0 0 9px;
         }
@@ -497,8 +510,7 @@ $additional_documents_note = $qf_get_opt('proposal_additional_documents_note');
             background: #1a3a7a;
             color: #ffffff;
             border-radius: 12px;
-            padding: 22px 24px;
-            margin-top: 22px;
+            padding: 22px 20px;
         }
 
         .reasons-box h3 {
@@ -727,7 +739,7 @@ $additional_documents_note = $qf_get_opt('proposal_additional_documents_note');
             $greeting = 'Dear ' . $customer_name;
         }
     ?>
-    <div class="proposal-page intro-page">
+    <div class="proposal-page">
         <h2 class="intro-heading"><?php echo esc_html($greeting); ?></h2>
         <div class="intro-letter-body"><?php echo $intro_body; ?></div>
         <?php if (!empty($reasons_list)): ?>
