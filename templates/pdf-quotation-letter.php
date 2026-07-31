@@ -105,7 +105,7 @@ $additional_documents_note = $qf_get_opt('proposal_additional_documents_note');
             border-bottom: 3px solid #1a5490;
             padding-top: 0px;
             padding-bottom: 20px;
-            margin-bottom: 40px;
+            margin-bottom: 25px;
             overflow: hidden;
             display: table;
             width: 100%;
@@ -142,7 +142,7 @@ $additional_documents_note = $qf_get_opt('proposal_additional_documents_note');
         .info-grid-wrapper {
             margin-left: -7.5px;
             margin-right: -7.5px;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
 
         .info-grid {
@@ -188,7 +188,7 @@ $additional_documents_note = $qf_get_opt('proposal_additional_documents_note');
             padding: 20px;
             border: 1px solid #e0e0e0;
             border-radius: 5px;
-            margin: 30px 0;
+            margin: 20px 0;
         }
 
         .message-section p {
@@ -203,7 +203,7 @@ $additional_documents_note = $qf_get_opt('proposal_additional_documents_note');
             color: white;
             padding: 25px;
             border-radius: 5px;
-            margin: 30px 0;
+            margin: 22px 0;
             text-align: center;
         }
 
@@ -223,7 +223,7 @@ $additional_documents_note = $qf_get_opt('proposal_additional_documents_note');
             background: #fff9e6;
             border-left: 4px solid #ffc107;
             padding: 15px;
-            margin: 20px 0;
+            margin: 15px 0;
             border-radius: 5px;
         }
 
