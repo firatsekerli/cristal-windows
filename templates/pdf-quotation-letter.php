@@ -497,9 +497,9 @@ $additional_documents_note = $qf_get_opt('proposal_additional_documents_note');
         }
 
         .intro-letter-body p {
-            font-size: 14px;
-            line-height: 1.6;
-            margin: 0 0 12px;
+            font-size: 16px;
+            line-height: 1.8;
+            margin: 10px 0;
         }
 
         .intro-letter-body strong {
@@ -515,7 +515,7 @@ $additional_documents_note = $qf_get_opt('proposal_additional_documents_note');
 
         .reasons-box h3 {
             color: #ffffff;
-            font-size: 17px;
+            font-size: 16px;
             margin: 0 0 16px;
             line-height: 1.3;
         }
@@ -529,9 +529,9 @@ $additional_documents_note = $qf_get_opt('proposal_additional_documents_note');
 
         .reasons-box li {
             position: relative;
-            padding: 0 0 13px 34px;
-            font-size: 13px;
-            line-height: 1.5;
+            padding: 0 0 14px 34px;
+            font-size: 14px;
+            line-height: 1.6;
             counter-increment: reason;
         }
 
@@ -543,7 +543,7 @@ $additional_documents_note = $qf_get_opt('proposal_additional_documents_note');
             content: counter(reason);
             position: absolute;
             left: 0;
-            top: 0;
+            top: 4px;
             width: 22px;
             height: 22px;
             background: #f5c518;
