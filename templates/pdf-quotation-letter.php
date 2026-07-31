@@ -460,6 +460,91 @@ $additional_documents_note = $qf_get_opt('proposal_additional_documents_note');
             min-width: 320px;
         }
 
+        /* Intro letter + five reasons single-page spread */
+        .intro-columns {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            table-layout: fixed;
+        }
+
+        .intro-left {
+            width: 57%;
+            vertical-align: top;
+            padding-right: 24px;
+        }
+
+        .intro-right {
+            width: 43%;
+            vertical-align: top;
+        }
+
+        .intro-heading {
+            color: #1a5490;
+            font-size: 26px;
+            font-weight: bold;
+            margin: 0 0 14px;
+        }
+
+        .intro-letter-body p {
+            font-size: 11px;
+            line-height: 1.5;
+            margin: 0 0 9px;
+        }
+
+        .intro-letter-body strong {
+            color: #1a5490;
+        }
+
+        .reasons-box {
+            background: #1a3a7a;
+            color: #ffffff;
+            border-radius: 12px;
+            padding: 22px 20px;
+        }
+
+        .reasons-box h3 {
+            color: #ffffff;
+            font-size: 15px;
+            margin: 0 0 16px;
+            line-height: 1.3;
+        }
+
+        .reasons-box ol {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            counter-reset: reason;
+        }
+
+        .reasons-box li {
+            position: relative;
+            padding: 0 0 13px 34px;
+            font-size: 11px;
+            line-height: 1.4;
+            counter-increment: reason;
+        }
+
+        .reasons-box li:last-child {
+            padding-bottom: 0;
+        }
+
+        .reasons-box li:before {
+            content: counter(reason);
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 22px;
+            height: 22px;
+            background: #f5c518;
+            color: #1a3a7a;
+            border-radius: 50%;
+            text-align: center;
+            font-weight: bold;
+            font-size: 12px;
+            line-height: 22px;
+        }
+
         .payment-table {
             width: 100%;
             border-collapse: collapse;
@@ -594,30 +679,12 @@ $additional_documents_note = $qf_get_opt('proposal_additional_documents_note');
     </div>
 
     <div class="message-section">
-        <?php if (!empty($intro_letter)): ?>
-            <?php echo str_replace('[Customer Name]', esc_html($customer_name), $intro_letter); ?>
-        <?php else: ?>
         <p>Dear <?php echo esc_html($data['customer_name']); ?>,</p>
 
         <p>Thank you for your recent enquiry regarding windows, doors and conservatories. We are pleased to provide you with the following quotation based on your requirements.</p>
 
         <p>This quotation is based on a supply and installation service. All prices are given in good faith and are subject to a signed company contract and final survey. <strong>Prices are inclusive of VAT at 20%.</strong></p>
-        <?php endif; ?>
     </div>
-
-    <?php
-    $reasons_list = !empty($five_reasons) ? $qf_lines($five_reasons) : array();
-    if (!empty($reasons_list)):
-    ?>
-    <div class="message-section">
-        <h3 style="color:#1a5490; margin-top:0;">Five great reasons to choose us</h3>
-        <ol class="proposal-list">
-            <?php foreach ($reasons_list as $reason): ?>
-            <li><?php echo esc_html($reason); ?></li>
-            <?php endforeach; ?>
-        </ol>
-    </div>
-    <?php endif; ?>
 
     <div class="price-section">
         <div style="font-size: 18px; margin-bottom: 10px;">TOTAL QUOTATION VALUE</div>
@@ -644,6 +711,47 @@ $additional_documents_note = $qf_get_opt('proposal_additional_documents_note');
         <strong>Steve Cornish</strong><br>
         Cristal Windows, Doors & Conservatories Ltd</p>
     </div>
+
+    <?php
+    // Introduction letter + five reasons, one dedicated page (two columns)
+    $reasons_list = !empty($five_reasons) ? $qf_lines($five_reasons) : array();
+    if (!empty($intro_letter) || !empty($reasons_list)):
+        // Split the greeting (first paragraph) from the letter body so it can
+        // be shown as a heading, matching the proposal design.
+        $intro_html = str_replace('[Customer Name]', esc_html($customer_name), (string) $intro_letter);
+        $greeting = '';
+        $intro_body = $intro_html;
+        if (preg_match('/^\s*<p>(.*?)<\/p>(.*)$/is', $intro_html, $mm)) {
+            $greeting = trim(rtrim(strip_tags($mm[1]), ','));
+            $intro_body = $mm[2];
+        }
+        if ($greeting === '') {
+            $greeting = 'Dear ' . $customer_name;
+        }
+    ?>
+    <div class="proposal-page">
+        <table class="intro-columns">
+            <tr>
+                <td class="intro-left">
+                    <h2 class="intro-heading"><?php echo esc_html($greeting); ?></h2>
+                    <div class="intro-letter-body"><?php echo $intro_body; ?></div>
+                </td>
+                <td class="intro-right">
+                    <?php if (!empty($reasons_list)): ?>
+                    <div class="reasons-box">
+                        <h3>Five great reasons to choose our service, windows and doors</h3>
+                        <ol>
+                            <?php foreach ($reasons_list as $reason): ?>
+                            <li><?php echo esc_html($reason); ?></li>
+                            <?php endforeach; ?>
+                        </ol>
+                    </div>
+                    <?php endif; ?>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <?php endif; ?>
 
     <!-- Item Pages -->
     <?php
