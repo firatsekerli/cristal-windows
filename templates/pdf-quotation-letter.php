@@ -619,13 +619,6 @@ $additional_documents_note = $qf_get_opt('proposal_additional_documents_note');
     </div>
     <?php endif; ?>
 
-    <?php if (!empty($brief_description)): ?>
-    <div class="brief-description">
-        <h3>Brief Project Description</h3>
-        <p><?php echo nl2br(esc_html($brief_description)); ?></p>
-    </div>
-    <?php endif; ?>
-
     <div class="price-section">
         <div style="font-size: 18px; margin-bottom: 10px;">TOTAL QUOTATION VALUE</div>
         <div class="quote-price"><?php echo format_currency($quote_price); ?></div>
