@@ -17,7 +17,17 @@ function format_currency($amount) {
 // Every value below is optional. Sections only render when their content
 // exists, so an un-synced or empty site produces the same PDF as before.
 $qf_get_opt = function($name) {
-    return function_exists('get_field') ? get_field($name, 'option') : '';
+    $val = function_exists('get_field') ? get_field($name, 'option') : '';
+    // Fall back to the field's configured default so the proposal still
+    // renders from the drafts even if the options page has not been saved
+    // yet (e.g. an unrelated required field is blocking the settings save).
+    if (($val === null || $val === '' || $val === false || (is_array($val) && empty($val))) && function_exists('acf_get_field')) {
+        $f = acf_get_field('field_' . $name);
+        if ($f && isset($f['default_value']) && $f['default_value'] !== '' && $f['default_value'] !== null) {
+            return $f['default_value'];
+        }
+    }
+    return $val;
 };
 $qf_lines = function($text) {
     $lines = preg_split('/\r\n|\r|\n/', (string) $text);
