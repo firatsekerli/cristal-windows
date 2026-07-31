@@ -497,9 +497,9 @@ $additional_documents_note = $qf_get_opt('proposal_additional_documents_note');
         }
 
         .intro-letter-body p {
-            font-size: 11px;
-            line-height: 1.5;
-            margin: 0 0 9px;
+            font-size: 14px;
+            line-height: 1.6;
+            margin: 0 0 12px;
         }
 
         .intro-letter-body strong {
@@ -515,7 +515,7 @@ $additional_documents_note = $qf_get_opt('proposal_additional_documents_note');
 
         .reasons-box h3 {
             color: #ffffff;
-            font-size: 15px;
+            font-size: 17px;
             margin: 0 0 16px;
             line-height: 1.3;
         }
@@ -530,8 +530,8 @@ $additional_documents_note = $qf_get_opt('proposal_additional_documents_note');
         .reasons-box li {
             position: relative;
             padding: 0 0 13px 34px;
-            font-size: 11px;
-            line-height: 1.4;
+            font-size: 13px;
+            line-height: 1.5;
             counter-increment: reason;
         }
 
@@ -835,7 +835,7 @@ $additional_documents_note = $qf_get_opt('proposal_additional_documents_note');
             }
             $product_name = implode(' ', $product_name_parts);
     ?>
-    <div class="item-page<?php echo ($item_number > 1) ? ' page-break-item' : ''; ?>">
+    <div class="item-page page-break-item">
         <div class="item-technical-detail">
             Technical Detail: <?php echo $technical_detail; ?>
         </div>
