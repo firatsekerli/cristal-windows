@@ -616,7 +616,7 @@
                     "instructions": "Upload an image for this glazing feature",
                     "return_format": "array",
                     "preview_size": "thumbnail",
-                    "required": 1
+                    "required": 0
                 },
                 {
                     "key": "field_feature_value",
@@ -1083,5 +1083,5 @@
     "style": "default",
     "label_placement": "top",
     "instruction_placement": "label",
-    "modified": 1784584281
+    "modified": 1785524541
 }
