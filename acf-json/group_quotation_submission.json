@@ -10,6 +10,20 @@
             "placement": "top"
         },
         {
+            "key": "field_customer_title",
+            "label": "Title",
+            "name": "customer_title",
+            "type": "select",
+            "choices": {
+                "Mr.": "Mr.",
+                "Ms.": "Ms.",
+                "Mrs.": "Mrs.",
+                "Miss": "Miss"
+            },
+            "allow_null": 1,
+            "ui": 1
+        },
+        {
             "key": "field_customer_name",
             "label": "Customer Name",
             "name": "customer_name",
@@ -43,6 +57,12 @@
             "type": "text"
         },
         {
+            "key": "field_customer_house_number",
+            "label": "House Name or Number",
+            "name": "customer_house_number",
+            "type": "text"
+        },
+        {
             "key": "field_customer_street",
             "label": "Customer Street",
             "name": "customer_street",
@@ -65,6 +85,13 @@
             "label": "Postcode",
             "name": "customer_postcode",
             "type": "text"
+        },
+        {
+            "key": "field_customer_directions",
+            "label": "Directions or Nearby Landmarks",
+            "name": "customer_directions",
+            "type": "textarea",
+            "rows": 3
         },
         {
             "key": "field_preferred_contact",
@@ -695,5 +722,5 @@
     "style": "default",
     "label_placement": "top",
     "instruction_placement": "label",
-    "modified": 1784584281
+    "modified": 1787295093
 }

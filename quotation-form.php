@@ -1658,15 +1658,18 @@ class Quotation_Form_Plugin {
 
         // Sanitize customer data with field-specific sanitization
         $sanitized_customer_data = array(
+            'title' => sanitize_text_field($customer_data['title'] ?? ''),
             'name' => sanitize_text_field($customer_data['name'] ?? ''),
             'email' => sanitize_email($customer_data['email'] ?? ''),
             'alt_email' => sanitize_email($customer_data['alt_email'] ?? ''),
             'phone' => $this->sanitize_phone_number($customer_data['phone'] ?? ''),
             'alt_phone' => $this->sanitize_phone_number($customer_data['alt_phone'] ?? ''),
+            'house_number' => sanitize_text_field($customer_data['house_number'] ?? ''),
             'street' => sanitize_text_field($customer_data['street'] ?? ''),
             'town' => sanitize_text_field($customer_data['town'] ?? ''),
             'county' => sanitize_text_field($customer_data['county'] ?? ''),
             'postcode' => $this->sanitize_postcode($customer_data['postcode'] ?? ''),
+            'directions' => sanitize_textarea_field($customer_data['directions'] ?? ''),
             'preferred_contact' => sanitize_text_field($customer_data['preferred_contact'] ?? 'email'),
             'additional_notes' => sanitize_textarea_field($customer_data['additional_notes'] ?? ''),
             'availability' => (isset($customer_data['availability']) && is_array($customer_data['availability']))
@@ -1699,6 +1702,8 @@ class Quotation_Form_Plugin {
     private function save_to_quotation_cpt($basket_items, $customer_data) {
         // Normalize field names - convert from JS format to ACF format
         $normalized_data = array(
+            'customer_title' => isset($customer_data['title']) ? $customer_data['title'] :
+                               (isset($customer_data['customer_title']) ? $customer_data['customer_title'] : ''),
             'customer_name' => isset($customer_data['name']) ? $customer_data['name'] :
                               (isset($customer_data['customer_name']) ? $customer_data['customer_name'] : ''),
             'customer_email' => isset($customer_data['email']) ? $customer_data['email'] :
@@ -1709,6 +1714,8 @@ class Quotation_Form_Plugin {
                                (isset($customer_data['customer_phone']) ? $customer_data['customer_phone'] : ''),
             'customer_alt_phone' => isset($customer_data['alt_phone']) ? $customer_data['alt_phone'] :
                                    (isset($customer_data['customer_alt_phone']) ? $customer_data['customer_alt_phone'] : ''),
+            'customer_house_number' => isset($customer_data['house_number']) ? $customer_data['house_number'] :
+                                      (isset($customer_data['customer_house_number']) ? $customer_data['customer_house_number'] : ''),
             'customer_street' => isset($customer_data['street']) ? $customer_data['street'] :
                                 (isset($customer_data['customer_street']) ? $customer_data['customer_street'] : ''),
             'customer_town' => isset($customer_data['town']) ? $customer_data['town'] :
@@ -1717,6 +1724,8 @@ class Quotation_Form_Plugin {
                                 (isset($customer_data['customer_county']) ? $customer_data['customer_county'] : ''),
             'customer_postcode' => isset($customer_data['postcode']) ? $customer_data['postcode'] :
                                   (isset($customer_data['customer_postcode']) ? $customer_data['customer_postcode'] : ''),
+            'customer_directions' => isset($customer_data['directions']) ? $customer_data['directions'] :
+                                    (isset($customer_data['customer_directions']) ? $customer_data['customer_directions'] : ''),
             'preferred_contact' => isset($customer_data['preferred_contact']) ? $customer_data['preferred_contact'] : 'email',
             'additional_notes' => isset($customer_data['additional_notes']) ? $customer_data['additional_notes'] : '',
             'customer_availability' => (isset($customer_data['availability']) && is_array($customer_data['availability']))
@@ -1746,15 +1755,18 @@ class Quotation_Form_Plugin {
 
         // Save customer data to ACF fields (if ACF is available)
         if (function_exists('update_field')) {
+            update_field('customer_title', $normalized_data['customer_title'], $post_id);
             update_field('customer_name', $normalized_data['customer_name'], $post_id);
             update_field('customer_email', $normalized_data['customer_email'], $post_id);
             update_field('customer_alt_email', $normalized_data['customer_alt_email'], $post_id);
             update_field('customer_phone', $normalized_data['customer_phone'], $post_id);
             update_field('customer_alt_phone', $normalized_data['customer_alt_phone'], $post_id);
+            update_field('customer_house_number', $normalized_data['customer_house_number'], $post_id);
             update_field('customer_street', $normalized_data['customer_street'], $post_id);
             update_field('customer_town', $normalized_data['customer_town'], $post_id);
             update_field('customer_county', $normalized_data['customer_county'], $post_id);
             update_field('customer_postcode', $normalized_data['customer_postcode'], $post_id);
+            update_field('customer_directions', $normalized_data['customer_directions'], $post_id);
             update_field('preferred_contact', $normalized_data['preferred_contact'], $post_id);
             update_field('additional_notes', $normalized_data['additional_notes'], $post_id);
             update_field('customer_availability', $normalized_data['customer_availability'], $post_id);
@@ -1949,6 +1961,8 @@ class Quotation_Form_Plugin {
     private function send_email_notification($basket_items, $customer_data, $post_id = null) {
         // Normalize field names - convert from JS format to display format
         $normalized_data = array(
+            'Title' => isset($customer_data['title']) ? $customer_data['title'] :
+                      (isset($customer_data['customer_title']) ? $customer_data['customer_title'] : ''),
             'Name' => isset($customer_data['name']) ? $customer_data['name'] :
                      (isset($customer_data['customer_name']) ? $customer_data['customer_name'] : ''),
             'Email' => isset($customer_data['email']) ? $customer_data['email'] :
@@ -1959,14 +1973,18 @@ class Quotation_Form_Plugin {
                       (isset($customer_data['customer_phone']) ? $customer_data['customer_phone'] : ''),
             'Alternative Phone' => isset($customer_data['alt_phone']) ? $customer_data['alt_phone'] :
                                   (isset($customer_data['customer_alt_phone']) ? $customer_data['customer_alt_phone'] : ''),
-            'House Number / Name & Street' => isset($customer_data['street']) ? $customer_data['street'] :
-                                             (isset($customer_data['customer_street']) ? $customer_data['customer_street'] : ''),
+            'House Name or Number' => isset($customer_data['house_number']) ? $customer_data['house_number'] :
+                                     (isset($customer_data['customer_house_number']) ? $customer_data['customer_house_number'] : ''),
+            'Street' => isset($customer_data['street']) ? $customer_data['street'] :
+                       (isset($customer_data['customer_street']) ? $customer_data['customer_street'] : ''),
             'Town' => isset($customer_data['town']) ? $customer_data['town'] :
                      (isset($customer_data['customer_town']) ? $customer_data['customer_town'] : ''),
             'County' => isset($customer_data['county']) ? $customer_data['county'] :
                        (isset($customer_data['customer_county']) ? $customer_data['customer_county'] : ''),
             'Postcode' => isset($customer_data['postcode']) ? $customer_data['postcode'] :
                          (isset($customer_data['customer_postcode']) ? $customer_data['customer_postcode'] : ''),
+            'Directions or nearby landmarks' => isset($customer_data['directions']) ? $customer_data['directions'] :
+                                               (isset($customer_data['customer_directions']) ? $customer_data['customer_directions'] : ''),
             'Preferred Contact' => isset($customer_data['preferred_contact']) ? $customer_data['preferred_contact'] : 'email',
             'Additional Notes' => isset($customer_data['additional_notes']) ? $customer_data['additional_notes'] : '',
             'Availability' => (isset($customer_data['availability']) && is_array($customer_data['availability']))
@@ -2103,10 +2121,12 @@ class Quotation_Form_Plugin {
                          (isset($customer_data['customer_email']) ? $customer_data['customer_email'] : '');
         $customer_name = isset($customer_data['name']) ? $customer_data['name'] :
                         (isset($customer_data['customer_name']) ? $customer_data['customer_name'] : '');
+        $customer_title = isset($customer_data['title']) ? $customer_data['title'] :
+                         (isset($customer_data['customer_title']) ? $customer_data['customer_title'] : '');
 
         if ($send_customer_confirmation && !empty($customer_email)) {
             $customer_subject = 'Thank you for your quotation request';
-            $customer_message = "Dear " . $customer_name . ",\n\n";
+            $customer_message = "Dear " . trim(($customer_title ? $customer_title . ' ' : '') . $customer_name) . ",\n\n";
             $customer_message .= "Thank you for requesting a quotation. We have received your request and will get back to you shortly.\n\n";
             $customer_message .= "Items requested: " . count($basket_items) . "\n\n";
 
@@ -2580,12 +2600,15 @@ class Quotation_Form_Plugin {
 
         // Get customer data
         $customer_name = get_field('customer_name', $post_id);
+        $customer_title = get_field('customer_title', $post_id);
         $customer_email = get_field('customer_email', $post_id);
         $customer_phone = get_field('customer_phone', $post_id);
+        $customer_house_number = get_field('customer_house_number', $post_id);
         $customer_street = get_field('customer_street', $post_id);
         $customer_town = get_field('customer_town', $post_id);
         $customer_county = get_field('customer_county', $post_id);
         $customer_postcode = get_field('customer_postcode', $post_id);
+        $customer_directions = get_field('customer_directions', $post_id);
         $quote_price = get_field('quote_price', $post_id);
 
         // Get brand information
@@ -2655,12 +2678,15 @@ class Quotation_Form_Plugin {
         // Generate and save PDF file
         $data = array(
             'customer_name' => $customer_name,
+            'customer_title' => $customer_title,
             'customer_email' => $customer_email,
             'customer_phone' => $customer_phone,
+            'customer_house_number' => $customer_house_number,
             'customer_street' => $customer_street,
             'customer_town' => $customer_town,
             'customer_county' => $customer_county,
             'customer_postcode' => $customer_postcode,
+            'customer_directions' => $customer_directions,
             'basket_items' => $basket_items,
             'quote_price' => $quote_price,
             'centralized_brand' => $centralized_brand,
@@ -3043,12 +3069,15 @@ img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
 
         // Get data
         $customer_name = get_field('customer_name', $post_id);
+        $customer_title = get_field('customer_title', $post_id);
         $customer_email = get_field('customer_email', $post_id);
         $customer_phone = get_field('customer_phone', $post_id);
+        $customer_house_number = get_field('customer_house_number', $post_id);
         $customer_street = get_field('customer_street', $post_id);
         $customer_town = get_field('customer_town', $post_id);
         $customer_county = get_field('customer_county', $post_id);
         $customer_postcode = get_field('customer_postcode', $post_id);
+        $customer_directions = get_field('customer_directions', $post_id);
         $basket_items = get_field('basket_items', $post_id);
         $quote_price = get_field('quote_price', $post_id);
 
@@ -3115,12 +3144,15 @@ img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
 
         $data = array(
             'customer_name' => $customer_name,
+            'customer_title' => $customer_title,
             'customer_email' => $customer_email,
             'customer_phone' => $customer_phone,
+            'customer_house_number' => $customer_house_number,
             'customer_street' => $customer_street,
             'customer_town' => $customer_town,
             'customer_county' => $customer_county,
             'customer_postcode' => $customer_postcode,
+            'customer_directions' => $customer_directions,
             'basket_items' => $basket_items,
             'quote_price' => $quote_price,
             'centralized_brand' => $centralized_brand,

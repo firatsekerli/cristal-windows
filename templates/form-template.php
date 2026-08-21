@@ -570,7 +570,18 @@ if (!$use_acf) {
 
             <div class="review-container">
                 <div class="customer-details-form">
-                    <div class="form-group full-width">
+                    <div class="form-group">
+                        <label for="customer-title">Title *</label>
+                        <select id="customer-title" name="customer_title" required>
+                            <option value="" disabled selected>Select Title</option>
+                            <option value="Mr.">Mr.</option>
+                            <option value="Ms.">Ms.</option>
+                            <option value="Mrs.">Mrs.</option>
+                            <option value="Miss">Miss</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
                         <label for="customer-name">Full Name *</label>
                         <input type="text" id="customer-name" name="customer_name" required>
                     </div>
@@ -595,8 +606,13 @@ if (!$use_acf) {
                         <input type="tel" id="customer-alt-phone" name="customer_alt_phone" required>
                     </div>
 
-                    <div class="form-group full-width">
-                        <label for="customer-street">House Number / Name & Street *</label>
+                    <div class="form-group">
+                        <label for="customer-house-number">House Name or Number *</label>
+                        <input type="text" id="customer-house-number" name="customer_house_number" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="customer-street">Street *</label>
                         <input type="text" id="customer-street" name="customer_street" required>
                     </div>
 
@@ -622,6 +638,11 @@ if (!$use_acf) {
                             <option value="phone">Phone</option>
                             <option value="either">Either</option>
                         </select>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="customer-directions">Directions or nearby landmarks *</label>
+                        <textarea id="customer-directions" name="customer_directions" rows="3" required></textarea>
                     </div>
 
                     <div class="form-group full-width availability-group">

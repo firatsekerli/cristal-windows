@@ -3028,15 +3028,18 @@ jQuery(document).ready(function($) {
 
             // Prepare data
             const customerData = {
+                title: $('#customer-title').val(),
                 name: $('#customer-name').val(),
                 email: $('#customer-email').val(),
                 alt_email: $('#customer-alt-email').val(),
                 phone: $('#customer-phone').val(),
                 alt_phone: $('#customer-alt-phone').val(),
+                house_number: $('#customer-house-number').val(),
                 street: $('#customer-street').val(),
                 town: $('#customer-town').val(),
                 county: $('#customer-county').val(),
                 postcode: $('#customer-postcode').val(),
+                directions: $('#customer-directions').val(),
                 preferred_contact: $('#preferred-contact').val(),
                 additional_notes: $('#additional-notes').val(),
                 availability: $('input[name="availability[]"]:checked').map(function() {
@@ -3198,15 +3201,18 @@ jQuery(document).ready(function($) {
             this.editingItemId = null;
             this.resetConfigurationForm();
             $('.image-card').removeClass('selected');
+            $('#customer-title').val('');
             $('#customer-name').val('');
             $('#customer-email').val('');
             $('#customer-alt-email').val('');
             $('#customer-phone').val('');
             $('#customer-alt-phone').val('');
+            $('#customer-house-number').val('');
             $('#customer-street').val('');
             $('#customer-town').val('');
             $('#customer-county').val('');
             $('#customer-postcode').val('');
+            $('#customer-directions').val('');
             $('#additional-notes').val('');
             $('input[name="availability[]"]').prop('checked', false);
             this.navigateToStep(1);

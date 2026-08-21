@@ -648,14 +648,19 @@ $additional_documents_note = $qf_get_opt('proposal_additional_documents_note');
             <div class="info-section">
                 <h3>Client Details</h3>
                 <div class="info-item">
-                    <span class="info-label">Name:</span> <?php echo esc_html($data['customer_name']); ?>
+                    <span class="info-label">Name:</span> <?php echo esc_html(trim((!empty($data['customer_title']) ? $data['customer_title'] . ' ' : '') . $data['customer_name'])); ?>
                 </div>
                 <div class="info-item">
                     <span class="info-label">Address:</span><br>
-                    <?php echo esc_html($data['customer_street']); ?><br>
+                    <?php echo esc_html(trim(($data['customer_house_number'] ?? '') . ' ' . ($data['customer_street'] ?? ''))); ?><br>
                     <?php echo esc_html($data['customer_town']); ?><?php echo !empty($data['customer_county']) ? ', ' . esc_html($data['customer_county']) : ''; ?><br>
                     <?php echo esc_html($data['customer_postcode']); ?>
                 </div>
+                <?php if (!empty($data['customer_directions'])): ?>
+                <div class="info-item">
+                    <span class="info-label">Directions:</span> <?php echo esc_html($data['customer_directions']); ?>
+                </div>
+                <?php endif; ?>
                 <div class="info-item">
                     <span class="info-label">Phone:</span> <?php echo esc_html($data['customer_phone']); ?>
                 </div>
@@ -689,7 +694,7 @@ $additional_documents_note = $qf_get_opt('proposal_additional_documents_note');
     </div>
 
     <div class="message-section">
-        <p>Dear <?php echo esc_html($data['customer_name']); ?>,</p>
+        <p>Dear <?php echo esc_html(trim((!empty($data['customer_title']) ? $data['customer_title'] . ' ' : '') . $data['customer_name'])); ?>,</p>
 
         <p>Thank you for your recent enquiry regarding windows, doors and conservatories. We are pleased to provide you with the following quotation based on your requirements.</p>
 
